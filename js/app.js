@@ -17,6 +17,7 @@ const AppState = {
 
 document.addEventListener('DOMContentLoaded', async () => {
   initToastShelf();
+  initHeroCarousel();
   await loadInventory();
   await syncHomepageFromConfig();
   initListeners();
@@ -323,6 +324,7 @@ function renderInventoryGrid() {
 
   grid.innerHTML = AppState.filteredCars.map(car => {
     const isSold = car.status === 'Sold';
+    const isFav = isFavorited(car.id);
     const mainImg = car.image_url || (car.gallery && car.gallery[0]) || 'https://images.unsplash.com/photo-1590362891991-f776e747a588?auto=format&fit=crop&w=800&q=80';
     const origPriceHtml = car.original_price && car.original_price > car.price 
       ? `<span class="price-val-orig">${formatCurrency(car.original_price)}</span>` 
@@ -333,6 +335,10 @@ function renderInventoryGrid() {
         <!-- Thumbnail -->
         <div class="car-thumb-wrap">
           <img src="${mainImg}" alt="${car.title}" loading="lazy" onerror="this.src='https://images.unsplash.com/photo-1590362891991-f776e747a588?auto=format&fit=crop&w=800&q=80'">
+          
+          <button type="button" class="btn-card-fav ${isFav ? 'active' : ''}" onclick="toggleFavorite('${car.id}', event)" title="Save to Favorites" aria-label="Save to Favorites">
+            <i class="${isFav ? 'fas' : 'far'} fa-heart"></i>
+          </button>
           
           ${car.is_featured ? '<div class="card-badge-feat"><i class="fas fa-star"></i> Featured</div>' : ''}
           
@@ -950,3 +956,154 @@ function initListeners() {
     }
   });
 }
+
+// ==========================================================================
+// HERO BANNER CAROUSEL
+// ==========================================================================
+let currentHeroSlideIdx = 0;
+let heroSlideTimer = null;
+
+function initHeroCarousel() {
+  const sliderWrap = document.getElementById('hero-slider-wrap');
+  if (!sliderWrap) return;
+  
+  startHeroAutoSlide();
+  
+  // Pause on hover, resume on leave
+  sliderWrap.addEventListener('mouseenter', () => clearInterval(heroSlideTimer));
+  sliderWrap.addEventListener('mouseleave', () => startHeroAutoSlide());
+}
+
+function startHeroAutoSlide() {
+  clearInterval(heroSlideTimer);
+  heroSlideTimer = setInterval(() => {
+    const slides = document.querySelectorAll('.hero-slider-wrap .hero-slide');
+    if (slides.length <= 1) return;
+    currentHeroSlideIdx = (currentHeroSlideIdx + 1) % slides.length;
+    showHeroSlide(currentHeroSlideIdx);
+  }, 3800);
+}
+
+function showHeroSlide(index) {
+  const slides = document.querySelectorAll('.hero-slider-wrap .hero-slide');
+  const dots = document.querySelectorAll('#hero-carousel-dots .dot');
+  if (!slides.length) return;
+
+  currentHeroSlideIdx = index;
+
+  slides.forEach((s, idx) => {
+    s.classList.toggle('active', idx === index);
+  });
+
+  dots.forEach((d, idx) => {
+    d.classList.toggle('active', idx === index);
+  });
+}
+
+function goToHeroSlide(index) {
+  showHeroSlide(index);
+  startHeroAutoSlide();
+}
+
+// ==========================================================================
+// WISHLIST / FAVORITES SYSTEM
+// ==========================================================================
+function isFavorited(carId) {
+  return AppState.favorites.includes(String(carId));
+}
+
+function toggleFavorite(carId, e) {
+  if (e) e.stopPropagation();
+  const idStr = String(carId);
+  const idx = AppState.favorites.indexOf(idStr);
+  
+  if (idx > -1) {
+    AppState.favorites.splice(idx, 1);
+    showToast('Removed from Saved Vehicles', 'info');
+  } else {
+    AppState.favorites.push(idStr);
+    showToast('❤️ Added to Saved Vehicles!', 'success');
+  }
+
+  localStorage.setItem('shri_rani_favs_v2', JSON.stringify(AppState.favorites));
+  updateWishlistCount();
+  renderInventoryGrid();
+  renderFavoritesList();
+}
+
+function updateWishlistCount() {
+  const count = AppState.favorites.length;
+  const badge = document.getElementById('header-fav-count');
+  const modalCount = document.getElementById('fav-modal-count');
+
+  if (badge) {
+    badge.textContent = count;
+    badge.style.display = count > 0 ? 'inline-flex' : 'none';
+  }
+
+  if (modalCount) {
+    modalCount.textContent = count;
+  }
+}
+
+function openFavoritesModal() {
+  renderFavoritesList();
+  const modal = document.getElementById('favoritesModal');
+  if (modal) {
+    modal.classList.add('active');
+    document.body.style.overflow = 'hidden';
+  }
+}
+
+function closeFavoritesModal() {
+  const modal = document.getElementById('favoritesModal');
+  if (modal) {
+    modal.classList.remove('active');
+    document.body.style.overflow = '';
+  }
+}
+
+function renderFavoritesList() {
+  const body = document.getElementById('favorites-modal-body');
+  if (!body) return;
+
+  const favCars = AppState.cars.filter(c => AppState.favorites.includes(String(c.id)));
+
+  if (favCars.length === 0) {
+    body.innerHTML = `
+      <div style="text-align: center; padding: 3rem 1rem;">
+        <i class="far fa-heart" style="font-size: 3rem; color: #CBD5E1; margin-bottom: 1rem;"></i>
+        <h4 style="font-weight: 700; color: #071426; margin-bottom: 0.35rem;">No Saved Vehicles Yet</h4>
+        <p class="text-muted" style="font-size: 0.88rem; max-width: 320px; margin: 0 auto 1.25rem;">
+          Click the heart icon on any car card to save it for quick reference and comparison.
+        </p>
+      </div>
+    `;
+    return;
+  }
+
+  body.innerHTML = favCars.map(car => {
+    const mainImg = car.image_url || (car.gallery && car.gallery[0]) || 'https://images.unsplash.com/photo-1590362891991-f776e747a588?auto=format&fit=crop&w=800&q=80';
+    return `
+      <div class="fav-item-row">
+        <img src="${mainImg}" alt="${car.title}" class="fav-item-thumb">
+        <div class="fav-item-info">
+          <div class="fav-item-title">${car.title}</div>
+          <div style="font-size: 0.78rem; color: var(--text-muted); margin-bottom: 0.2rem;">
+            ${car.year} • ${(car.kms || 0).toLocaleString('en-IN')} km • ${car.fuel_type || 'Petrol'}
+          </div>
+          <div class="fav-item-price">${formatCurrency(car.price)}</div>
+        </div>
+        <div class="fav-item-actions">
+          <button type="button" class="fav-view-btn" onclick="closeFavoritesModal(); viewCarDetails('${car.id}')">
+            <i class="fas fa-eye"></i> View
+          </button>
+          <button type="button" class="fav-remove-btn" onclick="toggleFavorite('${car.id}', event)" title="Remove">
+            <i class="fas fa-trash-alt"></i>
+          </button>
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+

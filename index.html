@@ -24,7 +24,7 @@
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
   <!-- Clean Luxury Unified Stylesheet -->
-  <link rel="stylesheet" href="css/style.css?v=3.0">
+  <link rel="stylesheet" href="css/style.css?v=3.2">
 </head>
 <body>
 
@@ -52,73 +52,71 @@
 
         <!-- Header Actions -->
         <div class="header-right">
-          <button type="button" class="btn btn-outline btn-sm" onclick="openSearchModal()">
-            <i class="fas fa-search"></i> <span>Search</span>
-          </button>
           <a href="admin.html" class="btn btn-outline btn-sm" title="Admin Portal">
             <i class="fas fa-lock"></i> <span>Admin</span>
           </a>
-          <a href="https://wa.me/917550172585?text=Hello%20Shri%20Rani%20Cars,%20I%20am%20looking%20for%20a%20quality%20pre-owned%20car." target="_blank" class="btn btn-whatsapp btn-sm">
-            <i class="fab fa-whatsapp"></i> <span>WhatsApp</span>
-          </a>
+          <button type="button" class="btn-fav-header" id="header-fav-btn" onclick="openFavoritesModal()" title="Saved / Favorite Cars">
+            <i class="fas fa-heart"></i>
+            <span class="fav-count-badge" id="header-fav-count" style="display: none;">0</span>
+          </button>
         </div>
       </div>
     </div>
   </header>
 
+  <!-- QUICK APP-STYLE OMNI SEARCH BAR (FLIPKART / AMAZON STYLE) -->
+  <div class="quick-omni-search-container">
+    <div class="container">
+      <div class="quick-search-box" onclick="openSearchModal()">
+        <i class="fas fa-search quick-search-icon"></i>
+        <div class="quick-search-placeholder">
+          <span>Search by Brand, Model, Year, Fuel, Budget...</span>
+        </div>
+        <span class="quick-search-btn-badge"><i class="fas fa-arrow-right"></i></span>
+      </div>
+    </div>
+  </div>
+
   <!-- MAIN SHOWROOM LANDING VIEW -->
   <main id="main-showroom-view">
 
-    <!-- HERO SHOWCASE SECTION -->
-    <section id="home" class="hero">
+    <!-- HERO SHOWCASE BANNER CAROUSEL -->
+    <section id="home" class="hero-carousel-section">
       <div class="container">
-        <div class="hero-grid">
-          <!-- Hero Text -->
-          <div class="hero-left">
-            <h2 class="hero-heading" id="hero-main-heading">
-              Premium Cars. <br>
-              <span>Certified Quality.</span> <br>
-              Unmatched Value.
-            </h2>
-            <p class="hero-text" id="hero-main-sub">
-              Discover Salem and Vazhapadi's most reliable collection of certified pre-owned vehicles. Rigorous 140-point technical inspection, instant financing, and transparent paperwork.
-            </p>
-
-            <div class="hero-actions">
-              <a href="#inventory-section" class="btn btn-primary btn-lg">
-                <i class="fas fa-car"></i> View Available Cars
-              </a>
-              <button type="button" class="btn btn-outline btn-lg" onclick="openFilterModal()">
-                <i class="fas fa-sliders"></i> Filter & Search
-              </button>
-            </div>
-
-            <!-- Trust Badges -->
-            <div style="display: flex; gap: 1.5rem; flex-wrap: wrap;">
-              <div>
-                <strong style="font-size: 1.25rem; color: #0f172a; font-weight: 800;">140+</strong>
-                <div style="font-size: 0.78rem; color: var(--text-muted);">Inspection Checks</div>
-              </div>
-              <div style="border-left: 1px solid var(--border-light); padding-left: 1.5rem;">
-                <strong style="font-size: 1.25rem; color: #0f172a; font-weight: 800;">100%</strong>
-                <div style="font-size: 0.78rem; color: var(--text-muted);">Non-Accidental</div>
-              </div>
-              <div style="border-left: 1px solid var(--border-light); padding-left: 1.5rem;">
-                <strong style="font-size: 1.25rem; color: #0f172a; font-weight: 800;">500+</strong>
-                <div style="font-size: 0.78rem; color: var(--text-muted);">Happy Customers</div>
-              </div>
+        <div class="hero-slider-wrap" id="hero-slider-wrap">
+          <!-- Slide 1 -->
+          <div class="hero-slide active">
+            <img src="https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&w=1200&q=80" alt="Certified Luxury Pre-Owned Cars" id="hero-main-img">
+            <div class="hero-slide-caption">
+              <span class="hero-slide-tag"><i class="fas fa-certificate text-primary"></i> Certified Pre-Owned</span>
+              <h2 id="hero-main-heading">Tested, Certified & Road Ready</h2>
+              <p id="hero-main-sub">140-Point Quality Inspection • Instant Financing • Salem & Vazhapadi</p>
             </div>
           </div>
-
-          <!-- Hero Image Banner -->
-          <div class="hero-right">
-            <div class="hero-showcase-box">
-              <img id="hero-main-img" src="https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&w=1200&q=80" alt="Sri Rani Cars Showroom Showcase">
-              <div class="hero-showcase-overlay">
-                <h3 style="font-size: 1.25rem; font-weight: 800; line-height: 1.2;">Tested, Certified & Road Ready</h3>
-                <p style="font-size: 0.82rem; color: #cbd5e1; margin-top: 0.3rem;">Every car is thoroughly verified for engine health, original kilometers, and clear title documentation.</p>
-              </div>
+          <!-- Slide 2 -->
+          <div class="hero-slide">
+            <img src="https://images.unsplash.com/photo-1580273916550-e323be2ae537?auto=format&fit=crop&w=1200&q=80" alt="Premium SUV & Sedan Collection">
+            <div class="hero-slide-caption">
+              <span class="hero-slide-tag"><i class="fas fa-shield-alt text-primary"></i> 100% Non-Accidental</span>
+              <h2>Multi-Brand Pre-Owned Showroom</h2>
+              <p>Verified Kilometers • Single Owner Options • Fast RC Transfer</p>
             </div>
+          </div>
+          <!-- Slide 3 -->
+          <div class="hero-slide">
+            <img src="https://images.unsplash.com/photo-1533473359331-0135ef1b58bf?auto=format&fit=crop&w=1200&q=80" alt="Easy EMI & Car Exchange">
+            <div class="hero-slide-caption">
+              <span class="hero-slide-tag"><i class="fas fa-bolt text-primary"></i> Instant EMI Approval</span>
+              <h2>Lowest Interest Rates & Free Valuation</h2>
+              <p>Sell or Exchange Your Car for Best Showroom Price</p>
+            </div>
+          </div>
+          
+          <!-- Carousel Dots -->
+          <div class="hero-carousel-dots" id="hero-carousel-dots">
+            <span class="dot active" onclick="goToHeroSlide(0)"></span>
+            <span class="dot" onclick="goToHeroSlide(1)"></span>
+            <span class="dot" onclick="goToHeroSlide(2)"></span>
           </div>
         </div>
       </div>
@@ -264,6 +262,141 @@
             </div>
           </div>
 
+        </div>
+      </div>
+    </section>
+
+    <!-- ABOUT SRI RANI CARS -->
+    <section id="about-section" class="about-section">
+      <div class="container">
+        <div class="about-grid">
+          <div class="about-text-col">
+            <span class="section-badge"><i class="fas fa-award text-primary"></i> About Sri Rani Cars</span>
+            <h2 class="about-title">Salem &amp; Vazhapadi's Most Trusted Pre-Owned Dealership</h2>
+            <p class="about-lead">
+              Sri Rani Cars has earned the trust of over 500+ car buyers across Salem, Vazhapadi, Attur, and Namakkal. We believe that buying a pre-owned car should feel as exciting, transparent, and secure as buying brand new.
+            </p>
+            <div class="about-points-grid">
+              <div class="about-point-card">
+                <div class="about-point-icon"><i class="fas fa-clipboard-check"></i></div>
+                <div>
+                  <h4>140-Point Inspection</h4>
+                  <p>Engine, transmission, suspension, brakes, electricals and chassis thoroughly tested by technicians.</p>
+                </div>
+              </div>
+              <div class="about-point-card">
+                <div class="about-point-icon"><i class="fas fa-shield-alt"></i></div>
+                <div>
+                  <h4>Non-Accidental Guarantee</h4>
+                  <p>Strict policy against flood-damaged or accidental vehicles with 100% genuine odometer guarantee.</p>
+                </div>
+              </div>
+              <div class="about-point-card">
+                <div class="about-point-icon"><i class="fas fa-file-signature"></i></div>
+                <div>
+                  <h4>Hassle-Free RC Transfer</h4>
+                  <p>Complete transparent paperwork, clear title documentation, and fast RTO passing support.</p>
+                </div>
+              </div>
+              <div class="about-point-card">
+                <div class="about-point-icon"><i class="fas fa-hand-holding-usd"></i></div>
+                <div>
+                  <h4>Instant Financing &amp; EMI</h4>
+                  <p>Tie-ups with leading nationalized and private banks for lowest interest rates and quick loan approval.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="about-visual-col">
+            <div class="about-visual-card">
+              <img src="icons/app-logo.png" alt="Sri Rani Cars Dealership Logo" class="about-brand-logo">
+              <h3>SRI RANI CARS</h3>
+              <p class="text-lime" style="font-weight: 800; font-size: 0.85rem; letter-spacing: 0.05em; text-transform: uppercase;">Certified Pre-Owned Showroom</p>
+              <div class="about-stats-row">
+                <div>
+                  <strong>10+</strong>
+                  <span>Years Trust</span>
+                </div>
+                <div>
+                  <strong>500+</strong>
+                  <span>Happy Buyers</span>
+                </div>
+                <div>
+                  <strong>100%</strong>
+                  <span>Verified Cars</span>
+                </div>
+              </div>
+              <div class="about-location-tag">
+                <i class="fas fa-map-marker-alt text-lime"></i> Mangamma Salai, Vazhapadi, Salem
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CUSTOMER REVIEWS & TESTIMONIALS -->
+    <section id="reviews-section" class="reviews-section">
+      <div class="container">
+        <div class="section-head-bar text-center-wrap">
+          <div>
+            <span class="section-badge"><i class="fas fa-star text-gold" style="color: #F59E0B;"></i> Customer Experiences</span>
+            <h2 class="section-main-title">What Our Buyers Say</h2>
+            <p class="section-sub-title">Rated <strong>4.9 / 5.0</strong> by 500+ satisfied car owners across Tamil Nadu</p>
+          </div>
+        </div>
+
+        <div class="reviews-grid">
+          <!-- Review 1 -->
+          <div class="review-card">
+            <div class="review-stars">
+              <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+            </div>
+            <p class="review-text">
+              "Bought my Hyundai Creta from Sri Rani Cars. The vehicle condition was showroom fresh with 100% genuine kms. Transparent pricing and got RC transfer completed within days."
+            </p>
+            <div class="review-author-wrap">
+              <div class="review-avatar">KR</div>
+              <div>
+                <strong>Karthikeyan R.</strong>
+                <div class="review-meta"><i class="fas fa-check-circle" style="color: #16a34a;"></i> Verified Buyer • Salem</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Review 2 -->
+          <div class="review-card">
+            <div class="review-stars">
+              <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+            </div>
+            <p class="review-text">
+              "Best pre-owned car showroom in Vazhapadi. The team helped me secure a low-interest bank loan for my Innova Crysta within a single day. Highly recommend Sri Rani Cars!"
+            </p>
+            <div class="review-author-wrap">
+              <div class="review-avatar">SK</div>
+              <div>
+                <strong>Senthil Kumar</strong>
+                <div class="review-meta"><i class="fas fa-check-circle" style="color: #16a34a;"></i> Verified Buyer • Vazhapadi</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Review 3 -->
+          <div class="review-card">
+            <div class="review-stars">
+              <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+            </div>
+            <p class="review-text">
+              "Very honest dealership with zero hidden charges. They showed all service records and let us test drive extensively. Loving our Maruti Swift Dzire!"
+            </p>
+            <div class="review-author-wrap">
+              <div class="review-avatar">PV</div>
+              <div>
+                <strong>Priya &amp; Vignesh</strong>
+                <div class="review-meta"><i class="fas fa-check-circle" style="color: #16a34a;"></i> Verified Buyer • Namakkal</div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </section>
@@ -684,6 +817,27 @@
     </div>
   </div>
 
+  <!-- FAVORITES / SAVED CARS MODAL -->
+  <div id="favoritesModal" class="modal-layer" role="dialog" aria-modal="true">
+    <div class="modal-window" style="max-width: 650px;">
+      <div class="modal-top">
+        <h3 class="modal-heading"><i class="fas fa-heart text-red" style="color: #EF4444;"></i> Saved Vehicles (<span id="fav-modal-count">0</span>)</h3>
+        <button type="button" class="modal-dismiss" onclick="closeFavoritesModal()">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+      <div class="modal-content-body" id="favorites-modal-body">
+        <!-- Dynamic List of Favorited Cars -->
+      </div>
+      <div class="modal-actions-bar">
+        <button type="button" class="btn btn-outline" onclick="closeFavoritesModal()">Close</button>
+        <button type="button" class="btn btn-primary" onclick="closeFavoritesModal(); document.getElementById('inventory-section').scrollIntoView({ behavior: 'smooth' });">
+          <i class="fas fa-car"></i> Explore More Cars
+        </button>
+      </div>
+    </div>
+  </div>
+
   <!-- 1. CATEGORY FILTER & SORT DRAWER -->
   <div id="filterModal" class="modal-layer" role="dialog" aria-modal="true">
     <div class="modal-window">
@@ -872,9 +1026,9 @@
   </div>
 
   <!-- JavaScript Modules -->
-  <script src="js/supabase-config.js?v=3.0"></script>
-  <script src="js/cars-data.js?v=3.0"></script>
-  <script src="js/app.js?v=3.0"></script>
+  <script src="js/supabase-config.js?v=3.1"></script>
+  <script src="js/cars-data.js?v=3.1"></script>
+  <script src="js/app.js?v=3.1"></script>
 
   <!-- PWA & Filter Drawer Helper Scripts -->
   <script>
