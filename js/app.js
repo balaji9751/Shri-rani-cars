@@ -44,6 +44,33 @@ async function syncHomepageFromConfig() {
   try {
     const config = await window.CarService.getHomepageConfig();
     if (config) {
+      const sliderWrap = document.getElementById('hero-slider-wrap');
+      if (sliderWrap && Array.isArray(config.heroBanners) && config.heroBanners.length > 0) {
+        const activeBanners = config.heroBanners.filter(b => b.active !== false);
+        if (activeBanners.length > 0) {
+          const slidesHtml = activeBanners.map((banner, idx) => `
+            <div class="hero-slide ${idx === 0 ? 'active' : ''}">
+              <img src="${banner.image}" alt="${banner.heading || 'Sri Rani Cars'}" loading="lazy">
+              <div class="hero-slide-caption">
+                <span class="hero-slide-tag"><i class="fas ${banner.tagIcon || 'fa-certificate'} text-primary"></i> ${banner.tag || 'Certified Pre-Owned'}</span>
+                <h2>${banner.heading || 'Tested, Certified & Road Ready'}</h2>
+                <p>${banner.sub || '140-Point Quality Inspection • Instant Financing'}</p>
+              </div>
+            </div>
+          `).join('');
+
+          const dotsHtml = `
+            <div class="hero-carousel-dots" id="hero-carousel-dots">
+              ${activeBanners.map((_, idx) => `<span class="dot ${idx === 0 ? 'active' : ''}" onclick="goToHeroSlide(${idx})"></span>`).join('')}
+            </div>
+          `;
+
+          sliderWrap.innerHTML = slidesHtml + dotsHtml;
+          initHeroCarousel();
+          return;
+        }
+      }
+
       const headingEl = document.getElementById('hero-main-heading');
       const subEl = document.getElementById('hero-main-sub');
       const imgEl = document.getElementById('hero-main-img');

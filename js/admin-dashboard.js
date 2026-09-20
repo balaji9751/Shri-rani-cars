@@ -864,14 +864,206 @@ function deleteEnquiryMaster(id) {
 }
 
 // ==========================================================================
-// 6. HOMEPAGE MANAGER
+// 6. HOMEPAGE & HERO CAROUSEL BANNERS MANAGER
 // ==========================================================================
 function renderHomepageManager() {
-  const cfg = AdminDashboard.homepageConfig;
-  document.getElementById('hp-hero-heading').value = cfg.heroHeading || '';
-  document.getElementById('hp-hero-sub').value = cfg.heroSub || '';
-  document.getElementById('hp-hero-image').value = cfg.heroImage || '';
-  document.getElementById('hp-hero-preview').src = cfg.heroImage || '';
+  const cfg = AdminDashboard.homepageConfig || {};
+  
+  // Set fallback fields
+  const headingEl = document.getElementById('hp-hero-heading');
+  const subEl = document.getElementById('hp-hero-sub');
+  const imgEl = document.getElementById('hp-hero-image');
+  const prevEl = document.getElementById('hp-hero-preview');
+
+  if (headingEl) headingEl.value = cfg.heroHeading || '';
+  if (subEl) subEl.value = cfg.heroSubtitle || cfg.heroSub || '';
+  if (imgEl) imgEl.value = cfg.heroImage || '';
+  if (prevEl) prevEl.src = cfg.heroImage || 'https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&w=1200&q=80';
+
+  renderHeroBannersList();
+}
+
+function renderHeroBannersList() {
+  const container = document.getElementById('hero-banners-list-container');
+  if (!container) return;
+
+  const banners = (AdminDashboard.homepageConfig && Array.isArray(AdminDashboard.homepageConfig.heroBanners)) 
+    ? AdminDashboard.homepageConfig.heroBanners 
+    : [];
+
+  if (banners.length === 0) {
+    container.innerHTML = `
+      <div style="text-align: center; padding: 2.5rem 1rem; background: #F8FAFC; border-radius: var(--radius-md); border: 1px dashed var(--border-color);">
+        <i class="fas fa-images" style="font-size: 2.5rem; color: #94A3B8; margin-bottom: 0.75rem;"></i>
+        <h4 style="font-size: 1rem; font-weight: 700; color: #071426;">No Banner Slides Added</h4>
+        <p class="text-muted" style="font-size: 0.85rem; margin-bottom: 1rem;">Add dynamic hero banner slides that auto-rotate on the showroom landing page.</p>
+        <button type="button" class="btn btn-lime btn-sm" onclick="openAddBannerModal()">
+          <i class="fas fa-plus-circle"></i> + Add First Banner Slide
+        </button>
+      </div>
+    `;
+    return;
+  }
+
+  container.innerHTML = banners.map((banner, index) => {
+    const isActive = banner.active !== false;
+    return `
+      <div class="banner-slide-admin-card" style="background: white; border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 1rem; display: flex; align-items: center; gap: 1.25rem; justify-content: space-between; flex-wrap: wrap;">
+        <!-- Left info -->
+        <div style="display: flex; align-items: center; gap: 1rem; min-width: 0; flex: 1;">
+          <div style="width: 110px; height: 68px; border-radius: var(--radius-sm); overflow: hidden; background: #071426; flex-shrink: 0; border: 1px solid var(--border-color);">
+            <img src="${banner.image}" alt="${banner.heading}" style="width: 100%; height: 100%; object-fit: cover;">
+          </div>
+          <div style="min-width: 0;">
+            <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.25rem;">
+              <span style="font-size: 0.7rem; font-weight: 800; background: rgba(7, 20, 38, 0.08); color: #071426; padding: 0.15rem 0.5rem; border-radius: var(--radius-full);">
+                Slide #${index + 1}
+              </span>
+              <span style="font-size: 0.75rem; font-weight: 700; color: ${isActive ? '#059669' : '#DC2626'}; background: ${isActive ? '#ECFDF5' : '#FEE2E2'}; padding: 0.15rem 0.5rem; border-radius: var(--radius-full);">
+                ${isActive ? '● Live on Showroom' : '○ Disabled'}
+              </span>
+              <span style="font-size: 0.75rem; font-weight: 700; color: #4B5563;">
+                <i class="fas ${banner.tagIcon || 'fa-certificate'}"></i> ${banner.tag || 'Badge'}
+              </span>
+            </div>
+            <h4 style="font-size: 0.95rem; font-weight: 800; color: #071426; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-bottom: 0.15rem;">
+              ${banner.heading || 'Headline'}
+            </h4>
+            <p style="font-size: 0.8rem; color: var(--text-muted); margin: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+              ${banner.sub || 'Subtitle description'}
+            </p>
+          </div>
+        </div>
+
+        <!-- Right actions -->
+        <div style="display: flex; align-items: center; gap: 0.5rem;">
+          <button type="button" class="btn btn-outline btn-sm" onclick="toggleBannerActive('${banner.id}')" title="${isActive ? 'Disable from Showroom' : 'Enable in Showroom'}">
+            <i class="fas ${isActive ? 'fa-eye-slash' : 'fa-eye'}"></i> ${isActive ? 'Disable' : 'Enable'}
+          </button>
+          <button type="button" class="btn btn-outline btn-sm" onclick="openEditBannerModal('${banner.id}')" title="Edit Slide">
+            <i class="fas fa-edit"></i> Edit
+          </button>
+          <button type="button" class="btn btn-danger-outline btn-sm" onclick="deleteBannerSlide('${banner.id}')" title="Delete Slide">
+            <i class="fas fa-trash"></i>
+          </button>
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+// Modal Controllers for Banner Slides
+function openAddBannerModal() {
+  document.getElementById('banner-modal-title').innerHTML = '<i class="fas fa-plus-circle text-primary"></i> Add Hero Banner Slide';
+  document.getElementById('banner-edit-id').value = '';
+  document.getElementById('banner-tag-input').value = 'Certified Pre-Owned';
+  document.getElementById('banner-icon-select').value = 'fa-certificate';
+  document.getElementById('banner-heading-input').value = '';
+  document.getElementById('banner-sub-input').value = '';
+  document.getElementById('banner-image-input').value = 'https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&w=1200&q=80';
+  document.getElementById('banner-preview-img').src = 'https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&w=1200&q=80';
+  document.getElementById('banner-active-input').checked = true;
+
+  const modal = document.getElementById('bannerModal');
+  if (modal) {
+    modal.classList.add('active');
+    document.body.style.overflow = 'hidden';
+  }
+}
+
+function openEditBannerModal(id) {
+  const banners = (AdminDashboard.homepageConfig && Array.isArray(AdminDashboard.homepageConfig.heroBanners)) 
+    ? AdminDashboard.homepageConfig.heroBanners 
+    : [];
+  const banner = banners.find(b => String(b.id) === String(id));
+  if (!banner) return;
+
+  document.getElementById('banner-modal-title').innerHTML = '<i class="fas fa-edit text-primary"></i> Edit Hero Banner Slide';
+  document.getElementById('banner-edit-id').value = banner.id;
+  document.getElementById('banner-tag-input').value = banner.tag || '';
+  document.getElementById('banner-icon-select').value = banner.tagIcon || 'fa-certificate';
+  document.getElementById('banner-heading-input').value = banner.heading || '';
+  document.getElementById('banner-sub-input').value = banner.sub || '';
+  document.getElementById('banner-image-input').value = banner.image || '';
+  document.getElementById('banner-preview-img').src = banner.image || '';
+  document.getElementById('banner-active-input').checked = banner.active !== false;
+
+  const modal = document.getElementById('bannerModal');
+  if (modal) {
+    modal.classList.add('active');
+    document.body.style.overflow = 'hidden';
+  }
+}
+
+function closeBannerModal() {
+  const modal = document.getElementById('bannerModal');
+  if (modal) {
+    modal.classList.remove('active');
+    document.body.style.overflow = '';
+  }
+}
+
+async function handleBannerSubmit(e) {
+  e.preventDefault();
+  const editId = document.getElementById('banner-edit-id').value;
+  const tag = document.getElementById('banner-tag-input').value.trim();
+  const tagIcon = document.getElementById('banner-icon-select').value;
+  const heading = document.getElementById('banner-heading-input').value.trim();
+  const sub = document.getElementById('banner-sub-input').value.trim();
+  const image = document.getElementById('banner-image-input').value.trim();
+  const active = document.getElementById('banner-active-input').checked;
+
+  if (!AdminDashboard.homepageConfig.heroBanners) {
+    AdminDashboard.homepageConfig.heroBanners = [];
+  }
+
+  if (editId) {
+    // Update existing
+    const idx = AdminDashboard.homepageConfig.heroBanners.findIndex(b => String(b.id) === String(editId));
+    if (idx !== -1) {
+      AdminDashboard.homepageConfig.heroBanners[idx] = {
+        ...AdminDashboard.homepageConfig.heroBanners[idx],
+        tag, tagIcon, heading, sub, image, active
+      };
+      showToast('Banner slide updated successfully!');
+      logActivity(`Updated banner slide: ${heading}`);
+    }
+  } else {
+    // Add new
+    const newBanner = {
+      id: 'banner_' + Date.now(),
+      tag, tagIcon, heading, sub, image, active
+    };
+    AdminDashboard.homepageConfig.heroBanners.push(newBanner);
+    showToast('New banner slide added to showroom carousel!');
+    logActivity(`Added new banner slide: ${heading}`);
+  }
+
+  await window.CarService.saveHomepageConfig(AdminDashboard.homepageConfig);
+  closeBannerModal();
+  renderHeroBannersList();
+}
+
+async function toggleBannerActive(id) {
+  if (!AdminDashboard.homepageConfig.heroBanners) return;
+  const banner = AdminDashboard.homepageConfig.heroBanners.find(b => String(b.id) === String(id));
+  if (banner) {
+    banner.active = banner.active === false ? true : false;
+    await window.CarService.saveHomepageConfig(AdminDashboard.homepageConfig);
+    showToast(banner.active ? 'Slide activated on showroom!' : 'Slide disabled from showroom.');
+    renderHeroBannersList();
+  }
+}
+
+async function deleteBannerSlide(id) {
+  if (!confirm('Are you sure you want to delete this banner slide?')) return;
+  if (!AdminDashboard.homepageConfig.heroBanners) return;
+
+  AdminDashboard.homepageConfig.heroBanners = AdminDashboard.homepageConfig.heroBanners.filter(b => String(b.id) !== String(id));
+  await window.CarService.saveHomepageConfig(AdminDashboard.homepageConfig);
+  showToast('Banner slide deleted.');
+  logActivity('Deleted a hero banner slide');
+  renderHeroBannersList();
 }
 
 async function saveHomepageConfig(e) {
@@ -881,6 +1073,7 @@ async function saveHomepageConfig(e) {
   const heroImage = document.getElementById('hp-hero-image').value.trim();
 
   AdminDashboard.homepageConfig = {
+    ...AdminDashboard.homepageConfig,
     heroHeading,
     heroSubtitle: heroSub,
     heroSub,
@@ -888,7 +1081,7 @@ async function saveHomepageConfig(e) {
   };
 
   await window.CarService.saveHomepageConfig(AdminDashboard.homepageConfig);
-  showToast('Homepage configuration saved successfully!');
+  showToast('Homepage fallback configuration saved successfully!');
   logActivity('Updated Homepage content');
 }
 

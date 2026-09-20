@@ -706,33 +706,54 @@
         </section>
 
         <!-- =================================================================== -->
-        <!-- VIEW 5: HOMEPAGE MANAGER -->
+        <!-- VIEW 5: HOMEPAGE & HERO BANNERS MANAGER -->
         <!-- =================================================================== -->
         <section id="view-homepage" class="admin-view-panel">
           
+          <!-- Hero Carousel Banners Manager -->
           <div class="admin-card-box">
+            <div class="admin-card-header" style="flex-wrap: wrap; gap: 0.75rem;">
+              <div>
+                <div class="admin-card-title">
+                  <i class="fas fa-images text-primary"></i> Hero Banner Carousel Slides
+                </div>
+                <p style="font-size: 0.8rem; color: var(--text-muted); margin-top: 0.2rem;">
+                  Add, edit, or remove slides that auto-rotate on the showroom homepage.
+                </p>
+              </div>
+              <button type="button" class="btn btn-lime btn-sm" onclick="openAddBannerModal()">
+                <i class="fas fa-plus-circle"></i> + Add New Banner Slide
+              </button>
+            </div>
+
+            <!-- Slides List Container -->
+            <div id="hero-banners-list-container" style="padding: 1.25rem; display: flex; flex-direction: column; gap: 1rem;">
+              <!-- Dynamically populated -->
+            </div>
+          </div>
+
+          <!-- Legacy Single Header Fallback & Quick Settings -->
+          <div class="admin-card-box" style="margin-top: 1.5rem;">
             <div class="admin-card-header">
               <div class="admin-card-title">
-                <i class="fas fa-desktop text-primary"></i> Public Homepage Content Editor
+                <i class="fas fa-desktop text-primary"></i> Showroom Primary Headline Fallback
               </div>
             </div>
 
             <form onsubmit="saveHomepageConfig(event)" style="padding: 1.5rem;">
-              <h3 style="font-size: 1rem; font-weight: 800; color: #071426; margin-bottom: 1rem;">Hero Showcase Section</h3>
-
               <div class="form-field-group">
-                <label class="form-field-lbl">Hero Headline</label>
-                <input type="text" id="hp-hero-heading" class="form-input-ctrl" required>
+                <label class="form-field-lbl">Hero Main Headline</label>
+                <input type="text" id="hp-hero-heading" class="form-input-ctrl" placeholder="Tested, Certified & Road Ready" required>
               </div>
 
               <div class="form-field-group">
                 <label class="form-field-lbl">Hero Subtitle</label>
-                <textarea id="hp-hero-sub" class="form-input-ctrl" rows="2" required></textarea>
+                <textarea id="hp-hero-sub" class="form-input-ctrl" rows="2" placeholder="140-Point Quality Inspection • Instant Financing • Salem & Vazhapadi" required></textarea>
               </div>
 
               <div class="form-columns-2" style="margin-bottom: 1.5rem;">
                 <div class="form-field-group">
-                  <label class="form-field-lbl">Hero Background Image URL</label>
+                  <label class="form-field-lbl">Hero Default Image URL</label>
                   <input type="url" id="hp-hero-image" class="form-input-ctrl" oninput="document.getElementById('hp-hero-preview').src=this.value;" required>
                 </div>
 
@@ -745,7 +766,7 @@
               </div>
 
               <button type="submit" class="btn btn-lime">
-                <i class="fas fa-save"></i> Save Homepage Changes
+                <i class="fas fa-save"></i> Save Fallback Headline
               </button>
             </form>
           </div>
@@ -909,9 +930,87 @@
     </div>
   </div>
 
+  <!-- ADD / EDIT HERO BANNER SLIDE MODAL -->
+  <div id="bannerModal" class="admin-modal-backdrop" role="dialog" aria-modal="true">
+    <div class="admin-modal-container" style="max-width: 620px;">
+      <div class="admin-modal-header">
+        <h3 id="banner-modal-title" style="font-size: 1.15rem; font-weight: 800; color: #071426; display: flex; align-items: center; gap: 0.5rem;">
+          <i class="fas fa-images text-primary"></i> Add Banner Slide
+        </h3>
+        <button type="button" class="modal-dismiss" onclick="closeBannerModal()">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+
+      <form onsubmit="handleBannerSubmit(event)">
+        <div class="admin-modal-body">
+          <input type="hidden" id="banner-edit-id">
+
+          <div class="form-columns-2">
+            <div class="form-field-group">
+              <label class="form-field-lbl">Badge / Tag Text *</label>
+              <input type="text" id="banner-tag-input" class="form-input-ctrl" placeholder="e.g. Certified Pre-Owned, 100% Non-Accidental" required>
+            </div>
+
+            <div class="form-field-group">
+              <label class="form-field-lbl">Tag Icon</label>
+              <select id="banner-icon-select" class="form-input-ctrl">
+                <option value="fa-certificate">Certificate (fa-certificate)</option>
+                <option value="fa-shield-alt">Shield / Non-Accidental (fa-shield-alt)</option>
+                <option value="fa-bolt">Lightning / Fast EMI (fa-bolt)</option>
+                <option value="fa-star">Star / Featured (fa-star)</option>
+                <option value="fa-award">Award (fa-award)</option>
+                <option value="fa-car">Car (fa-car)</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-field-group">
+            <label class="form-field-lbl">Slide Headline *</label>
+            <input type="text" id="banner-heading-input" class="form-input-ctrl" placeholder="e.g. Multi-Brand Pre-Owned Showroom" required>
+          </div>
+
+          <div class="form-field-group">
+            <label class="form-field-lbl">Slide Subtitle / Highlights *</label>
+            <textarea id="banner-sub-input" class="form-input-ctrl" rows="2" placeholder="e.g. Verified Kilometers • Single Owner Options • Fast RC Transfer" required></textarea>
+          </div>
+
+          <div class="form-field-group">
+            <label class="form-field-lbl">Banner Image URL *</label>
+            <input type="url" id="banner-image-input" class="form-input-ctrl" placeholder="https://..." oninput="document.getElementById('banner-preview-img').src=this.value;" required>
+          </div>
+
+          <div style="margin-bottom: 1rem;">
+            <label class="form-field-lbl">Slide Preview</label>
+            <div style="height: 140px; border-radius: var(--radius-md); overflow: hidden; background: #071426; border: 1px solid var(--border-color); position: relative;">
+              <img id="banner-preview-img" src="https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&w=1200&q=80" style="width: 100%; height: 100%; object-fit: cover;" alt="Banner Preview">
+              <div style="position: absolute; bottom: 8px; left: 12px; color: white; text-shadow: 0 2px 4px rgba(0,0,0,0.8); font-size: 0.85rem; font-weight: 700;">
+                Live Preview
+              </div>
+            </div>
+          </div>
+
+          <div style="display: flex; align-items: center; gap: 0.6rem; padding: 0.5rem 0;">
+            <input type="checkbox" id="banner-active-input" checked style="width: 18px; height: 18px; accent-color: #071426;">
+            <label for="banner-active-input" style="font-weight: 700; font-size: 0.88rem; color: #071426; cursor: pointer;">
+              Active in Showroom Carousel (Auto-rotates live)
+            </label>
+          </div>
+        </div>
+
+        <div class="admin-modal-footer">
+          <button type="button" class="btn btn-outline" onclick="closeBannerModal()">Cancel</button>
+          <button type="submit" class="btn btn-lime">
+            <i class="fas fa-save"></i> Save Banner Slide
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
   <!-- SCRIPTS -->
-  <script src="js/supabase-config.js?v=3.0"></script>
-  <script src="js/cars-data.js?v=3.0"></script>
-  <script src="js/admin-dashboard.js?v=3.0"></script>
+  <script src="js/supabase-config.js?v=3.2"></script>
+  <script src="js/cars-data.js?v=3.2"></script>
+  <script src="js/admin-dashboard.js?v=3.2"></script>
 </body>
 </html>
