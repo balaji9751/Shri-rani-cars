@@ -98,6 +98,17 @@ async function loadDashboardData() {
 }
 
 function setupGlobalListeners() {
+  // Mobile Sidebar Toggle
+  const toggleBtn = document.getElementById('sidebar-toggle-btn');
+  if (toggleBtn) {
+    toggleBtn.addEventListener('click', () => {
+      const sidebar = document.getElementById('admin-sidebar');
+      const overlay = document.getElementById('sidebar-overlay');
+      if (sidebar) sidebar.classList.toggle('open');
+      if (overlay) overlay.classList.toggle('active');
+    });
+  }
+
   // Realtime Events from Supabase
   window.addEventListener('shri_rani_cars_sync', async (e) => {
     console.log('⚡ Realtime cars update in Admin:', e.detail);
@@ -122,6 +133,13 @@ function setupGlobalListeners() {
     if (AdminDashboard.currentView === 'settings') renderSettings();
     else if (AdminDashboard.currentView === 'homepage') renderHomepageManager();
   });
+}
+
+function closeMobileSidebar() {
+  const sidebar = document.getElementById('admin-sidebar');
+  const overlay = document.getElementById('sidebar-overlay');
+  if (sidebar) sidebar.classList.remove('open');
+  if (overlay) overlay.classList.remove('active');
 }
 
 // Activity Logger
