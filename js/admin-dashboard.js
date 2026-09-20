@@ -616,19 +616,18 @@ function addCustomFeature() {
 }
 
 // Image Drag & Drop & Upload Handling
-function handleImageFileUpload(event) {
+async function handleImageFileUpload(event) {
   const files = event.target.files;
   if (!files || files.length === 0) return;
 
+  showToast(`Optimizing ${files.length} image${files.length > 1 ? 's' : ''} from gallery...`, 'info');
   for (let i = 0; i < files.length; i++) {
     const file = files[i];
-    const reader = new FileReader();
-    reader.onload = function(e) {
-      AdminDashboard.carFormImages.push(e.target.result);
-      renderImageGalleryThumbnails();
-    };
-    reader.readAsDataURL(file);
+    const compressed = await compressImageFile(file, 1200, 800, 0.85);
+    AdminDashboard.carFormImages.push(compressed);
   }
+  renderImageGalleryThumbnails();
+  showToast('Photos added to vehicle gallery!', 'success');
 }
 
 function addImageByUrl() {
@@ -970,6 +969,40 @@ function renderHeroBannersList() {
   }).join('');
 }
 
+// Image File Compressor for Fast Loading on Slow Internet
+function compressImageFile(file, maxWidth = 1200, maxHeight = 800, quality = 0.85) {
+  return new Promise((resolve) => {
+    const reader = new FileReader();
+    reader.onload = function(e) {
+      const img = new Image();
+      img.onload = function() {
+        const canvas = document.createElement('canvas');
+        let width = img.width;
+        let height = img.height;
+
+        if (width > maxWidth) {
+          height = Math.round((height * maxWidth) / width);
+          width = maxWidth;
+        }
+        if (height > maxHeight) {
+          width = Math.round((width * maxHeight) / height);
+          height = maxHeight;
+        }
+
+        canvas.width = width;
+        canvas.height = height;
+        const ctx = canvas.getContext('2d');
+        ctx.drawImage(img, 0, 0, width, height);
+
+        const compressedDataUrl = canvas.toDataURL('image/jpeg', quality);
+        resolve(compressedDataUrl);
+      };
+      img.src = e.target.result;
+    };
+    reader.readAsDataURL(file);
+  });
+}
+
 // Modal Controllers for Banner Slides
 function openAddBannerModal() {
   document.getElementById('banner-modal-title').innerHTML = '<i class="fas fa-plus-circle text-primary"></i> Add Hero Banner Slide';
@@ -981,6 +1014,13 @@ function openAddBannerModal() {
   document.getElementById('banner-image-input').value = 'https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&w=1200&q=80';
   document.getElementById('banner-preview-img').src = 'https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&w=1200&q=80';
   document.getElementById('banner-active-input').checked = true;
+
+  const zoomSlider = document.getElementById('banner-zoom-slider');
+  const posSelect = document.getElementById('banner-pos-select');
+  if (zoomSlider) zoomSlider.value = 100;
+  if (posSelect) posSelect.value = 'center';
+  adjustBannerCrop();
+  syncCropLivePreview();
 
   const modal = document.getElementById('bannerModal');
   if (modal) {
@@ -1006,6 +1046,13 @@ function openEditBannerModal(id) {
   document.getElementById('banner-preview-img').src = banner.image || '';
   document.getElementById('banner-active-input').checked = banner.active !== false;
 
+  const zoomSlider = document.getElementById('banner-zoom-slider');
+  const posSelect = document.getElementById('banner-pos-select');
+  if (zoomSlider) zoomSlider.value = 100;
+  if (posSelect) posSelect.value = 'center';
+  adjustBannerCrop();
+  syncCropLivePreview();
+
   const modal = document.getElementById('bannerModal');
   if (modal) {
     modal.classList.add('active');
@@ -1018,6 +1065,55 @@ function closeBannerModal() {
   if (modal) {
     modal.classList.remove('active');
     document.body.style.overflow = '';
+  }
+}
+
+async function handleBannerFileInput(event) {
+  const file = event.target.files && event.target.files[0];
+  if (!file) return;
+
+  showToast('Optimizing image from gallery...', 'info');
+  const compressed = await compressImageFile(file, 1400, 800, 0.88);
+  
+  const input = document.getElementById('banner-image-input');
+  if (input) input.value = compressed;
+  
+  updateBannerLivePreview(compressed);
+  showToast('Image loaded! Ready to save.', 'success');
+}
+
+function updateBannerLivePreview(url) {
+  const prevImg = document.getElementById('banner-preview-img');
+  if (prevImg) {
+    prevImg.src = url || 'https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&w=1200&q=80';
+  }
+}
+
+function adjustBannerCrop() {
+  const zoomSlider = document.getElementById('banner-zoom-slider');
+  const posSelect = document.getElementById('banner-pos-select');
+  const prevImg = document.getElementById('banner-preview-img');
+
+  if (prevImg) {
+    const scale = (zoomSlider ? zoomSlider.value : 100) / 100;
+    const pos = posSelect ? posSelect.value : 'center';
+    
+    prevImg.style.transform = `scale(${scale})`;
+    prevImg.style.objectPosition = pos;
+  }
+}
+
+function syncCropLivePreview() {
+  const headInput = document.getElementById('banner-heading-input');
+  const tagInput = document.getElementById('banner-tag-input');
+  const cropHead = document.getElementById('crop-head-preview');
+  const cropTag = document.getElementById('crop-tag-badge');
+
+  if (cropHead && headInput) {
+    cropHead.textContent = headInput.value.trim() || 'Headline Preview';
+  }
+  if (cropTag && tagInput) {
+    cropTag.textContent = tagInput.value.trim() || 'Certified Pre-Owned';
   }
 }
 

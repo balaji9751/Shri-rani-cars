@@ -1413,4 +1413,71 @@ select.form-input-ctrl,
   }
 }
 
+/* ==========================================================================
+   INTERACTIVE CROP & FRAMING PREVIEW (WHATSAPP-STYLE)
+   ========================================================================== */
+.crop-preview-container {
+  position: relative;
+  background: #071426;
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.25);
+}
+
+.crop-grid-overlay {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  border: 2px solid rgba(132, 212, 0, 0.65);
+  border-radius: var(--radius-md);
+}
+
+.grid-line-h {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: rgba(255, 255, 255, 0.35);
+  box-shadow: 0 0 2px rgba(0, 0, 0, 0.5);
+}
+
+.grid-line-h.h1 { top: 33.33%; }
+.grid-line-h.h2 { top: 66.66%; }
+
+.grid-line-v {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 1px;
+  background: rgba(255, 255, 255, 0.35);
+  box-shadow: 0 0 2px rgba(0, 0, 0, 0.5);
+}
+
+.grid-line-v.v1 { left: 33.33%; }
+.grid-line-v.v2 { left: 66.66%; }
+
+.crop-caption-preview {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 0.75rem 1rem;
+  background: linear-gradient(180deg, transparent 0%, rgba(7, 20, 38, 0.85) 100%);
+  pointer-events: none;
+  z-index: 2;
+}
+
+.crop-tag-pill {
+  display: inline-block;
+  font-size: 0.68rem;
+  font-weight: 800;
+  color: var(--admin-lime);
+  background: rgba(7, 20, 38, 0.9);
+  padding: 0.15rem 0.45rem;
+  border-radius: var(--radius-full);
+  margin-bottom: 0.2rem;
+  border: 1px solid rgba(132, 212, 0, 0.4);
+}
+
+
 

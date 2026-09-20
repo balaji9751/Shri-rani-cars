@@ -967,7 +967,7 @@
 
           <div class="form-field-group">
             <label class="form-field-lbl">Slide Headline *</label>
-            <input type="text" id="banner-heading-input" class="form-input-ctrl" placeholder="e.g. Multi-Brand Pre-Owned Showroom" required>
+            <input type="text" id="banner-heading-input" class="form-input-ctrl" placeholder="e.g. Multi-Brand Pre-Owned Showroom" oninput="syncCropLivePreview()" required>
           </div>
 
           <div class="form-field-group">
@@ -975,17 +975,60 @@
             <textarea id="banner-sub-input" class="form-input-ctrl" rows="2" placeholder="e.g. Verified Kilometers • Single Owner Options • Fast RC Transfer" required></textarea>
           </div>
 
+          <!-- Image Upload Options -->
           <div class="form-field-group">
-            <label class="form-field-lbl">Banner Image URL *</label>
-            <input type="url" id="banner-image-input" class="form-input-ctrl" placeholder="https://..." oninput="document.getElementById('banner-preview-img').src=this.value;" required>
+            <label class="form-field-lbl">Banner Image (Gallery Upload or Web Link) *</label>
+            
+            <div style="display: flex; gap: 0.5rem; margin-bottom: 0.65rem; flex-wrap: wrap;">
+              <button type="button" class="btn btn-outline btn-sm" onclick="document.getElementById('banner-file-picker').click()" style="background: #F8FAFC; border: 1.5px solid #CBD5E1; color: #071426; font-weight: 700;">
+                <i class="fas fa-folder-open text-primary"></i> 📁 Choose from Phone Gallery / Device
+              </button>
+              <input type="file" id="banner-file-picker" accept="image/*" style="display: none;" onchange="handleBannerFileInput(event)">
+            </div>
+
+            <input type="url" id="banner-image-input" class="form-input-ctrl" placeholder="Or paste direct image URL (https://...)" oninput="updateBannerLivePreview(this.value)" required>
           </div>
 
-          <div style="margin-bottom: 1rem;">
-            <label class="form-field-lbl">Slide Preview</label>
-            <div style="height: 140px; border-radius: var(--radius-md); overflow: hidden; background: #071426; border: 1px solid var(--border-color); position: relative;">
-              <img id="banner-preview-img" src="https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&w=1200&q=80" style="width: 100%; height: 100%; object-fit: cover;" alt="Banner Preview">
-              <div style="position: absolute; bottom: 8px; left: 12px; color: white; text-shadow: 0 2px 4px rgba(0,0,0,0.8); font-size: 0.85rem; font-weight: 700;">
-                Live Preview
+          <!-- Interactive WhatsApp-style Crop & Framing Preview -->
+          <div style="margin-bottom: 1.25rem;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.4rem;">
+              <label class="form-field-lbl" style="margin: 0;"><i class="fas fa-crop-alt text-primary"></i> Live Carousel Framing & Crop Preview</label>
+              <span style="font-size: 0.72rem; font-weight: 700; color: #059669; background: #ECFDF5; padding: 0.15rem 0.5rem; border-radius: 999px;">
+                16:9 Banner Format
+              </span>
+            </div>
+
+            <div class="crop-preview-container" id="banner-crop-box" style="position: relative; height: 160px; border-radius: var(--radius-md); overflow: hidden; background: #071426; border: 1.5px solid var(--border-color);">
+              <img id="banner-preview-img" src="https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&w=1200&q=80" style="width: 100%; height: 100%; object-fit: cover; transition: transform 0.2s ease, object-position 0.2s ease;" alt="Banner Preview">
+              
+              <!-- Rule of Thirds WhatsApp-style Grid Lines Overlay -->
+              <div class="crop-grid-overlay">
+                <div class="grid-line-h h1"></div>
+                <div class="grid-line-h h2"></div>
+                <div class="grid-line-v v1"></div>
+                <div class="grid-line-v v2"></div>
+              </div>
+
+              <!-- Live Caption Overlay Preview -->
+              <div class="crop-caption-preview">
+                <span id="crop-tag-badge" class="crop-tag-pill">Certified Pre-Owned</span>
+                <div id="crop-head-preview" style="font-weight: 800; font-size: 0.92rem; color: #FFFFFF; text-shadow: 0 2px 4px rgba(0,0,0,0.8); line-height: 1.2;">Headline Preview</div>
+              </div>
+            </div>
+
+            <!-- Framing Controls (Zoom & Vertical Focus) -->
+            <div style="display: flex; align-items: center; gap: 1rem; margin-top: 0.65rem; background: #F8FAFC; padding: 0.5rem 0.85rem; border-radius: var(--radius-sm); border: 1px solid var(--border-color); flex-wrap: wrap;">
+              <div style="display: flex; align-items: center; gap: 0.4rem; font-size: 0.78rem; font-weight: 700; color: #334155;">
+                <i class="fas fa-search-plus"></i> Zoom:
+                <input type="range" id="banner-zoom-slider" min="100" max="180" value="100" style="width: 80px; accent-color: #071426;" oninput="adjustBannerCrop()">
+              </div>
+              <div style="display: flex; align-items: center; gap: 0.4rem; font-size: 0.78rem; font-weight: 700; color: #334155;">
+                <i class="fas fa-arrows-alt-v"></i> Focus:
+                <select id="banner-pos-select" class="form-input-ctrl" style="padding: 0.2rem 0.5rem; font-size: 0.75rem; width: auto;" onchange="adjustBannerCrop()">
+                  <option value="center">Center</option>
+                  <option value="top">Top</option>
+                  <option value="bottom">Bottom</option>
+                </select>
               </div>
             </div>
           </div>
