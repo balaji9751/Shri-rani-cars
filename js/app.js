@@ -371,29 +371,27 @@ function renderInventoryGrid() {
             </div>
           </div>
 
-          <!-- Price -->
+          <!-- Price Block -->
           <div class="card-price-block">
-            <div class="price-left-box">
-              <div class="price-row-wrap">
-                <span class="price-val-main">${formatCurrency(car.price)}</span>
-                ${origPriceHtml}
-              </div>
-              <div class="price-emi-text">${calculateMonthlyEmi(car.price)}</div>
+            <div class="price-row-wrap">
+              <span class="price-val-main">${formatCurrency(car.price)}</span>
+              ${origPriceHtml}
             </div>
-            <div class="owner-pill-badge">
-              <i class="fas fa-user-check"></i> ${car.owners || '1st Owner'}
+            <div class="price-meta-subrow">
+              <span class="price-emi-text">${calculateMonthlyEmi(car.price)}</span>
+              <span class="owner-pill-badge"><i class="fas fa-user-check"></i> ${car.owners || '1st Owner'}</span>
             </div>
           </div>
 
           <!-- Actions -->
           <div class="card-actions-row" onclick="event.stopPropagation()">
-            <button type="button" class="btn btn-outline btn-sm" onclick="viewCarDetails('${car.id}')">
-              <i class="fas fa-eye"></i> View Details
+            <button type="button" class="btn-card-view" onclick="viewCarDetails('${car.id}')">
+              <i class="fas fa-eye"></i> <span>View Details</span>
             </button>
-            <a href="https://wa.me/917550172585?text=Hello%20Sri%20Rani%20Cars,%20I%20am%20interested%20in%20*${encodeURIComponent(car.title)}*%20(${car.year},%20${formatCurrency(car.price)}).%20Please%20share%20details." target="_blank" class="btn btn-whatsapp btn-sm" title="WhatsApp">
+            <a href="https://wa.me/917550172585?text=Hello%20Sri%20Rani%20Cars,%20I%20am%20interested%20in%20*${encodeURIComponent(car.title)}*%20(${car.year},%20${formatCurrency(car.price)}).%20Please%20share%20details." target="_blank" class="btn-card-wa" title="WhatsApp" aria-label="WhatsApp">
               <i class="fab fa-whatsapp"></i>
             </a>
-            <a href="tel:9750332585" class="btn btn-call btn-sm" title="Call Showroom">
+            <a href="tel:9750332585" class="btn-card-call" title="Call Showroom" aria-label="Call">
               <i class="fas fa-phone-alt"></i>
             </a>
           </div>
@@ -433,6 +431,7 @@ function resetFilters() {
   applyFilters();
 }
 
+// ==========================================================================
 // ==========================================================================
 // FULL-PAGE FLIPKART/AMAZON STYLE CAR PRODUCT VIEW
 // ==========================================================================
@@ -516,16 +515,30 @@ function viewCarDetails(carId) {
     favBtn.innerHTML = `<i class="${isFav ? 'fas' : 'far'} fa-heart"></i>`;
   }
 
-  // Gallery Setup
+  // Robust Gallery & Image Setup
   let gallery = [];
-  if (car.gallery && Array.isArray(car.gallery) && car.gallery.length > 0) {
-    gallery = car.gallery;
-  } else if (car.image_url) {
-    gallery = [car.image_url];
-  } else {
-    gallery = ['https://images.unsplash.com/photo-1590362891991-f776e747a588?auto=format&fit=crop&w=1000&q=80'];
+  if (Array.isArray(car.gallery) && car.gallery.length > 0) {
+    gallery = car.gallery.filter(Boolean);
+  } else if (typeof car.gallery === 'string' && car.gallery.trim()) {
+    try {
+      const parsed = JSON.parse(car.gallery);
+      if (Array.isArray(parsed)) gallery = parsed.filter(Boolean);
+      else gallery = [car.gallery.trim()];
+    } catch (e) {
+      gallery = car.gallery.split(',').map(s => s.trim()).filter(Boolean);
+    }
   }
+
+  if (car.image_url && !gallery.includes(car.image_url)) {
+    gallery.unshift(car.image_url);
+  }
+
+  if (gallery.length === 0) {
+    gallery = ['icons/app-logo.png'];
+  }
+
   AppState.currentGallery = gallery;
+  AppState.currentGalleryIdx = 0;
   renderProductGallery(gallery);
 
   // Technical Specs Grid
@@ -563,8 +576,7 @@ function viewCarDetails(carId) {
   // Conversion CTAs
   const waBtn = document.getElementById('product-whatsapp-cta');
   if (waBtn) {
-    const waText = encodeURIComponent(`Hello Sri Rani Cars! I am interested in purchasing / booking *${car.title}* (${car.year} Model, ${car.fuel_type}, Price: ${formatCurrency(car.price)}). Please provide more photos and financing details.`);
-    waBtn.href = `https://wa.me/917550172585?text=${waText}`;
+    waBtn.onclick = handleProductWhatsAppInquiry;
   }
 
   const callBtn = document.getElementById('product-call-cta');
@@ -574,6 +586,34 @@ function viewCarDetails(carId) {
 
   // Render All Available / Similar Cars Below Details View
   renderSimilarCars(car);
+}
+
+// Dedicated WhatsApp Inquiry Handler with Full Vehicle Details
+function handleProductWhatsAppInquiry(e) {
+  if (e) e.preventDefault();
+  const car = AppState.currentCar;
+  if (!car) return;
+
+  const phone = '917550172585';
+  const priceText = formatCurrency(car.price);
+  const msg = [
+    `🚗 *SRI RANI CARS — SHOWROOM VEHICLE INQUIRY*`,
+    `---------------------------------------------`,
+    `📌 *Vehicle:* ${car.title || 'Car'}`,
+    `💰 *Price:* ${priceText}`,
+    `📅 *Reg. Year:* ${car.year || 'N/A'}`,
+    `⛽ *Fuel Type:* ${car.fuel_type || 'Petrol'}`,
+    `⚙️ *Transmission:* ${car.transmission || 'Manual'}`,
+    `🛣️ *Kilometers:* ${(car.kms || 0).toLocaleString('en-IN')} km`,
+    `👤 *Ownership:* ${car.owners || '1st Owner'}`,
+    `🎨 *Color:* ${car.color || 'Standard'}`,
+    `📍 *RTO / Location:* ${car.rto || 'TN 54 (Salem)'}`,
+    `---------------------------------------------`,
+    `Hello Sri Rani Cars! I am interested in purchasing / inspecting this vehicle. Please share full photos, service records, and test drive booking details.`
+  ].join('\n');
+
+  const waUrl = `https://api.whatsapp.com/send?phone=${phone}&text=${encodeURIComponent(msg)}`;
+  window.open(waUrl, '_blank');
 }
 
 function renderProductGallery(gallery) {
@@ -589,7 +629,7 @@ function renderProductGallery(gallery) {
     if (gallery.length > 1) {
       thumbsBox.style.display = 'flex';
       thumbsBox.innerHTML = gallery.map((img, idx) => `
-        <img src="${img}" class="product-thumb-item ${idx === AppState.currentGalleryIdx ? 'active' : ''}" onclick="setProductGalleryIdx(${idx})" alt="Thumbnail ${idx + 1}" onerror="this.src='https://images.unsplash.com/photo-1590362891991-f776e747a588?auto=format&fit=crop&w=400&q=80'">
+        <img src="${img}" class="product-thumb-item ${idx === AppState.currentGalleryIdx ? 'active' : ''}" onclick="setProductGalleryIdx(${idx})" alt="Thumbnail ${idx + 1}" onerror="this.onerror=null; this.src='icons/app-logo.png';">
       `).join('');
     } else {
       thumbsBox.style.display = 'none';

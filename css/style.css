@@ -782,20 +782,12 @@ input, select, textarea {
 
 .card-price-block {
   display: flex;
-  justify-content: space-between;
-  align-items: flex-end;
-  margin-top: auto;
-  padding-top: 0.5rem;
-  border-top: 1px dashed var(--border-light);
-  margin-bottom: 0.65rem;
-  gap: 0.35rem;
-}
-
-.price-left-box {
-  display: flex;
   flex-direction: column;
-  min-width: 0;
-  flex: 1;
+  gap: 0.2rem;
+  margin-top: auto;
+  padding-top: 0.45rem;
+  border-top: 1px dashed var(--border-light);
+  margin-bottom: 0.55rem;
 }
 
 .price-row-wrap {
@@ -806,7 +798,7 @@ input, select, textarea {
 }
 
 .price-val-main {
-  font-size: 1.02rem;
+  font-size: 1.05rem;
   font-weight: 800;
   color: var(--primary-navy);
   line-height: 1.1;
@@ -826,43 +818,123 @@ input, select, textarea {
   white-space: nowrap;
 }
 
+.price-meta-subrow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.35rem;
+  font-size: 0.68rem;
+}
+
 .price-emi-text {
   font-size: 0.68rem;
-  color: #4a8000;
+  color: #16a34a;
   font-weight: 700;
-  margin-top: 0.15rem;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  max-width: 60%;
 }
 
 .owner-pill-badge {
   font-size: 0.68rem;
-  color: var(--text-muted);
+  color: #64748B;
   font-weight: 700;
   white-space: nowrap;
-  display: flex;
+  display: inline-flex;
   align-items: center;
   gap: 0.2rem;
   flex-shrink: 0;
 }
 
 .owner-pill-badge i {
-  color: var(--lime);
+  color: #84D400;
 }
 
 .card-actions-row {
-  display: grid;
-  grid-template-columns: 1fr auto auto;
+  display: flex;
   gap: 0.35rem;
+  align-items: center;
 }
 
-@media (max-width: 480px) {
-  .card-actions-row {
-    grid-template-columns: 1fr auto;
+.btn-card-view {
+  flex: 1;
+  min-width: 0;
+  padding: 0.42rem 0.35rem;
+  font-size: 0.72rem;
+  font-weight: 800;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.3rem;
+  border-radius: var(--radius-sm);
+  background: #FFFFFF;
+  color: var(--primary-navy);
+  border: 1px solid var(--border-light);
+  cursor: pointer;
+  transition: var(--transition);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-family: inherit;
+}
+
+.btn-card-view:hover {
+  background: var(--primary-navy);
+  color: var(--lime);
+  border-color: var(--primary-navy);
+}
+
+.btn-card-wa {
+  width: 32px;
+  height: 32px;
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-sm);
+  background: #25D366;
+  color: #FFFFFF !important;
+  font-size: 1rem;
+  border: none;
+  transition: var(--transition);
+  text-decoration: none;
+}
+
+.btn-card-wa:hover {
+  background: #20BA5A;
+  transform: scale(1.06);
+}
+
+.btn-card-call {
+  display: none;
+  width: 32px;
+  height: 32px;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-sm);
+  background: #071426;
+  color: #FFFFFF !important;
+  font-size: 0.85rem;
+  border: none;
+  transition: var(--transition);
+  text-decoration: none;
+}
+
+@media (min-width: 768px) {
+  .btn-card-view {
+    padding: 0.5rem 0.75rem;
+    font-size: 0.82rem;
   }
-  .card-actions-row .btn-call {
-    display: none;
+  .btn-card-wa {
+    width: 36px;
+    height: 36px;
+  }
+  .btn-card-call {
+    display: inline-flex;
+    width: 36px;
+    height: 36px;
   }
 }
 
@@ -1082,75 +1154,124 @@ input, select, textarea {
    ========================================================================== */
 .pwa-install-banner {
   position: fixed;
-  bottom: 64px; /* Above mobile bottom bar */
-  left: 0;
-  right: 0;
-  background: var(--primary-navy);
+  bottom: 60px; /* Above mobile bottom bar */
+  left: 10px;
+  right: 10px;
+  background: #071426;
   color: white;
-  padding: 0.75rem 1.25rem;
+  padding: 0.65rem 0.85rem;
   display: flex;
   align-items: center;
   justify-content: space-between;
+  gap: 0.65rem;
   z-index: 998;
-  box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.3);
-  border-top: 2px solid var(--lime);
+  border-radius: 12px;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.5);
+  border: 1px solid rgba(132, 212, 0, 0.45);
   animation: slideUp 0.3s ease;
 }
 
 @media (min-width: 992px) {
   .pwa-install-banner {
-    bottom: 0;
+    bottom: 20px;
+    left: auto;
+    right: 20px;
+    max-width: 420px;
   }
 }
 
 .pwa-banner-text {
-  font-size: 0.88rem;
+  font-size: 0.82rem;
   font-weight: 700;
   display: flex;
   align-items: center;
-  gap: 0.75rem;
+  gap: 0.6rem;
+  min-width: 0;
 }
 
 .pwa-banner-icon {
-  width: 44px;
-  height: 44px;
-  border-radius: 12px;
+  width: 38px;
+  height: 38px;
+  border-radius: 10px;
   object-fit: cover;
   flex-shrink: 0;
-  border: 1px solid rgba(132, 212, 0, 0.4);
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(132, 212, 0, 0.5);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+.pwa-banner-text strong {
+  font-size: 0.82rem;
+  font-weight: 800;
+  color: #FFFFFF;
+  display: block;
+  line-height: 1.2;
+}
+
+.pwa-banner-text p {
+  font-size: 0.7rem;
+  color: #94A3B8;
+  margin: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 170px;
+}
+
+@media (min-width: 640px) {
+  .pwa-banner-text p {
+    max-width: none;
+  }
 }
 
 .pwa-controls {
   display: flex;
   align-items: center;
-  gap: 0.65rem;
+  gap: 0.45rem;
+  flex-shrink: 0;
 }
 
+.pwa-btn-install,
 .pwa-install-btn {
-  background: var(--lime);
-  color: var(--primary-navy);
-  font-weight: 800;
-  font-size: 0.82rem;
-  padding: 0.45rem 1rem;
-  border-radius: var(--radius-sm);
-  transition: var(--transition);
+  background: #84D400 !important;
+  color: #071426 !important;
+  font-weight: 800 !important;
+  font-size: 0.78rem !important;
+  padding: 0.42rem 0.85rem !important;
+  border-radius: 6px !important;
+  border: none !important;
+  cursor: pointer !important;
+  white-space: nowrap !important;
+  box-shadow: 0 2px 8px rgba(132, 212, 0, 0.4) !important;
+  transition: all 0.2s ease !important;
+  font-family: inherit;
 }
 
+.pwa-btn-install:hover,
 .pwa-install-btn:hover {
-  background: var(--lime-hover);
-  transform: scale(1.03);
+  background: #A3E635 !important;
+  transform: scale(1.04) !important;
 }
 
+.pwa-btn-close,
 .pwa-close-btn {
-  color: #94A3B8;
-  font-size: 1.3rem;
-  line-height: 1;
-  padding: 0.2rem 0.4rem;
+  background: rgba(255, 255, 255, 0.15) !important;
+  color: #FFFFFF !important;
+  border: none !important;
+  width: 28px !important;
+  height: 28px !important;
+  border-radius: 50% !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  font-size: 0.82rem !important;
+  cursor: pointer !important;
+  flex-shrink: 0 !important;
+  transition: all 0.2s ease !important;
 }
 
+.pwa-btn-close:hover,
 .pwa-close-btn:hover {
-  color: white;
+  background: rgba(255, 255, 255, 0.3) !important;
 }
 
 @keyframes slideUp {
@@ -2395,6 +2516,133 @@ input, select, textarea {
   margin-top: 3rem;
   padding-top: 2rem;
   border-top: 2px dashed var(--border-light);
+}
+
+/* ==========================================================================
+   ULTRA-RESPONSIVE VIEWPORT POLISH (FROM 320PX TO 480PX MOBILE)
+   ========================================================================== */
+@media (max-width: 480px) {
+  .site-header .container {
+    padding: 0 0.75rem;
+  }
+  
+  .brand-titles h1 {
+    font-size: 1rem;
+    letter-spacing: -0.01em;
+  }
+  
+  .header-right {
+    gap: 0.3rem;
+  }
+  
+  .header-right .btn-sm {
+    padding: 0.35rem 0.55rem;
+    font-size: 0.75rem;
+  }
+
+  .car-grid-container {
+    gap: 0.65rem;
+  }
+
+  .card-content-area {
+    padding: 0.65rem;
+  }
+
+  .card-car-title {
+    font-size: 0.82rem;
+    min-height: 2.3em;
+  }
+
+  .card-specs-matrix {
+    padding: 0.3rem 0.15rem;
+    gap: 0.15rem;
+  }
+
+  .matrix-val {
+    font-size: 0.65rem;
+  }
+
+  .matrix-lbl {
+    font-size: 0.55rem;
+  }
+
+  .price-val-main {
+    font-size: 0.95rem;
+  }
+
+  .price-emi-text,
+  .owner-pill-badge {
+    font-size: 0.62rem;
+  }
+
+  .btn-card-view {
+    padding: 0.38rem 0.25rem;
+    font-size: 0.68rem;
+  }
+
+  .btn-card-wa {
+    width: 30px;
+    height: 30px;
+    font-size: 0.9rem;
+  }
+
+  .product-layout-grid {
+    gap: 1.15rem;
+  }
+
+  #product-title-main {
+    font-size: 1.35rem !important;
+  }
+
+  .product-price-big {
+    font-size: 1.45rem !important;
+  }
+
+  .product-specs-grid {
+    gap: 0.45rem;
+  }
+
+  .spec-tile {
+    padding: 0.6rem 0.65rem;
+    gap: 0.5rem;
+  }
+
+  .spec-tile-icon {
+    width: 30px;
+    height: 30px;
+    font-size: 0.85rem;
+  }
+
+  .spec-tile-val {
+    font-size: 0.78rem;
+  }
+}
+
+@media (max-width: 360px) {
+  .brand-titles h1 {
+    font-size: 0.88rem;
+  }
+  
+  .brand-logo-img {
+    width: 32px;
+    height: 32px;
+  }
+
+  .car-grid-container {
+    gap: 0.45rem;
+  }
+
+  .card-content-area {
+    padding: 0.5rem;
+  }
+
+  .price-val-main {
+    font-size: 0.88rem;
+  }
+
+  .btn-card-view span {
+    font-size: 0.62rem;
+  }
 }
 
 

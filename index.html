@@ -24,7 +24,7 @@
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
   <!-- Clean Luxury Unified Stylesheet -->
-  <link rel="stylesheet" href="css/style.css?v=2.8">
+  <link rel="stylesheet" href="css/style.css?v=3.0">
 </head>
 <body>
 
@@ -45,9 +45,8 @@
           <a href="#home" class="nav-link active" onclick="backToShowroom()">Home</a>
           <a href="#inventory-section" class="nav-link" onclick="backToShowroom()">Cars</a>
           <button type="button" class="nav-link" style="display: inline-flex; align-items: center; gap: 0.4rem;" onclick="openFilterModal()">
-            <i class="fas fa-sliders text-primary"></i> Filter & Search
+            <i class="fas fa-sliders text-primary"></i> Filter
           </button>
-          <a href="#location-section" class="nav-link" onclick="backToShowroom()">Location</a>
           <a href="#location-section" class="nav-link" onclick="backToShowroom()">Contact</a>
         </nav>
 
@@ -367,7 +366,7 @@
         <!-- LEFT COLUMN: Sticky Dynamic Image Gallery + Thumbnails -->
         <div class="product-left-gallery">
           <div class="main-image-viewport">
-            <img id="product-main-view-image" src="" alt="Sri Rani Cars Vehicle" onerror="this.src='https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&w=800&q=80'">
+            <img id="product-main-view-image" src="" alt="Sri Rani Cars Vehicle" onerror="this.onerror=null; this.src='icons/app-logo.png';">
             <div id="product-status-tag" class="product-status-badge">Available</div>
             <button type="button" class="btn-fav-round" id="product-fav-btn" onclick="toggleFavoriteFromProduct()" title="Save to Favorites">
               <i class="far fa-heart"></i>
@@ -427,7 +426,7 @@
 
           <!-- Big Conversion Action Buttons -->
           <div class="product-cta-cluster">
-            <a id="product-whatsapp-cta" href="javascript:void(0)" target="_blank" class="btn btn-whatsapp btn-lg" style="flex: 1;">
+            <a id="product-whatsapp-cta" href="javascript:void(0)" onclick="handleProductWhatsAppInquiry(event)" class="btn btn-whatsapp btn-lg" style="flex: 1;">
               <i class="fab fa-whatsapp" style="font-size: 1.25rem;"></i> Buy / Inquire on WhatsApp
             </a>
             <button type="button" class="btn btn-outline btn-lg" onclick="openTestDriveModalForCurrentCar()">
@@ -608,10 +607,6 @@
       <span>Filter</span>
     </button>
     <a href="#location-section" class="mob-nav-btn" onclick="backToShowroom()">
-      <i class="fas fa-map-marker-alt"></i>
-      <span>Location</span>
-    </a>
-    <a href="#location-section" class="mob-nav-btn" onclick="backToShowroom()">
       <i class="fas fa-phone-alt"></i>
       <span>Contact</span>
     </a>
@@ -699,16 +694,6 @@
         </button>
       </div>
       <div class="modal-content-body">
-        
-        <!-- Search -->
-        <div class="form-field-group">
-          <label class="form-field-lbl">Search by Make, Model or Year</label>
-          <div class="search-field">
-            <i class="fas fa-search"></i>
-            <input type="text" id="modal-search-input" class="form-input-ctrl" placeholder="e.g. Dzire, Thar, Creta, Diesel...">
-          </div>
-        </div>
-
         <div class="form-columns-2">
           <!-- Fuel Filter -->
           <div class="form-field-group">
@@ -887,9 +872,9 @@
   </div>
 
   <!-- JavaScript Modules -->
-  <script src="js/supabase-config.js?v=2.8"></script>
-  <script src="js/cars-data.js?v=2.8"></script>
-  <script src="js/app.js?v=2.8"></script>
+  <script src="js/supabase-config.js?v=3.0"></script>
+  <script src="js/cars-data.js?v=3.0"></script>
+  <script src="js/app.js?v=3.0"></script>
 
   <!-- PWA & Filter Drawer Helper Scripts -->
   <script>
@@ -947,13 +932,11 @@
     }
 
     function applyModalFilters() {
-      const s = document.getElementById('modal-search-input').value;
-      const f = document.getElementById('modal-fuel-select').value;
-      const t = document.getElementById('modal-trans-select').value;
-      const b = document.getElementById('modal-budget-select').value;
-      const sort = document.getElementById('modal-sort-select').value;
+      const f = document.getElementById('modal-fuel-select') ? document.getElementById('modal-fuel-select').value : 'all';
+      const t = document.getElementById('modal-trans-select') ? document.getElementById('modal-trans-select').value : 'all';
+      const b = document.getElementById('modal-budget-select') ? document.getElementById('modal-budget-select').value : 'all';
+      const sort = document.getElementById('modal-sort-select') ? document.getElementById('modal-sort-select').value : 'featured';
 
-      AppState.searchQuery = s;
       AppState.activeFuel = f;
       AppState.activeTransmission = t;
       AppState.activeBudget = b;
