@@ -143,13 +143,15 @@ input, select, textarea {
 }
 
 .sidebar-logo-img {
-  width: 40px;
-  height: 40px;
-  border-radius: var(--radius-md);
-  object-fit: cover;
+  width: 44px;
+  height: 38px;
+  border-radius: var(--radius-sm);
+  object-fit: contain;
+  background: #FFFFFF;
+  padding: 2px 4px;
   flex-shrink: 0;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-  border: 1px solid rgba(132, 212, 0, 0.35);
+  border: 1px solid rgba(132, 212, 0, 0.45);
 }
 
 .sidebar-logo-icon {
