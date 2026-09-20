@@ -1,0 +1,817 @@
+// SHRI RANI CARS - CORE CLIENT JAVASCRIPT & PRODUCT EXPERIENCE
+
+const AppState = {
+  cars: [],
+  filteredCars: [],
+  activeBrand: 'all',
+  activeFuel: 'all',
+  activeTransmission: 'all',
+  activeBodyType: 'all',
+  activeBudget: 'all',
+  sortBy: 'featured',
+  searchQuery: '',
+  favorites: JSON.parse(localStorage.getItem('shri_rani_favs_v2') || '[]'),
+  currentCar: null,
+  currentGalleryIdx: 0
+};
+
+document.addEventListener('DOMContentLoaded', async () => {
+  initToastShelf();
+  await loadInventory();
+  await syncHomepageFromConfig();
+  initListeners();
+  initStandaloneCalculator();
+  updateWishlistCount();
+
+  // Check URL hash for direct car linking e.g. #car_101
+  handleHashNavigation();
+  window.addEventListener('hashchange', handleHashNavigation);
+
+  // Realtime Supabase Sync Listeners
+  window.addEventListener('shri_rani_cars_sync', async (e) => {
+    console.log('⚡ Realtime cars update received in Showroom App:', e.detail);
+    await loadInventory();
+  });
+
+  window.addEventListener('shri_rani_settings_sync', async (e) => {
+    console.log('⚡ Realtime settings update received in Showroom App:', e.detail);
+    await syncHomepageFromConfig();
+  });
+});
+
+async function syncHomepageFromConfig() {
+  try {
+    const config = await window.CarService.getHomepageConfig();
+    if (config) {
+      const headingEl = document.getElementById('hero-main-heading');
+      const subEl = document.getElementById('hero-main-sub');
+      const imgEl = document.getElementById('hero-main-img');
+
+      if (headingEl && config.heroHeading) {
+        headingEl.innerHTML = config.heroHeading.replace(/\n/g, '<br>');
+      }
+      if (subEl && config.heroSubtitle) {
+        subEl.textContent = config.heroSubtitle;
+      }
+      if (imgEl && config.heroImage) {
+        imgEl.src = config.heroImage;
+      }
+    }
+  } catch (e) {
+    console.warn('Homepage sync error:', e);
+  }
+}
+
+// Toast System
+function showToast(message, type = 'success') {
+  let shelf = document.getElementById('toast-shelf');
+  if (!shelf) {
+    shelf = document.createElement('div');
+    shelf.id = 'toast-shelf';
+    shelf.className = 'toast-shelf';
+    document.body.appendChild(shelf);
+  }
+  const pill = document.createElement('div');
+  pill.className = `toast-pill ${type}`;
+  pill.innerHTML = `
+    <i class="fas ${type === 'success' ? 'fa-check-circle text-emerald' : 'fa-exclamation-circle text-red'}"></i>
+    <span>${message}</span>
+  `;
+  shelf.appendChild(pill);
+  setTimeout(() => {
+    pill.style.opacity = '0';
+    pill.style.transform = 'translateX(100%)';
+    pill.style.transition = 'all 0.3s ease';
+    setTimeout(() => pill.remove(), 300);
+  }, 3200);
+}
+
+function initToastShelf() {
+  if (!document.getElementById('toast-shelf')) {
+    const shelf = document.createElement('div');
+    shelf.id = 'toast-shelf';
+    shelf.className = 'toast-shelf';
+    document.body.appendChild(shelf);
+  }
+}
+
+// Fetch Inventory from Supabase / Data Service
+async function loadInventory() {
+  const grid = document.getElementById('inventory-grid');
+  if (grid) {
+    grid.innerHTML = `
+      <div style="grid-column: 1/-1; text-align: center; padding: 3.5rem 1rem;">
+        <i class="fas fa-spinner fa-spin" style="font-size: 2.5rem; color: var(--primary);"></i>
+        <h3 style="margin-top: 1rem; font-weight: 700; color: #0f172a;">Loading Showroom Cars...</h3>
+        <p class="text-muted">Fetching certified pre-owned vehicles from Sri Rani Cars.</p>
+      </div>
+    `;
+  }
+
+  const rawCars = await window.CarService.getCars();
+  AppState.cars = rawCars.filter(c => c.status !== 'Hidden' && c.status !== 'Draft');
+  renderBrandScroller();
+  applyFilters();
+}
+
+function formatCurrency(num) {
+  if (!num) return '₹ 0';
+  if (num >= 10000000) {
+    return `₹ ${(num / 10000000).toFixed(2)} Cr`;
+  } else if (num >= 100000) {
+    return `₹ ${(num / 100000).toFixed(2)} Lakh`;
+  }
+  return `₹ ${Number(num).toLocaleString('en-IN')}`;
+}
+
+function calculateMonthlyEmi(price) {
+  const principal = price * 0.8; // 80% loan
+  const r = 9.5 / (12 * 100);    // 9.5% annual interest
+  const months = 60;             // 5 years
+  const emi = (principal * r * Math.pow(1 + r, months)) / (Math.pow(1 + r, months) - 1);
+  return `EMI from ₹ ${Math.round(emi).toLocaleString('en-IN')}/mo`;
+}
+
+// Brand Filter Scroller
+function renderBrandScroller() {
+  const box = document.getElementById('brand-scroller-box');
+  if (!box) return;
+
+  const counts = { all: AppState.cars.length };
+  AppState.cars.forEach(c => {
+    const b = c.brand || 'Other';
+    counts[b] = (counts[b] || 0) + 1;
+  });
+
+  const brands = ['all', ...Object.keys(counts).filter(b => b !== 'all').sort()];
+
+  box.innerHTML = brands.map(brand => {
+    const isAll = brand === 'all';
+    const label = isAll ? 'All Brands' : brand;
+    const isActive = AppState.activeBrand === brand;
+    return `
+      <button type="button" class="brand-pill ${isActive ? 'active' : ''}" onclick="filterByBrand('${brand}')">
+        <span>${label}</span>
+        <span class="pill-count">${counts[brand] || 0}</span>
+      </button>
+    `;
+  }).join('');
+}
+
+function filterByBrand(brand) {
+  AppState.activeBrand = brand;
+  renderBrandScroller();
+  applyFilters();
+}
+
+// Filter Logic
+function applyFilters() {
+  let list = [...AppState.cars];
+
+  // Brand
+  if (AppState.activeBrand !== 'all') {
+    list = list.filter(c => (c.brand || '').toLowerCase() === AppState.activeBrand.toLowerCase());
+  }
+
+  // Fuel
+  if (AppState.activeFuel !== 'all') {
+    list = list.filter(c => (c.fuel_type || '').toLowerCase() === AppState.activeFuel.toLowerCase());
+  }
+
+  // Transmission
+  if (AppState.activeTransmission !== 'all') {
+    list = list.filter(c => (c.transmission || '').toLowerCase() === AppState.activeTransmission.toLowerCase());
+  }
+
+  // Body Type
+  if (AppState.activeBodyType !== 'all') {
+    list = list.filter(c => (c.body_type || '').toLowerCase() === AppState.activeBodyType.toLowerCase());
+  }
+
+  // Budget
+  if (AppState.activeBudget !== 'all') {
+    const b = AppState.activeBudget;
+    if (b === 'under-8') list = list.filter(c => c.price < 800000);
+    else if (b === '8-15') list = list.filter(c => c.price >= 800000 && c.price <= 1500000);
+    else if (b === '15-25') list = list.filter(c => c.price >= 1500000 && c.price <= 2500000);
+    else if (b === 'above-25') list = list.filter(c => c.price > 2500000);
+  }
+
+  // Search
+  if (AppState.searchQuery.trim()) {
+    const q = AppState.searchQuery.toLowerCase().trim();
+    list = list.filter(c => 
+      (c.title && c.title.toLowerCase().includes(q)) ||
+      (c.brand && c.brand.toLowerCase().includes(q)) ||
+      (c.model && c.model.toLowerCase().includes(q)) ||
+      (c.variant && c.variant.toLowerCase().includes(q)) ||
+      (c.fuel_type && c.fuel_type.toLowerCase().includes(q)) ||
+      (String(c.year).includes(q))
+    );
+  }
+
+  // Sort
+  if (AppState.sortBy === 'price-low') list.sort((a, b) => a.price - b.price);
+  else if (AppState.sortBy === 'price-high') list.sort((a, b) => b.price - a.price);
+  else if (AppState.sortBy === 'year-new') list.sort((a, b) => b.year - a.year);
+  else if (AppState.sortBy === 'kms-low') list.sort((a, b) => a.kms - b.kms);
+  else list.sort((a, b) => (b.is_featured ? 1 : 0) - (a.is_featured ? 1 : 0));
+
+  AppState.filteredCars = list;
+  renderInventoryGrid();
+  
+  const countBadge = document.getElementById('inventory-count-badge');
+  if (countBadge) countBadge.textContent = `${AppState.filteredCars.length} Cars Available`;
+}
+
+// Render Main Showroom Grid
+function renderInventoryGrid() {
+  const grid = document.getElementById('inventory-grid');
+  if (!grid) return;
+
+  if (AppState.filteredCars.length === 0) {
+    grid.innerHTML = `
+      <div style="grid-column: 1/-1; text-align: center; padding: 4rem 1.5rem; background: white; border-radius: var(--radius-lg); border: 1px solid var(--border-light);">
+        <i class="fas fa-car-side" style="font-size: 3rem; color: #94a3b8; margin-bottom: 1rem;"></i>
+        <h3 style="font-size: 1.25rem; font-weight: 700; color: #0f172a;">No Matching Vehicles Found</h3>
+        <p class="text-muted" style="margin-top: 0.35rem;">Try modifying your search or reset filters to see all available showroom cars.</p>
+        <button type="button" class="btn btn-primary" style="margin-top: 1.25rem;" onclick="resetFilters()">
+          <i class="fas fa-rotate-left"></i> Reset All Filters
+        </button>
+      </div>
+    `;
+    return;
+  }
+
+  grid.innerHTML = AppState.filteredCars.map(car => {
+    const isSold = car.status === 'Sold';
+    const mainImg = car.image_url || (car.gallery && car.gallery[0]) || 'https://images.unsplash.com/photo-1590362891991-f776e747a588?auto=format&fit=crop&w=800&q=80';
+    const origPriceHtml = car.original_price && car.original_price > car.price 
+      ? `<span class="price-val-orig">${formatCurrency(car.original_price)}</span>` 
+      : '';
+
+    return `
+      <div class="car-item-card" onclick="viewCarDetails('${car.id}')">
+        <!-- Thumbnail -->
+        <div class="car-thumb-wrap">
+          <img src="${mainImg}" alt="${car.title}" loading="lazy" onerror="this.src='https://images.unsplash.com/photo-1590362891991-f776e747a588?auto=format&fit=crop&w=800&q=80'">
+          
+          ${car.is_featured ? '<div class="card-badge-feat"><i class="fas fa-star"></i> Featured</div>' : ''}
+          
+          <div class="card-badge-status ${car.status === 'Sold' ? 'status-badge-sold' : (car.status === 'Reserved' ? 'status-badge-res' : 'status-badge-avail')}">
+            ${car.status || 'Available'}
+          </div>
+        </div>
+
+        <!-- Content -->
+        <div class="card-content-area">
+          <div class="card-make-line">${car.brand || 'Vehicle'} • ${car.body_type || 'Car'}</div>
+          <h3 class="card-car-title">${car.title}</h3>
+          <div class="card-variant-text">${car.variant || 'Standard'}</div>
+
+          <!-- Specs Matrix -->
+          <div class="card-specs-matrix">
+            <div class="matrix-col">
+              <i class="fas fa-calendar-alt"></i>
+              <span class="matrix-val">${car.year || '2022'}</span>
+              <span class="matrix-lbl">Year</span>
+            </div>
+            <div class="matrix-col">
+              <i class="fas fa-tachometer-alt"></i>
+              <span class="matrix-val">${(car.kms || 0).toLocaleString('en-IN')} km</span>
+              <span class="matrix-lbl">Driven</span>
+            </div>
+            <div class="matrix-col">
+              <i class="fas fa-gas-pump"></i>
+              <span class="matrix-val">${car.fuel_type || 'Petrol'}</span>
+              <span class="matrix-lbl">Fuel</span>
+            </div>
+            <div class="matrix-col">
+              <i class="fas fa-cogs"></i>
+              <span class="matrix-val">${car.transmission || 'Manual'}</span>
+              <span class="matrix-lbl">Gear</span>
+            </div>
+          </div>
+
+          <!-- Price -->
+          <div class="card-price-block">
+            <div class="price-left-box">
+              <div class="price-row-wrap">
+                <span class="price-val-main">${formatCurrency(car.price)}</span>
+                ${origPriceHtml}
+              </div>
+              <div class="price-emi-text">${calculateMonthlyEmi(car.price)}</div>
+            </div>
+            <div class="owner-pill-badge">
+              <i class="fas fa-user-check"></i> ${car.owners || '1st Owner'}
+            </div>
+          </div>
+
+          <!-- Actions -->
+          <div class="card-actions-row" onclick="event.stopPropagation()">
+            <button type="button" class="btn btn-outline btn-sm" onclick="viewCarDetails('${car.id}')">
+              <i class="fas fa-eye"></i> View Details
+            </button>
+            <a href="https://wa.me/917550172585?text=Hello%20Sri%20Rani%20Cars,%20I%20am%20interested%20in%20*${encodeURIComponent(car.title)}*%20(${car.year},%20${formatCurrency(car.price)}).%20Please%20share%20details." target="_blank" class="btn btn-whatsapp btn-sm" title="WhatsApp">
+              <i class="fab fa-whatsapp"></i>
+            </a>
+            <a href="tel:9750332585" class="btn btn-call btn-sm" title="Call Showroom">
+              <i class="fas fa-phone-alt"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+function resetFilters() {
+  AppState.activeBrand = 'all';
+  AppState.activeFuel = 'all';
+  AppState.activeTransmission = 'all';
+  AppState.activeBodyType = 'all';
+  AppState.activeBudget = 'all';
+  AppState.searchQuery = '';
+  AppState.sortBy = 'featured';
+
+  const sInput = document.getElementById('search-input-box');
+  if (sInput) sInput.value = '';
+
+  const fuelSel = document.getElementById('fuel-select-ctrl');
+  if (fuelSel) fuelSel.value = 'all';
+
+  const transSel = document.getElementById('trans-select-ctrl');
+  if (transSel) transSel.value = 'all';
+
+  const budgetSel = document.getElementById('budget-select-ctrl');
+  if (budgetSel) budgetSel.value = 'all';
+
+  const sortSel = document.getElementById('sort-select-ctrl');
+  if (sortSel) sortSel.value = 'featured';
+
+  document.querySelectorAll('.pill-tag-btn').forEach(btn => btn.classList.remove('active'));
+
+  renderBrandScroller();
+  applyFilters();
+}
+
+// ==========================================================================
+// FULL-PAGE FLIPKART/AMAZON STYLE CAR PRODUCT VIEW
+// ==========================================================================
+function viewCarDetails(carId) {
+  const car = AppState.cars.find(c => String(c.id) === String(carId));
+  if (!car) return;
+
+  AppState.currentCar = car;
+  AppState.currentGalleryIdx = 0;
+
+  // Hide Main Landing & Show Product Page View
+  document.getElementById('main-showroom-view').style.display = 'none';
+  const productView = document.getElementById('product-page-view');
+  productView.classList.add('active');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+
+  // Update URL hash
+  history.pushState(null, '', `#car/${car.id}`);
+
+  // Populate Breadcrumbs
+  document.getElementById('product-breadcrumb-title').textContent = car.title;
+
+  // Title, Brand & Subtitle
+  document.getElementById('product-brand-tag').textContent = `${car.brand || 'Vehicle'} • ${car.body_type || 'Car'}`;
+  document.getElementById('product-title-text').textContent = car.title;
+  document.getElementById('product-variant-text').textContent = `${car.variant || 'Standard'} • ${car.year} Model • ${car.owners || '1st Owner'}`;
+
+  // Price Card
+  document.getElementById('product-price-val').textContent = formatCurrency(car.price);
+  if (car.original_price && car.original_price > car.price) {
+    document.getElementById('product-orig-price-val').textContent = formatCurrency(car.original_price);
+    document.getElementById('product-savings-badge').textContent = `Save ${formatCurrency(car.original_price - car.price)}`;
+    document.getElementById('product-savings-badge').style.display = 'inline-block';
+  } else {
+    document.getElementById('product-orig-price-val').textContent = '';
+    document.getElementById('product-savings-badge').style.display = 'none';
+  }
+  document.getElementById('product-emi-calc-note').textContent = calculateMonthlyEmi(car.price);
+
+  // Status Badge
+  const statusBadge = document.getElementById('product-status-pill');
+  if (statusBadge) {
+    statusBadge.textContent = car.status === 'Sold' ? 'Sold Out' : 'Available in Stock';
+    statusBadge.className = `card-badge-status ${car.status === 'Sold' ? 'status-badge-sold' : 'status-badge-avail'}`;
+  }
+
+  // Gallery Setup
+  const gallery = (car.gallery && car.gallery.length > 0) ? car.gallery : [car.image_url || 'https://images.unsplash.com/photo-1590362891991-f776e747a588?auto=format&fit=crop&w=1000&q=80'];
+  renderProductGallery(gallery);
+
+  // Specs Matrix Grid
+  const specsGrid = document.getElementById('product-specs-grid-box');
+  if (specsGrid) {
+    specsGrid.innerHTML = `
+      <div class="spec-tile">
+        <div class="spec-tile-icon"><i class="fas fa-calendar-alt"></i></div>
+        <div>
+          <div class="spec-tile-lbl">Reg. Year</div>
+          <div class="spec-tile-val">${car.year || '2022'}</div>
+        </div>
+      </div>
+      <div class="spec-tile">
+        <div class="spec-tile-icon"><i class="fas fa-tachometer-alt"></i></div>
+        <div>
+          <div class="spec-tile-lbl">Kilometers</div>
+          <div class="spec-tile-val">${(car.kms || 0).toLocaleString('en-IN')} km</div>
+        </div>
+      </div>
+      <div class="spec-tile">
+        <div class="spec-tile-icon"><i class="fas fa-gas-pump"></i></div>
+        <div>
+          <div class="spec-tile-lbl">Fuel Type</div>
+          <div class="spec-tile-val">${car.fuel_type || 'Petrol'}</div>
+        </div>
+      </div>
+      <div class="spec-tile">
+        <div class="spec-tile-icon"><i class="fas fa-cogs"></i></div>
+        <div>
+          <div class="spec-tile-lbl">Transmission</div>
+          <div class="spec-tile-val">${car.transmission || 'Manual'}</div>
+        </div>
+      </div>
+      <div class="spec-tile">
+        <div class="spec-tile-icon"><i class="fas fa-user-shield"></i></div>
+        <div>
+          <div class="spec-tile-lbl">Ownership</div>
+          <div class="spec-tile-val">${car.owners || '1st Owner'}</div>
+        </div>
+      </div>
+      <div class="spec-tile">
+        <div class="spec-tile-icon"><i class="fas fa-file-contract"></i></div>
+        <div>
+          <div class="spec-tile-lbl">Insurance</div>
+          <div class="spec-tile-val" style="font-size: 0.8rem;">${car.insurance || 'Comprehensive Valid'}</div>
+        </div>
+      </div>
+      <div class="spec-tile">
+        <div class="spec-tile-icon"><i class="fas fa-map-marker-alt"></i></div>
+        <div>
+          <div class="spec-tile-lbl">RTO Passing</div>
+          <div class="spec-tile-val">${car.rto || 'TN 54 (Salem)'}</div>
+        </div>
+      </div>
+      <div class="spec-tile">
+        <div class="spec-tile-icon"><i class="fas fa-palette"></i></div>
+        <div>
+          <div class="spec-tile-lbl">Color</div>
+          <div class="spec-tile-val">${car.color || 'Standard'}</div>
+        </div>
+      </div>
+    `;
+  }
+
+  // Key Features
+  const featCloud = document.getElementById('product-features-cloud');
+  if (featCloud) {
+    const featList = (car.features && car.features.length > 0)
+      ? car.features
+      : ['Touchscreen Infotainment', 'Dual Airbags', 'ABS with EBD', 'Power Steering & Windows', 'Reverse Parking Sensors', 'Alloy Wheels'];
+    
+    featCloud.innerHTML = featList.map(f => `
+      <span class="feat-tag"><i class="fas fa-check-circle text-emerald"></i> ${f}</span>
+    `).join('');
+  }
+
+  // Vehicle Description
+  document.getElementById('product-desc-paragraph').textContent = car.description || 'Pre-owned certified vehicle in mint condition at Sri Rani Cars showroom, Salem.';
+
+  // CTA Links
+  const waBtn = document.getElementById('product-wa-btn');
+  if (waBtn) {
+    const waText = encodeURIComponent(`Hello Sri Rani Cars, I would like to purchase / inquire about *${car.title}* (${car.year}, Price: ${formatCurrency(car.price)}). Please provide more details.`);
+    waBtn.href = `https://wa.me/917550172585?text=${waText}`;
+  }
+
+  // Render Amazon/Flipkart Style Similar Cars
+  renderSimilarCars(car);
+}
+
+function renderProductGallery(gallery) {
+  const mainImg = document.getElementById('product-gallery-img');
+  const thumbsBox = document.getElementById('product-thumbs-box');
+
+  if (mainImg) {
+    mainImg.src = gallery[AppState.currentGalleryIdx] || gallery[0];
+  }
+
+  if (thumbsBox) {
+    thumbsBox.innerHTML = gallery.map((img, idx) => `
+      <img src="${img}" class="product-thumb-item ${idx === AppState.currentGalleryIdx ? 'active' : ''}" onclick="setProductGalleryIdx(${idx})" alt="View ${idx + 1}">
+    `).join('');
+  }
+}
+
+function setProductGalleryIdx(idx) {
+  if (!AppState.currentCar) return;
+  const gallery = AppState.currentCar.gallery || [AppState.currentCar.image_url];
+  if (idx >= 0 && idx < gallery.length) {
+    AppState.currentGalleryIdx = idx;
+    renderProductGallery(gallery);
+  }
+}
+
+function productGalleryNext() {
+  if (!AppState.currentCar) return;
+  const gallery = AppState.currentCar.gallery || [AppState.currentCar.image_url];
+  AppState.currentGalleryIdx = (AppState.currentGalleryIdx + 1) % gallery.length;
+  renderProductGallery(gallery);
+}
+
+function productGalleryPrev() {
+  if (!AppState.currentCar) return;
+  const gallery = AppState.currentCar.gallery || [AppState.currentCar.image_url];
+  AppState.currentGalleryIdx = (AppState.currentGalleryIdx - 1 + gallery.length) % gallery.length;
+  renderProductGallery(gallery);
+}
+
+// Back to Showroom List
+function backToShowroom() {
+  const productView = document.getElementById('product-page-view');
+  productView.classList.remove('active');
+  document.getElementById('main-showroom-view').style.display = 'block';
+  history.pushState(null, '', window.location.pathname);
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// Render Similar / Related Cars (Amazon / Flipkart recommendation style)
+function renderSimilarCars(currentCar) {
+  const container = document.getElementById('similar-cars-grid');
+  if (!container) return;
+
+  // Filter cars matching same body type or brand or price range (excluding current car)
+  let similar = AppState.cars.filter(c => String(c.id) !== String(currentCar.id));
+  
+  // Sort by similarity: same brand or same body type first
+  similar.sort((a, b) => {
+    let scoreA = (a.brand === currentCar.brand ? 2 : 0) + (a.body_type === currentCar.body_type ? 1 : 0);
+    let scoreB = (b.brand === currentCar.brand ? 2 : 0) + (b.body_type === currentCar.body_type ? 1 : 0);
+    return scoreB - scoreA;
+  });
+
+  similar = similar.slice(0, 3); // Take top 3 similar cars
+
+  if (similar.length === 0) {
+    container.innerHTML = '<p class="text-muted">No similar cars available right now.</p>';
+    return;
+  }
+
+  container.innerHTML = similar.map(car => `
+    <div class="car-item-card" onclick="viewCarDetails('${car.id}')">
+      <div class="car-thumb-wrap" style="height: 180px;">
+        <img src="${car.image_url || 'https://images.unsplash.com/photo-1590362891991-f776e747a588?auto=format&fit=crop&w=600&q=80'}" alt="${car.title}">
+        <div class="card-badge-status ${car.status === 'Sold' ? 'status-badge-sold' : 'status-badge-avail'}">
+          ${car.status || 'Available'}
+        </div>
+      </div>
+      <div class="card-content-area" style="padding: 1rem;">
+        <div class="card-make-line">${car.brand}</div>
+        <h4 class="card-car-title" style="font-size: 1.05rem;">${car.title}</h4>
+        <div style="font-size: 0.78rem; color: var(--text-muted); margin-bottom: 0.5rem;">${car.year} • ${car.fuel_type} • ${(car.kms || 0).toLocaleString('en-IN')} km</div>
+        <div style="font-size: 1.15rem; font-weight: 800; color: #0f172a; margin-top: auto;">${formatCurrency(car.price)}</div>
+      </div>
+    </div>
+  `).join('');
+}
+
+// Handle Direct URL hash navigation e.g. #car/car_101
+function handleHashNavigation() {
+  const hash = window.location.hash;
+  if (hash.startsWith('#car/')) {
+    const carId = hash.replace('#car/', '');
+    if (AppState.cars.length > 0) {
+      viewCarDetails(carId);
+    } else {
+      setTimeout(() => viewCarDetails(carId), 500);
+    }
+  }
+}
+
+// Standalone EMI Calculator
+function initStandaloneCalculator() {
+  const amountSlider = document.getElementById('calc-amount-slider');
+  const rateSlider = document.getElementById('calc-rate-slider');
+  const tenureSlider = document.getElementById('calc-tenure-slider');
+
+  if (!amountSlider || !rateSlider || !tenureSlider) return;
+
+  const update = () => {
+    const principal = Number(amountSlider.value);
+    const rate = Number(rateSlider.value);
+    const months = Number(tenureSlider.value) * 12;
+
+    document.getElementById('calc-amount-val').textContent = formatCurrency(principal);
+    document.getElementById('calc-rate-val').textContent = `${rate}% p.a.`;
+    document.getElementById('calc-tenure-val').textContent = `${tenureSlider.value} Years (${months} Mos)`;
+
+    const r = rate / (12 * 100);
+    const emi = (principal * r * Math.pow(1 + r, months)) / (Math.pow(1 + r, months) - 1);
+    const totalPayable = emi * months;
+    const totalInterest = totalPayable - principal;
+
+    document.getElementById('calc-emi-result').textContent = `₹ ${Math.round(emi).toLocaleString('en-IN')}`;
+    document.getElementById('calc-total-interest').textContent = `₹ ${Math.round(totalInterest).toLocaleString('en-IN')}`;
+    document.getElementById('calc-total-payable').textContent = `₹ ${Math.round(totalPayable).toLocaleString('en-IN')}`;
+  };
+
+  amountSlider.addEventListener('input', update);
+  rateSlider.addEventListener('input', update);
+  tenureSlider.addEventListener('input', update);
+  update();
+}
+
+// Wishlist / Saved Cars Count
+function updateWishlistCount() {
+  const countEls = document.querySelectorAll('.wishlist-counter');
+  countEls.forEach(el => {
+    el.textContent = AppState.favorites.length;
+    el.style.display = AppState.favorites.length > 0 ? 'inline-flex' : 'none';
+  });
+}
+
+// Test Drive Modal
+function openTestDriveModal(carTitle = '') {
+  const modal = document.getElementById('testDriveModal');
+  const carInput = document.getElementById('td-car-name');
+  if (carInput) {
+    carInput.value = carTitle || (AppState.currentCar ? AppState.currentCar.title : '');
+  }
+  if (modal) {
+    modal.classList.add('active');
+    document.body.style.overflow = 'hidden';
+  }
+}
+
+function closeTestDriveModal() {
+  const modal = document.getElementById('testDriveModal');
+  if (modal) modal.classList.remove('active');
+  document.body.style.overflow = '';
+}
+
+async function handleTestDriveSubmit(e) {
+  e.preventDefault();
+  const carName = document.getElementById('td-car-name').value;
+  const name = document.getElementById('td-user-name').value;
+  const phone = document.getElementById('td-user-phone').value;
+  const date = document.getElementById('td-date').value;
+  const city = document.getElementById('td-city').value;
+
+  const enquiry = {
+    car_name: carName,
+    customer_name: name,
+    phone: phone,
+    preferred_date: date,
+    city: city,
+    enquiry_type: 'Test Drive / Showroom Visit'
+  };
+
+  await window.CarService.submitEnquiry(enquiry);
+  showToast('Test drive request submitted! Opening WhatsApp confirmation...');
+  closeTestDriveModal();
+
+  const waMsg = encodeURIComponent(`Hello Sri Rani Cars, I would like to book a Test Drive for *${carName}* on ${date}. My Name: ${name}, Phone: ${phone}, City: ${city}.`);
+  window.open(`https://wa.me/917550172585?text=${waMsg}`, '_blank');
+}
+
+// Sell Car Modal
+function openSellCarModal() {
+  const modal = document.getElementById('sellCarModal');
+  if (modal) {
+    modal.classList.add('active');
+    document.body.style.overflow = 'hidden';
+  }
+}
+
+function closeSellCarModal() {
+  const modal = document.getElementById('sellCarModal');
+  if (modal) modal.classList.remove('active');
+  document.body.style.overflow = '';
+}
+
+async function handleSellCarSubmit(e) {
+  e.preventDefault();
+  const brand = document.getElementById('sell-brand').value;
+  const model = document.getElementById('sell-model').value;
+  const year = document.getElementById('sell-year').value;
+  const kms = document.getElementById('sell-kms').value;
+  const expectedPrice = document.getElementById('sell-price').value;
+  const name = document.getElementById('sell-name').value;
+  const phone = document.getElementById('sell-phone').value;
+  const city = document.getElementById('sell-city').value;
+
+  const enquiry = {
+    car_name: `${year} ${brand} ${model}`,
+    kms: kms,
+    expected_price: expectedPrice,
+    customer_name: name,
+    phone: phone,
+    city: city,
+    enquiry_type: 'Sell Car Valuation'
+  };
+
+  await window.CarService.submitEnquiry(enquiry);
+  showToast('Valuation request submitted! Opening WhatsApp...');
+  closeSellCarModal();
+
+  const waMsg = encodeURIComponent(`Hello Sri Rani Cars, I want to SELL my car:\n- Vehicle: ${year} ${brand} ${model}\n- Kms Driven: ${kms}\n- Expected Price: ${expectedPrice}\n- Name: ${name}\n- Mobile: ${phone}\n- Location: ${city}`);
+  window.open(`https://wa.me/917550172585?text=${waMsg}`, '_blank');
+}
+
+// Init Event Listeners
+function initListeners() {
+  const searchInput = document.getElementById('search-input-box');
+  if (searchInput) {
+    searchInput.addEventListener('input', (e) => {
+      AppState.searchQuery = e.target.value;
+      applyFilters();
+    });
+  }
+
+  const heroSearchInput = document.getElementById('hero-quick-search');
+  if (heroSearchInput) {
+    heroSearchInput.addEventListener('keypress', (e) => {
+      if (e.key === 'Enter') {
+        AppState.searchQuery = heroSearchInput.value;
+        if (searchInput) searchInput.value = heroSearchInput.value;
+        applyFilters();
+        document.getElementById('inventory-section').scrollIntoView({ behavior: 'smooth' });
+      }
+    });
+  }
+
+  const fuelSelect = document.getElementById('fuel-select-ctrl');
+  if (fuelSelect) {
+    fuelSelect.addEventListener('change', (e) => {
+      AppState.activeFuel = e.target.value;
+      applyFilters();
+    });
+  }
+
+  const transSelect = document.getElementById('trans-select-ctrl');
+  if (transSelect) {
+    transSelect.addEventListener('change', (e) => {
+      AppState.activeTransmission = e.target.value;
+      applyFilters();
+    });
+  }
+
+  const budgetSelect = document.getElementById('budget-select-ctrl');
+  if (budgetSelect) {
+    budgetSelect.addEventListener('change', (e) => {
+      AppState.activeBudget = e.target.value;
+      applyFilters();
+    });
+  }
+
+  const sortSelect = document.getElementById('sort-select-ctrl');
+  if (sortSelect) {
+    sortSelect.addEventListener('change', (e) => {
+      AppState.sortBy = e.target.value;
+      applyFilters();
+    });
+  }
+
+  document.querySelectorAll('.pill-tag-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const type = btn.dataset.filterType;
+      const val = btn.dataset.filterVal;
+
+      if (type === 'fuel') {
+        AppState.activeFuel = AppState.activeFuel === val ? 'all' : val;
+        if (fuelSelect) fuelSelect.value = AppState.activeFuel;
+      } else if (type === 'body') {
+        AppState.activeBodyType = AppState.activeBodyType === val ? 'all' : val;
+      } else if (type === 'budget') {
+        AppState.activeBudget = AppState.activeBudget === val ? 'all' : val;
+        if (budgetSelect) budgetSelect.value = AppState.activeBudget;
+      }
+
+      document.querySelectorAll(`.pill-tag-btn[data-filter-type="${type}"]`).forEach(b => {
+        b.classList.toggle('active', b.dataset.filterVal === (type === 'fuel' ? AppState.activeFuel : type === 'body' ? AppState.activeBodyType : AppState.activeBudget));
+      });
+
+      applyFilters();
+    });
+  });
+
+  window.addEventListener('click', (e) => {
+    if (e.target.classList.contains('modal-layer')) {
+      e.target.classList.remove('active');
+      document.body.style.overflow = '';
+    }
+  });
+
+  window.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+      document.querySelectorAll('.modal-layer.active').forEach(m => m.classList.remove('active'));
+      document.body.style.overflow = '';
+    }
+  });
+}

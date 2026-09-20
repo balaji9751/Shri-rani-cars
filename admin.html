@@ -1,0 +1,917 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Sri Rani Cars — Admin Dashboard</title>
+  
+  <!-- Favicon & App Icon -->
+  <link rel="icon" type="image/png" href="icons/favicon.png">
+  <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+
+  <!-- Google Fonts: Plus Jakarta Sans / Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <!-- Font Awesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+  <!-- Supabase CDN Client -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+  <!-- Admin Dedicated Master Stylesheet -->
+  <link rel="stylesheet" href="css/admin.css?v=2.6">
+</head>
+<body>
+
+  <!-- TOAST NOTIFICATION SHELF -->
+  <div id="toast-shelf" class="toast-shelf"></div>
+
+  <!-- AUTH GATE OVERLAY -->
+  <div id="admin-auth-overlay" style="display: none; position: fixed; inset: 0; background: #071426; z-index: 9999; align-items: center; justify-content: center; padding: 1.5rem;">
+    <div style="background: white; border-radius: var(--radius-lg); padding: 2.5rem; max-width: 400px; width: 100%; box-shadow: var(--shadow-modal); text-align: center;">
+      <img src="icons/app-logo.png" alt="Sri Rani Cars App Icon" style="width: 76px; height: 76px; border-radius: 18px; margin-bottom: 0.75rem; box-shadow: 0 8px 25px rgba(7, 20, 38, 0.25);">
+      <h2 style="font-size: 1.4rem; font-weight: 800; color: #071426; margin-bottom: 0.25rem;">Sri Rani Cars</h2>
+      <div style="font-size: 0.72rem; font-weight: 700; color: #84D400; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 0.85rem;">Admin Control Center</div>
+      <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 1.5rem;">Enter your passcode to manage showroom inventory.</p>
+      
+      <form onsubmit="handleLoginSubmit(event)">
+        <div class="form-field-group" style="text-align: left;">
+          <label class="form-field-lbl">Admin Passcode</label>
+          <input type="password" id="admin-pass-field" class="form-input-ctrl" placeholder="Enter passcode (admin123)" required autofocus>
+        </div>
+        <button type="submit" class="btn btn-lime" style="width: 100%; padding: 0.8rem; margin-top: 0.5rem;">
+          <i class="fas fa-lock-open"></i> Unlock Dashboard
+        </button>
+        <div style="margin-top: 1.25rem;">
+          <a href="index.html" style="font-size: 0.85rem; color: var(--text-muted); font-weight: 600;"><i class="fas fa-arrow-left"></i> Back to Public Website</a>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- MAIN APP LAYOUT (SIDEBAR + MAIN CONTENT) -->
+  <div class="admin-app-layout">
+
+    <!-- MOBILE SIDEBAR OVERLAY -->
+    <div id="sidebar-overlay" class="sidebar-mobile-overlay" onclick="closeMobileSidebar()"></div>
+
+    <!-- LEFT SIDEBAR -->
+    <aside id="admin-sidebar" class="admin-sidebar">
+      
+      <!-- Brand Logo Header -->
+      <div class="sidebar-brand-box">
+        <img src="icons/app-logo.png" alt="Sri Rani Cars" class="sidebar-logo-img">
+        <div class="sidebar-brand-text">
+          <h2>Sri Rani Cars</h2>
+          <span>ADMIN PANEL</span>
+        </div>
+      </div>
+
+      <!-- Navigation Links -->
+      <nav class="sidebar-nav-container">
+        <div class="nav-section-label">Main Menu</div>
+        
+        <a href="#dashboard" class="sidebar-nav-item active" data-route="dashboard">
+          <i class="fas fa-chart-pie"></i>
+          <span>Dashboard</span>
+        </a>
+        
+        <a href="#cars" class="sidebar-nav-item" data-route="cars">
+          <i class="fas fa-car"></i>
+          <span>Cars</span>
+          <span id="badge-cars-count" class="nav-item-badge">0</span>
+        </a>
+
+        <a href="#add-car" class="sidebar-nav-item" data-route="add-car" onclick="openAddCarView()">
+          <i class="fas fa-plus-circle"></i>
+          <span>Add Car</span>
+        </a>
+
+        <a href="#enquiries" class="sidebar-nav-item" data-route="enquiries">
+          <i class="fas fa-envelope-open-text"></i>
+          <span>Enquiries</span>
+          <span id="badge-enq-count" class="nav-item-badge">0</span>
+        </a>
+
+        <div class="nav-section-label">Dealership Website</div>
+
+        <a href="#homepage" class="sidebar-nav-item" data-route="homepage">
+          <i class="fas fa-desktop"></i>
+          <span>Homepage</span>
+        </a>
+
+        <a href="#branches" class="sidebar-nav-item" data-route="branches">
+          <i class="fas fa-store-alt"></i>
+          <span>Branches</span>
+        </a>
+
+        <a href="#media" class="sidebar-nav-item" data-route="media">
+          <i class="fas fa-photo-video"></i>
+          <span>Media</span>
+        </a>
+
+        <div class="nav-section-label">System</div>
+
+        <a href="#settings" class="sidebar-nav-item" data-route="settings">
+          <i class="fas fa-cog"></i>
+          <span>Settings</span>
+        </a>
+
+        <a href="#logs" class="sidebar-nav-item" data-route="logs">
+          <i class="fas fa-history"></i>
+          <span>Audit Logs</span>
+        </a>
+      </nav>
+
+      <!-- Sidebar Footer User Profile -->
+      <div class="sidebar-footer-box">
+        <div class="admin-avatar">
+          <i class="fas fa-user-shield"></i>
+        </div>
+        <div class="admin-user-details">
+          <div class="admin-user-name">Showroom Admin</div>
+          <div class="admin-user-role">Super Administrator</div>
+        </div>
+        <button type="button" class="sidebar-logout-btn" onclick="handleAdminLogout()" title="Logout">
+          <i class="fas fa-sign-out-alt"></i>
+        </button>
+      </div>
+
+    </aside>
+
+    <!-- RIGHT MAIN CONTENT WRAPPER -->
+    <div class="admin-main-wrapper">
+      
+      <!-- TOP HEADER -->
+      <header class="admin-top-header">
+        
+        <div class="header-left-group">
+          <!-- Sidebar Toggle Button -->
+          <button type="button" id="sidebar-toggle-btn" class="header-toggle-btn" title="Toggle Sidebar">
+            <i class="fas fa-bars"></i>
+          </button>
+
+          <!-- Current View Title -->
+          <div class="header-page-title-box">
+            <h1 id="header-view-title">Dashboard</h1>
+            <p id="header-view-sub">Manage your inventory and dealership website.</p>
+          </div>
+        </div>
+
+        <!-- Global Search -->
+        <div class="header-search-wrap">
+          <i class="fas fa-search"></i>
+          <input type="text" id="global-search-input" class="header-search-input" placeholder="Search cars, customers, enquiries..." autocomplete="off">
+          
+          <!-- Dropdown Results -->
+          <div id="global-search-dropdown" style="display: none; position: absolute; top: calc(100% + 8px); left: 0; right: 0; background: white; border-radius: var(--radius-md); box-shadow: var(--shadow-modal); border: 1px solid var(--border-color); z-index: 200; max-height: 300px; overflow-y: auto;">
+          </div>
+        </div>
+
+        <!-- Right Header Actions -->
+        <div class="header-right-group">
+          <a href="index.html" class="btn btn-outline btn-sm" title="View Customer Showroom">
+            <i class="fas fa-external-link-alt"></i> <span>View Website</span>
+          </a>
+
+          <button type="button" class="btn-header-action" onclick="navigateTo('logs')" title="Activity Notifications">
+            <i class="fas fa-bell"></i>
+            <span class="header-notif-dot"></span>
+          </button>
+
+          <button type="button" class="btn btn-lime btn-sm" onclick="openAddCarView()">
+            <i class="fas fa-plus"></i> <span>Add Car</span>
+          </button>
+        </div>
+
+      </header>
+
+      <!-- SCROLLABLE CONTENT BODY -->
+      <main class="admin-content-scroll">
+
+        <!-- =================================================================== -->
+        <!-- VIEW 1: DASHBOARD HOME -->
+        <!-- =================================================================== -->
+        <section id="view-dashboard" class="admin-view-panel active">
+          
+          <!-- 5 Overview Stat Cards -->
+          <div class="stat-cards-grid">
+            <div class="stat-metric-card">
+              <div class="stat-card-header">
+                <span class="stat-card-label">Total Cars</span>
+                <div class="stat-card-icon icon-blue"><i class="fas fa-car"></i></div>
+              </div>
+              <div id="stat-total-cars" class="stat-card-value">0</div>
+              <div class="stat-card-sub">In database</div>
+            </div>
+
+            <div class="stat-metric-card">
+              <div class="stat-card-header">
+                <span class="stat-card-label">Available</span>
+                <div class="stat-card-icon icon-green"><i class="fas fa-check-circle"></i></div>
+              </div>
+              <div id="stat-avail-cars" class="stat-card-value" style="color: #059669;">0</div>
+              <div class="stat-card-sub">Live on showroom</div>
+            </div>
+
+            <div class="stat-metric-card">
+              <div class="stat-card-header">
+                <span class="stat-card-label">Reserved</span>
+                <div class="stat-card-icon icon-amber"><i class="fas fa-clock"></i></div>
+              </div>
+              <div id="stat-res-cars" class="stat-card-value" style="color: #D97706;">0</div>
+              <div class="stat-card-sub">Customer token booked</div>
+            </div>
+
+            <div class="stat-metric-card">
+              <div class="stat-card-header">
+                <span class="stat-card-label">Sold</span>
+                <div class="stat-card-icon icon-red"><i class="fas fa-tag"></i></div>
+              </div>
+              <div id="stat-sold-cars" class="stat-card-value" style="color: #DC2626;">0</div>
+              <div class="stat-card-sub">Delivered vehicles</div>
+            </div>
+
+            <div class="stat-metric-card">
+              <div class="stat-card-header">
+                <span class="stat-card-label">Enquiries</span>
+                <div class="stat-card-icon icon-lime"><i class="fas fa-envelope-open-text"></i></div>
+              </div>
+              <div id="stat-total-enq" class="stat-card-value">0</div>
+              <div class="stat-card-sub">Customer leads</div>
+            </div>
+          </div>
+
+          <!-- Quick Actions Bar -->
+          <div class="quick-actions-card">
+            <div>
+              <h3 style="font-size: 1.1rem; font-weight: 800;">Dealership Quick Actions</h3>
+              <p style="font-size: 0.8rem; color: #94A3B8; margin-top: 0.15rem;">Manage inventory and respond to customer queries immediately.</p>
+            </div>
+            <div class="quick-actions-btns">
+              <button type="button" class="btn btn-lime" onclick="openAddCarView()">
+                <i class="fas fa-plus-circle"></i> + Add New Car
+              </button>
+              <button type="button" class="btn btn-outline" style="background: rgba(255,255,255,0.1); border-color: rgba(255,255,255,0.2); color: white;" onclick="navigateTo('cars')">
+                <i class="fas fa-car"></i> Manage Cars
+              </button>
+              <button type="button" class="btn btn-outline" style="background: rgba(255,255,255,0.1); border-color: rgba(255,255,255,0.2); color: white;" onclick="navigateTo('enquiries')">
+                <i class="fas fa-envelope"></i> View Enquiries
+              </button>
+              <button type="button" class="btn btn-outline" style="background: rgba(255,255,255,0.1); border-color: rgba(255,255,255,0.2); color: white;" onclick="navigateTo('homepage')">
+                <i class="fas fa-desktop"></i> Edit Homepage
+              </button>
+            </div>
+          </div>
+
+          <!-- Recent Cars Table -->
+          <div class="admin-card-box">
+            <div class="admin-card-header">
+              <div class="admin-card-title">
+                <i class="fas fa-car text-primary"></i> Recent Vehicle Listings
+              </div>
+              <a href="#cars" class="btn btn-outline btn-sm" onclick="navigateTo('cars')">View All Cars</a>
+            </div>
+            <div class="table-responsive-box">
+              <table class="admin-data-table">
+                <thead>
+                  <tr>
+                    <th>Image</th>
+                    <th>Car Name</th>
+                    <th>Year</th>
+                    <th>Price</th>
+                    <th>KM</th>
+                    <th>Status</th>
+                    <th style="text-align: right;">Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="dashboard-recent-cars-tbody">
+                  <!-- Injected dynamically -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- Recent Enquiries Table -->
+          <div class="admin-card-box">
+            <div class="admin-card-header">
+              <div class="admin-card-title">
+                <i class="fas fa-envelope-open-text text-primary"></i> Latest Customer Leads & Test Drives
+              </div>
+              <a href="#enquiries" class="btn btn-outline btn-sm" onclick="navigateTo('enquiries')">View All Leads</a>
+            </div>
+            <div class="table-responsive-box">
+              <table class="admin-data-table">
+                <thead>
+                  <tr>
+                    <th>Customer</th>
+                    <th>Phone</th>
+                    <th>Interested Car</th>
+                    <th>Date</th>
+                    <th>Status</th>
+                    <th style="text-align: right;">Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="dashboard-recent-enq-tbody">
+                  <!-- Injected dynamically -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+        </section>
+
+        <!-- =================================================================== -->
+        <!-- VIEW 2: CARS MANAGEMENT -->
+        <!-- =================================================================== -->
+        <section id="view-cars" class="admin-view-panel">
+          
+          <div class="admin-card-box">
+            <!-- Filter Bar -->
+            <div style="padding: 1.25rem 1.5rem; border-bottom: 1px solid var(--border-color); background: #FFFFFF; display: flex; flex-direction: column; gap: 1rem;">
+              
+              <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.85rem;">
+                <!-- Search -->
+                <div style="position: relative; width: 280px; max-width: 100%;">
+                  <i class="fas fa-search" style="position: absolute; left: 0.85rem; top: 50%; transform: translateY(-50%); color: var(--text-light);"></i>
+                  <input type="text" class="form-input-ctrl" style="padding-left: 2.25rem;" placeholder="Search inventory..." oninput="AdminDashboard.carSearchQuery=this.value; renderCarsManagementTable();">
+                </div>
+
+                <div style="display: flex; align-items: center; gap: 0.65rem; flex-wrap: wrap;">
+                  <button type="button" class="btn btn-lime" onclick="openAddCarView()">
+                    <i class="fas fa-plus"></i> + Add New Car
+                  </button>
+                </div>
+              </div>
+
+              <!-- Filter Controls Row -->
+              <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 0.75rem;">
+                <div>
+                  <select class="form-input-ctrl" onchange="AdminDashboard.carFilterStatus=this.value; renderCarsManagementTable();">
+                    <option value="all">All Statuses</option>
+                    <option value="Available">Available</option>
+                    <option value="Reserved">Reserved</option>
+                    <option value="Sold">Sold</option>
+                    <option value="Hidden">Hidden</option>
+                    <option value="Draft">Draft</option>
+                  </select>
+                </div>
+
+                <div>
+                  <select class="form-input-ctrl" onchange="AdminDashboard.carFilterBrand=this.value; renderCarsManagementTable();">
+                    <option value="all">All Brands</option>
+                    <option value="Maruti Suzuki">Maruti Suzuki</option>
+                    <option value="Hyundai">Hyundai</option>
+                    <option value="Mahindra">Mahindra</option>
+                    <option value="Toyota">Toyota</option>
+                    <option value="Tata">Tata</option>
+                    <option value="Honda">Honda</option>
+                    <option value="Kia">Kia</option>
+                    <option value="BMW">BMW</option>
+                    <option value="MG">MG</option>
+                  </select>
+                </div>
+
+                <div>
+                  <select class="form-input-ctrl" onchange="AdminDashboard.carFilterFuel=this.value; renderCarsManagementTable();">
+                    <option value="all">All Fuels</option>
+                    <option value="Petrol">Petrol</option>
+                    <option value="Diesel">Diesel</option>
+                    <option value="Electric">Electric</option>
+                    <option value="CNG">CNG</option>
+                  </select>
+                </div>
+
+                <div>
+                  <select class="form-input-ctrl" onchange="AdminDashboard.carFilterSort=this.value; renderCarsManagementTable();">
+                    <option value="newest">Sort: Newest Added</option>
+                    <option value="price-low">Price: Low to High</option>
+                    <option value="price-high">Price: High to Low</option>
+                    <option value="year-new">Year: Newest</option>
+                    <option value="kms-low">KM: Lowest</option>
+                  </select>
+                </div>
+              </div>
+
+            </div>
+
+            <!-- Cars Table -->
+            <div class="table-responsive-box">
+              <table class="admin-data-table">
+                <thead>
+                  <tr>
+                    <th>Primary Image</th>
+                    <th>Brand / Model / Variant</th>
+                    <th>Year</th>
+                    <th>Price</th>
+                    <th>KM</th>
+                    <th>Fuel</th>
+                    <th>Status</th>
+                    <th>Featured</th>
+                    <th style="text-align: right;">Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="cars-mgmt-tbody">
+                  <!-- Rendered dynamically -->
+                </tbody>
+              </table>
+            </div>
+
+          </div>
+
+        </section>
+
+        <!-- =================================================================== -->
+        <!-- VIEW 3: ADD / EDIT CAR MULTI-SECTION FORM -->
+        <!-- =================================================================== -->
+        <section id="view-add-car" class="admin-view-panel">
+          
+          <div class="admin-card-box">
+            <div class="admin-card-header">
+              <h2 id="car-form-page-heading" class="admin-card-title">Add New Car</h2>
+              <button type="button" class="btn btn-outline btn-sm" onclick="navigateTo('cars')">
+                <i class="fas fa-arrow-left"></i> Cancel & Back to Cars
+              </button>
+            </div>
+
+            <form id="master-car-form" onsubmit="handleMasterCarFormSubmit(event)" style="padding: 1.5rem;">
+              
+              <!-- 1. BASIC INFORMATION -->
+              <h3 style="font-size: 1rem; font-weight: 800; color: #071426; margin-bottom: 1rem; display: flex; align-items: center; gap: 0.5rem;">
+                <span style="width: 24px; height: 24px; border-radius: 50%; background: #071426; color: var(--admin-lime); display: inline-flex; align-items: center; justify-content: center; font-size: 0.75rem;">1</span>
+                Basic Information
+              </h3>
+              
+              <div class="form-columns-2" style="margin-bottom: 1.5rem;">
+                <div class="form-field-group">
+                  <label class="form-field-lbl">Brand / Manufacturer *</label>
+                  <select id="form-car-brand" class="form-input-ctrl" required>
+                    <option value="Maruti Suzuki">Maruti Suzuki</option>
+                    <option value="Hyundai">Hyundai</option>
+                    <option value="Mahindra">Mahindra</option>
+                    <option value="Toyota">Toyota</option>
+                    <option value="Tata">Tata</option>
+                    <option value="Honda">Honda</option>
+                    <option value="Kia">Kia</option>
+                    <option value="BMW">BMW</option>
+                    <option value="MG">MG</option>
+                    <option value="Volkswagen">Volkswagen</option>
+                    <option value="Skoda">Skoda</option>
+                    <option value="Renault">Renault</option>
+                    <option value="Nissan">Nissan</option>
+                  </select>
+                </div>
+
+                <div class="form-field-group">
+                  <label class="form-field-lbl">Model Name *</label>
+                  <input type="text" id="form-car-model" class="form-input-ctrl" placeholder="e.g. Dzire, Thar, Creta" required>
+                </div>
+
+                <div class="form-field-group">
+                  <label class="form-field-lbl">Variant & Trims</label>
+                  <input type="text" id="form-car-variant" class="form-input-ctrl" placeholder="e.g. ZXi Plus AMT Automatic">
+                </div>
+
+                <div class="form-field-group">
+                  <label class="form-field-lbl">Manufacturing / Model Year *</label>
+                  <input type="number" id="form-car-year" class="form-input-ctrl" min="2000" max="2026" value="2022" required>
+                </div>
+              </div>
+
+              <!-- 2. PRICING -->
+              <h3 style="font-size: 1rem; font-weight: 800; color: #071426; margin-bottom: 1rem; display: flex; align-items: center; gap: 0.5rem;">
+                <span style="width: 24px; height: 24px; border-radius: 50%; background: #071426; color: var(--admin-lime); display: inline-flex; align-items: center; justify-content: center; font-size: 0.75rem;">2</span>
+                Pricing & Valuation
+              </h3>
+
+              <div class="form-columns-2" style="margin-bottom: 1.5rem;">
+                <div class="form-field-group">
+                  <label class="form-field-lbl">Asking Price (in ₹) *</label>
+                  <input type="number" id="form-car-price" class="form-input-ctrl" placeholder="e.g. 745000" required>
+                </div>
+
+                <div class="form-field-group" style="display: flex; align-items: center; gap: 0.6rem; margin-top: 1.6rem;">
+                  <input type="checkbox" id="form-car-negotiable" style="width: 18px; height: 18px; accent-color: #071426;">
+                  <label for="form-car-negotiable" style="font-weight: 700; font-size: 0.88rem; color: #071426; cursor: pointer;">
+                    Price is Negotiable
+                  </label>
+                </div>
+              </div>
+
+              <!-- 3. SPECIFICATIONS -->
+              <h3 style="font-size: 1rem; font-weight: 800; color: #071426; margin-bottom: 1rem; display: flex; align-items: center; gap: 0.5rem;">
+                <span style="width: 24px; height: 24px; border-radius: 50%; background: #071426; color: var(--admin-lime); display: inline-flex; align-items: center; justify-content: center; font-size: 0.75rem;">3</span>
+                Technical Specifications
+              </h3>
+
+              <div class="form-columns-3" style="margin-bottom: 1.25rem;">
+                <div class="form-field-group">
+                  <label class="form-field-lbl">Fuel Type *</label>
+                  <select id="form-car-fuel" class="form-input-ctrl" required>
+                    <option value="Petrol">Petrol</option>
+                    <option value="Diesel">Diesel</option>
+                    <option value="Electric">Electric (EV)</option>
+                    <option value="CNG">CNG</option>
+                  </select>
+                </div>
+
+                <div class="form-field-group">
+                  <label class="form-field-lbl">Transmission *</label>
+                  <select id="form-car-trans" class="form-input-ctrl" required>
+                    <option value="Manual">Manual</option>
+                    <option value="Automatic">Automatic</option>
+                  </select>
+                </div>
+
+                <div class="form-field-group">
+                  <label class="form-field-lbl">KM Driven *</label>
+                  <input type="number" id="form-car-kms" class="form-input-ctrl" placeholder="e.g. 28500" required>
+                </div>
+              </div>
+
+              <div class="form-columns-3" style="margin-bottom: 1.25rem;">
+                <div class="form-field-group">
+                  <label class="form-field-lbl">Body Type</label>
+                  <select id="form-car-body" class="form-input-ctrl">
+                    <option value="Sedan">Sedan</option>
+                    <option value="SUV">SUV</option>
+                    <option value="Hatchback">Hatchback</option>
+                    <option value="MUV">MUV / 7-Seater</option>
+                  </select>
+                </div>
+
+                <div class="form-field-group">
+                  <label class="form-field-lbl">Exterior Color</label>
+                  <input type="text" id="form-car-color" class="form-input-ctrl" placeholder="e.g. Napoli Black, Magma Red">
+                </div>
+
+                <div class="form-field-group">
+                  <label class="form-field-lbl">Ownership</label>
+                  <select id="form-car-owners" class="form-input-ctrl">
+                    <option value="1st Owner">1st Owner</option>
+                    <option value="2nd Owner">2nd Owner</option>
+                    <option value="3rd Owner">3rd Owner</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="form-columns-3" style="margin-bottom: 1.5rem;">
+                <div class="form-field-group">
+                  <label class="form-field-lbl">Registration Year</label>
+                  <input type="number" id="form-car-regyear" class="form-input-ctrl" min="2005" max="2026" value="2022">
+                </div>
+
+                <div class="form-field-group">
+                  <label class="form-field-lbl">Insurance Validity</label>
+                  <input type="text" id="form-car-insurance" class="form-input-ctrl" placeholder="e.g. Comprehensive valid till Dec 2026">
+                </div>
+
+                <div class="form-field-group">
+                  <label class="form-field-lbl">Location / RTO Passing</label>
+                  <input type="text" id="form-car-location" class="form-input-ctrl" value="TN 54 (Salem)">
+                </div>
+              </div>
+
+              <!-- 4. DESCRIPTION -->
+              <h3 style="font-size: 1rem; font-weight: 800; color: #071426; margin-bottom: 1rem; display: flex; align-items: center; gap: 0.5rem;">
+                <span style="width: 24px; height: 24px; border-radius: 50%; background: #071426; color: var(--admin-lime); display: inline-flex; align-items: center; justify-content: center; font-size: 0.75rem;">4</span>
+                Vehicle Overview Description
+              </h3>
+
+              <div class="form-field-group" style="margin-bottom: 1.5rem;">
+                <textarea id="form-car-desc" class="form-input-ctrl" rows="3" placeholder="Enter condition, mechanical health, tyre status, and authorized service history..."></textarea>
+              </div>
+
+              <!-- 5. FEATURES & EQUIPMENT -->
+              <h3 style="font-size: 1rem; font-weight: 800; color: #071426; margin-bottom: 0.65rem; display: flex; align-items: center; gap: 0.5rem;">
+                <span style="width: 24px; height: 24px; border-radius: 50%; background: #071426; color: var(--admin-lime); display: inline-flex; align-items: center; justify-content: center; font-size: 0.75rem;">5</span>
+                Features & Safety Checklist
+              </h3>
+
+              <div id="features-selection-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 0.65rem; margin-bottom: 1rem;">
+                <!-- Rendered dynamically -->
+              </div>
+
+              <!-- Add Custom Feature -->
+              <div style="display: flex; gap: 0.5rem; max-width: 400px; margin-bottom: 1.5rem;">
+                <input type="text" id="custom-feature-input" class="form-input-ctrl" placeholder="Add custom feature (e.g. 360 Camera)">
+                <button type="button" class="btn btn-outline" onclick="addCustomFeature()">Add</button>
+              </div>
+
+              <!-- 6. IMAGE UPLOAD & GALLERY MANAGEMENT -->
+              <h3 style="font-size: 1rem; font-weight: 800; color: #071426; margin-bottom: 0.65rem; display: flex; align-items: center; gap: 0.5rem;">
+                <span style="width: 24px; height: 24px; border-radius: 50%; background: #071426; color: var(--admin-lime); display: inline-flex; align-items: center; justify-content: center; font-size: 0.75rem;">6</span>
+                Vehicle Photos & Gallery (Drag & Drop)
+              </h3>
+
+              <!-- Dropzone -->
+              <div class="image-upload-dropzone" onclick="document.getElementById('gallery-file-picker').click()">
+                <i class="fas fa-cloud-upload-alt dropzone-icon"></i>
+                <h4 style="font-size: 1rem; font-weight: 700; color: #071426;">Drag and drop images here</h4>
+                <p style="font-size: 0.82rem; color: var(--text-muted); margin-top: 0.2rem;">or click to browse photos from computer or phone</p>
+                <input type="file" id="gallery-file-picker" multiple accept="image/*" style="display: none;" onchange="handleImageFileUpload(event)">
+              </div>
+
+              <!-- Add by URL input -->
+              <div style="display: flex; gap: 0.5rem; margin-bottom: 1.25rem;">
+                <input type="url" id="image-url-input-field" class="form-input-ctrl" placeholder="Or paste high-res image URL (e.g. https://images.unsplash.com/...)">
+                <button type="button" class="btn btn-outline" onclick="addImageByUrl()">Add URL</button>
+              </div>
+
+              <!-- Uploaded Thumbnails Grid -->
+              <div id="uploaded-gallery-grid" class="image-gallery-grid" style="margin-bottom: 1.5rem;">
+                <!-- Rendered dynamically with PRIMARY badge and delete handle -->
+              </div>
+
+              <!-- 7. PUBLISHING & VISIBILITY -->
+              <h3 style="font-size: 1rem; font-weight: 800; color: #071426; margin-bottom: 1rem; display: flex; align-items: center; gap: 0.5rem;">
+                <span style="width: 24px; height: 24px; border-radius: 50%; background: #071426; color: var(--admin-lime); display: inline-flex; align-items: center; justify-content: center; font-size: 0.75rem;">7</span>
+                Publishing Status & Visibility
+              </h3>
+
+              <div class="form-columns-2" style="margin-bottom: 1.75rem;">
+                <div class="form-field-group">
+                  <label class="form-field-lbl">Inventory Status</label>
+                  <select id="form-car-status" class="form-input-ctrl">
+                    <option value="Available">Available (Visible to all)</option>
+                    <option value="Reserved">Reserved</option>
+                    <option value="Sold">Sold</option>
+                    <option value="Hidden">Hidden (Unpublished)</option>
+                    <option value="Draft">Draft</option>
+                  </select>
+                </div>
+
+                <div class="form-field-group" style="display: flex; align-items: center; gap: 0.6rem; margin-top: 1.6rem;">
+                  <input type="checkbox" id="form-car-featured" style="width: 18px; height: 18px; accent-color: #071426;">
+                  <label for="form-car-featured" style="font-weight: 700; font-size: 0.88rem; color: #071426; cursor: pointer;">
+                    Featured Car on Public Homepage
+                  </label>
+                </div>
+              </div>
+
+              <!-- Form Buttons -->
+              <div style="display: flex; gap: 0.75rem; justify-content: flex-end; padding-top: 1.25rem; border-top: 1px solid var(--border-color);">
+                <button type="button" class="btn btn-outline" onclick="navigateTo('cars')">Cancel</button>
+                <button type="submit" id="car-form-submit-btn" class="btn btn-lime">
+                  <i class="fas fa-plus-circle"></i> Publish Car
+                </button>
+              </div>
+
+            </form>
+          </div>
+
+        </section>
+
+        <!-- =================================================================== -->
+        <!-- VIEW 4: CUSTOMER ENQUIRIES -->
+        <!-- =================================================================== -->
+        <section id="view-enquiries" class="admin-view-panel">
+          
+          <div class="admin-card-box">
+            
+            <!-- Tabs Bar -->
+            <div style="padding: 1.25rem 1.5rem; border-bottom: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
+              <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+                <button type="button" class="btn btn-outline btn-sm enquiry-tab-btn active" data-tab="all" onclick="filterEnquiryTab('all')">All Leads</button>
+                <button type="button" class="btn btn-outline btn-sm enquiry-tab-btn" data-tab="new" onclick="filterEnquiryTab('new')">New</button>
+                <button type="button" class="btn btn-outline btn-sm enquiry-tab-btn" data-tab="contacted" onclick="filterEnquiryTab('contacted')">Contacted</button>
+                <button type="button" class="btn btn-outline btn-sm enquiry-tab-btn" data-tab="closed" onclick="filterEnquiryTab('closed')">Closed</button>
+              </div>
+            </div>
+
+            <!-- Enquiries Table -->
+            <div class="table-responsive-box">
+              <table class="admin-data-table">
+                <thead>
+                  <tr>
+                    <th>Customer Name & City</th>
+                    <th>Phone Number</th>
+                    <th>Inquiry Type</th>
+                    <th>Interested Vehicle</th>
+                    <th>Received Date</th>
+                    <th>Status</th>
+                    <th style="text-align: right;">Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="enquiries-master-tbody">
+                  <!-- Injected dynamically -->
+                </tbody>
+              </table>
+            </div>
+
+          </div>
+
+        </section>
+
+        <!-- =================================================================== -->
+        <!-- VIEW 5: HOMEPAGE MANAGER -->
+        <!-- =================================================================== -->
+        <section id="view-homepage" class="admin-view-panel">
+          
+          <div class="admin-card-box">
+            <div class="admin-card-header">
+              <div class="admin-card-title">
+                <i class="fas fa-desktop text-primary"></i> Public Homepage Content Editor
+              </div>
+            </div>
+
+            <form onsubmit="saveHomepageConfig(event)" style="padding: 1.5rem;">
+              <h3 style="font-size: 1rem; font-weight: 800; color: #071426; margin-bottom: 1rem;">Hero Showcase Section</h3>
+
+              <div class="form-field-group">
+                <label class="form-field-lbl">Hero Headline</label>
+                <input type="text" id="hp-hero-heading" class="form-input-ctrl" required>
+              </div>
+
+              <div class="form-field-group">
+                <label class="form-field-lbl">Hero Subtitle</label>
+                <textarea id="hp-hero-sub" class="form-input-ctrl" rows="2" required></textarea>
+              </div>
+
+              <div class="form-columns-2" style="margin-bottom: 1.5rem;">
+                <div class="form-field-group">
+                  <label class="form-field-lbl">Hero Background Image URL</label>
+                  <input type="url" id="hp-hero-image" class="form-input-ctrl" oninput="document.getElementById('hp-hero-preview').src=this.value;" required>
+                </div>
+
+                <div class="form-field-group">
+                  <label class="form-field-lbl">Image Live Preview</label>
+                  <div style="height: 120px; border-radius: var(--radius-md); overflow: hidden; background: #071426;">
+                    <img id="hp-hero-preview" src="" style="width: 100%; height: 100%; object-fit: cover;" alt="Hero Preview">
+                  </div>
+                </div>
+              </div>
+
+              <button type="submit" class="btn btn-lime">
+                <i class="fas fa-save"></i> Save Homepage Changes
+              </button>
+            </form>
+          </div>
+
+        </section>
+
+        <!-- =================================================================== -->
+        <!-- VIEW 6: BRANCHES MANAGEMENT -->
+        <!-- =================================================================== -->
+        <section id="view-branches" class="admin-view-panel">
+          
+          <div class="admin-card-box">
+            <div class="admin-card-header">
+              <div class="admin-card-title">
+                <i class="fas fa-store-alt text-primary"></i> Showroom Branches & Dealership Locations
+              </div>
+            </div>
+            
+            <div id="branches-cards-container" style="padding: 1.5rem; display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 1.25rem;">
+              <!-- Rendered dynamically -->
+            </div>
+          </div>
+
+        </section>
+
+        <!-- =================================================================== -->
+        <!-- VIEW 7: MEDIA LIBRARY -->
+        <!-- =================================================================== -->
+        <section id="view-media" class="admin-view-panel">
+          
+          <div class="admin-card-box">
+            <div class="admin-card-header">
+              <div class="admin-card-title">
+                <i class="fas fa-photo-video text-primary"></i> Media Library Assets
+              </div>
+            </div>
+
+            <div id="media-library-grid" style="padding: 1.5rem; display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 1rem;">
+              <!-- Rendered dynamically -->
+            </div>
+          </div>
+
+        </section>
+
+        <!-- =================================================================== -->
+        <!-- VIEW 8: SETTINGS -->
+        <!-- =================================================================== -->
+        <section id="view-settings" class="admin-view-panel">
+          
+          <div class="admin-card-box">
+            <div class="admin-card-header">
+              <div class="admin-card-title">
+                <i class="fas fa-cog text-primary"></i> Business & Dealership Settings
+              </div>
+            </div>
+
+            <form onsubmit="saveSettingsSubmit(event)" style="padding: 1.5rem;">
+              <div class="form-columns-2">
+                <div class="form-field-group">
+                  <label class="form-field-lbl">Dealership Name</label>
+                  <input type="text" id="set-biz-name" class="form-input-ctrl" required>
+                </div>
+                <div class="form-field-group">
+                  <label class="form-field-lbl">Primary Phone</label>
+                  <input type="text" id="set-biz-phone1" class="form-input-ctrl" required>
+                </div>
+              </div>
+
+              <div class="form-columns-3">
+                <div class="form-field-group">
+                  <label class="form-field-lbl">Secondary Phone</label>
+                  <input type="text" id="set-biz-phone2" class="form-input-ctrl">
+                </div>
+                <div class="form-field-group">
+                  <label class="form-field-lbl">WhatsApp Number</label>
+                  <input type="text" id="set-biz-wa" class="form-input-ctrl" required>
+                </div>
+                <div class="form-field-group">
+                  <label class="form-field-lbl">Showroom Email</label>
+                  <input type="email" id="set-biz-email" class="form-input-ctrl">
+                </div>
+              </div>
+
+              <div class="form-field-group">
+                <label class="form-field-lbl">Full Showroom Address</label>
+                <input type="text" id="set-biz-addr" class="form-input-ctrl" required>
+              </div>
+
+              <div class="form-field-group">
+                <label class="form-field-lbl">Working Business Hours</label>
+                <input type="text" id="set-biz-hours" class="form-input-ctrl" value="Mon - Sun: 9:00 AM - 8:30 PM">
+              </div>
+
+              <!-- PWA & Brand Asset Display -->
+              <div style="margin-top: 1.5rem; margin-bottom: 1.5rem; padding: 1.25rem; background: #071426; border-radius: var(--radius-md); border: 1px solid rgba(132, 212, 0, 0.3); display: flex; align-items: center; gap: 1.25rem;">
+                <img src="icons/app-logo.png" alt="Sri Rani Cars Official App Icon" style="width: 64px; height: 64px; border-radius: 14px; object-fit: cover; box-shadow: 0 4px 15px rgba(0,0,0,0.4); border: 1px solid #84D400;">
+                <div>
+                  <div style="font-weight: 800; color: #FFFFFF; font-size: 0.95rem;">Official Dealership App Icon (PWA & Web)</div>
+                  <div style="font-size: 0.78rem; color: #94A3B8; margin-top: 0.2rem;">Used across Progressive Web App installation, browser favicon, showroom header, and admin panel.</div>
+                </div>
+              </div>
+
+              <button type="submit" class="btn btn-lime">
+                <i class="fas fa-save"></i> Save Settings
+              </button>
+            </form>
+          </div>
+
+        </section>
+
+        <!-- =================================================================== -->
+        <!-- VIEW 9: AUDIT LOGS -->
+        <!-- =================================================================== -->
+        <section id="view-logs" class="admin-view-panel">
+          
+          <div class="admin-card-box">
+            <div class="admin-card-header">
+              <div class="admin-card-title">
+                <i class="fas fa-history text-primary"></i> System Activity & Audit History
+              </div>
+            </div>
+
+            <div id="audit-logs-list">
+              <!-- Rendered dynamically -->
+            </div>
+          </div>
+
+        </section>
+
+      </main>
+
+    </div>
+
+  </div>
+
+  <!-- DELETE CONFIRMATION MODAL -->
+  <div id="confirmDeleteModal" class="admin-modal-backdrop" role="dialog" aria-modal="true">
+    <div class="admin-modal-container">
+      <div class="admin-modal-header">
+        <h3 style="font-size: 1.15rem; font-weight: 800; color: #DC2626; display: flex; align-items: center; gap: 0.5rem;">
+          <i class="fas fa-exclamation-triangle"></i> Delete this car?
+        </h3>
+        <button type="button" class="modal-dismiss" onclick="closeDeleteModal()">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+      <div class="admin-modal-body">
+        <p style="font-size: 0.92rem; color: #111827; font-weight: 600; margin-bottom: 0.5rem;">
+          Are you sure you want to permanently delete <span id="delete-car-name-target" style="color: #071426; font-weight: 800;"></span>?
+        </p>
+        <p style="font-size: 0.82rem; color: var(--text-muted); line-height: 1.5;">
+          This will permanently remove the car from your online inventory, database, and search results. This action cannot be undone.
+        </p>
+      </div>
+      <div class="admin-modal-footer">
+        <button type="button" class="btn btn-outline" onclick="closeDeleteModal()">Cancel</button>
+        <button type="button" class="btn btn-danger-outline" style="background: #DC2626; color: white;" onclick="confirmExecuteDelete()">
+          <i class="fas fa-trash"></i> Delete Permanently
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- SCRIPTS -->
+  <script src="js/supabase-config.js?v=2.6"></script>
+  <script src="js/cars-data.js?v=2.6"></script>
+  <script src="js/admin-dashboard.js?v=2.6"></script>
+</body>
+</html>

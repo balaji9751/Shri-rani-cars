@@ -1,0 +1,876 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Sri Rani Cars — Premium Pre-Owned Luxury Cars Showroom | Salem & Vazhapadi</title>
+  <meta name="description" content="Sri Rani Cars - Certified multi-brand pre-owned luxury cars showroom in Vazhapadi, Salem. 100% non-accidental guarantee, easy financing, and best valuation on car sales.">
+  
+  <!-- Favicon & PWA Manifest -->
+  <link rel="icon" type="image/png" href="icons/favicon.png">
+  <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#071426">
+
+  <!-- Google Fonts: Plus Jakarta Sans -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <!-- Font Awesome 6 -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+  <!-- Supabase Client -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+  <!-- Clean Luxury Unified Stylesheet -->
+  <link rel="stylesheet" href="css/style.css?v=2.6">
+</head>
+<body>
+
+  <!-- CLEAN MAIN HEADER -->
+  <header class="site-header">
+    <div class="container">
+      <div class="header-container">
+        <!-- Logo -->
+        <a href="#home" class="brand-link" onclick="backToShowroom()">
+          <img src="icons/app-logo.png" alt="Sri Rani Cars Logo" class="brand-logo-img">
+          <div class="brand-titles">
+            <h1>SRI RANI CARS</h1>
+          </div>
+        </a>
+
+        <!-- Desktop Navigation -->
+        <nav class="nav-links">
+          <a href="#home" class="nav-link active" onclick="backToShowroom()">Home</a>
+          <a href="#inventory-section" class="nav-link" onclick="backToShowroom()">Cars</a>
+          <button type="button" class="nav-link" style="display: inline-flex; align-items: center; gap: 0.4rem;" onclick="openFilterModal()">
+            <i class="fas fa-sliders text-primary"></i> Filter & Search
+          </button>
+          <a href="#location-section" class="nav-link" onclick="backToShowroom()">Location</a>
+          <a href="#location-section" class="nav-link" onclick="backToShowroom()">Contact</a>
+        </nav>
+
+        <!-- Header Actions -->
+        <div class="header-right">
+          <button type="button" class="btn btn-outline btn-sm" onclick="openFilterModal()">
+            <i class="fas fa-search"></i> <span>Search</span>
+          </button>
+          <a href="admin.html" class="btn btn-outline btn-sm" title="Admin Portal">
+            <i class="fas fa-lock"></i> <span>Admin</span>
+          </a>
+          <a href="https://wa.me/917550172585?text=Hello%20Shri%20Rani%20Cars,%20I%20am%20looking%20for%20a%20quality%20pre-owned%20car." target="_blank" class="btn btn-whatsapp btn-sm">
+            <i class="fab fa-whatsapp"></i> <span>WhatsApp</span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- MAIN SHOWROOM LANDING VIEW -->
+  <main id="main-showroom-view">
+
+    <!-- HERO SHOWCASE SECTION -->
+    <section id="home" class="hero">
+      <div class="container">
+        <div class="hero-grid">
+          <!-- Hero Text -->
+          <div class="hero-left">
+            <h2 class="hero-heading" id="hero-main-heading">
+              Premium Cars. <br>
+              <span>Certified Quality.</span> <br>
+              Unmatched Value.
+            </h2>
+            <p class="hero-text" id="hero-main-sub">
+              Discover Salem and Vazhapadi's most reliable collection of certified pre-owned vehicles. Rigorous 140-point technical inspection, instant financing, and transparent paperwork.
+            </p>
+
+            <div class="hero-actions">
+              <a href="#inventory-section" class="btn btn-primary btn-lg">
+                <i class="fas fa-car"></i> View Available Cars
+              </a>
+              <button type="button" class="btn btn-outline btn-lg" onclick="openFilterModal()">
+                <i class="fas fa-sliders"></i> Filter & Search
+              </button>
+            </div>
+
+            <!-- Trust Badges -->
+            <div style="display: flex; gap: 1.5rem; flex-wrap: wrap;">
+              <div>
+                <strong style="font-size: 1.25rem; color: #0f172a; font-weight: 800;">140+</strong>
+                <div style="font-size: 0.78rem; color: var(--text-muted);">Inspection Checks</div>
+              </div>
+              <div style="border-left: 1px solid var(--border-light); padding-left: 1.5rem;">
+                <strong style="font-size: 1.25rem; color: #0f172a; font-weight: 800;">100%</strong>
+                <div style="font-size: 0.78rem; color: var(--text-muted);">Non-Accidental</div>
+              </div>
+              <div style="border-left: 1px solid var(--border-light); padding-left: 1.5rem;">
+                <strong style="font-size: 1.25rem; color: #0f172a; font-weight: 800;">500+</strong>
+                <div style="font-size: 0.78rem; color: var(--text-muted);">Happy Customers</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Hero Image Banner -->
+          <div class="hero-right">
+            <div class="hero-showcase-box">
+              <img id="hero-main-img" src="https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&w=1200&q=80" alt="Sri Rani Cars Showroom Showcase">
+              <div class="hero-showcase-overlay">
+                <h3 style="font-size: 1.25rem; font-weight: 800; line-height: 1.2;">Tested, Certified & Road Ready</h3>
+                <p style="font-size: 0.82rem; color: #cbd5e1; margin-top: 0.3rem;">Every car is thoroughly verified for engine health, original kilometers, and clear title documentation.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- BRAND FILTER BAR -->
+    <section class="brand-bar-section">
+      <div class="container">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+          <div style="font-size: 0.8rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted);">
+            <i class="fas fa-tags text-primary"></i> Browse by Brand
+          </div>
+          <button type="button" style="font-size: 0.8rem; font-weight: 700; color: var(--primary);" onclick="openFilterModal()">
+            <i class="fas fa-sliders"></i> All Filters
+          </button>
+        </div>
+        <div class="brand-scroller" id="brand-scroller-box">
+          <!-- Dynamic Brand Pills -->
+        </div>
+      </div>
+    </section>
+
+    <!-- INVENTORY SECTION (2-COLUMNS ON MOBILE!) -->
+    <section id="inventory-section" class="inventory-section">
+      <div class="container">
+        
+        <!-- Section Header -->
+        <div class="section-head-bar">
+          <div>
+            <h2 class="section-main-title">Available Showroom Cars</h2>
+            <p class="section-sub-title">Certified pre-owned vehicles with complete service records</p>
+          </div>
+          <div style="display: flex; align-items: center; gap: 0.6rem;">
+            <button type="button" class="btn btn-outline btn-sm" onclick="openFilterModal()">
+              <i class="fas fa-sliders text-primary"></i> Filter
+            </button>
+            <div id="inventory-count-badge" style="font-weight: 700; color: var(--primary); background: var(--primary-light); padding: 0.35rem 0.8rem; border-radius: var(--radius-full); font-size: 0.82rem; border: 1px solid var(--primary-border);">
+              Loading...
+            </div>
+          </div>
+        </div>
+
+        <!-- 2-COLUMN CAR GRID -->
+        <div id="inventory-grid" class="car-grid-container">
+          <!-- Injected dynamically by app.js (2 columns on mobile, 3 columns on desktop) -->
+        </div>
+
+      </div>
+    </section>
+
+    <!-- WHY CHOOSE US -->
+    <section class="features-container" style="padding: 3rem 0; background: #ffffff; border-top: 1px solid var(--border-light); border-bottom: 1px solid var(--border-light);">
+      <div class="container">
+        <div style="text-align: center; max-width: 580px; margin: 0 auto 2rem;">
+          <h2 class="section-main-title" style="font-size: 1.7rem;">The Sri Rani Cars Advantage</h2>
+          <p class="section-sub-title" style="margin-top: 0.3rem;">Transparent pricing, verified quality, and complete peace of mind for every car buyer.</p>
+        </div>
+
+        <div class="perks-grid">
+          <div class="perk-box">
+            <div class="perk-icon-wrap">
+              <i class="fas fa-clipboard-check"></i>
+            </div>
+            <h3>140-Point Inspection</h3>
+            <p>Every engine, gearbox, electricals, and chassis undergo complete testing before listing.</p>
+          </div>
+
+          <div class="perk-box">
+            <div class="perk-icon-wrap">
+              <i class="fas fa-shield-alt"></i>
+            </div>
+            <h3>Non-Accidental Guarantee</h3>
+            <p>100% genuine odometer guarantee with verified background check and title certificate.</p>
+          </div>
+
+          <div class="perk-box">
+            <div class="perk-icon-wrap">
+              <i class="fas fa-id-card"></i>
+            </div>
+            <h3>Free RC Transfer</h3>
+            <p>End-to-end RTO name transfer handled directly by our experienced documentation executives.</p>
+          </div>
+
+          <div class="perk-box">
+            <div class="perk-icon-wrap">
+              <i class="fas fa-percentage"></i>
+            </div>
+            <h3>Instant Loan Approval</h3>
+            <p>Tie-ups with leading nationalized and private banks for flexible EMI and lowest interest rates.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- INTERACTIVE EMI CALCULATOR -->
+    <section id="calculator-section" class="tools-block" style="padding: 3rem 0;">
+      <div class="container">
+        <div style="max-width: 800px; margin: 0 auto;">
+          
+          <div class="calculator-card">
+            <h3 style="font-size: 1.35rem; font-weight: 800; color: #0f172a; margin-bottom: 1.25rem;">
+              <i class="fas fa-calculator text-primary"></i> Car Loan EMI Calculator
+            </h3>
+
+            <div class="calc-slider-item">
+              <div class="calc-header-flex">
+                <span>Loan Amount</span>
+                <span id="calc-amount-val" class="calc-val-highlight">₹ 8,00,000</span>
+              </div>
+              <input type="range" id="calc-amount-slider" class="range-input" min="100000" max="4000000" step="50000" value="800000">
+            </div>
+
+            <div class="calc-slider-item">
+              <div class="calc-header-flex">
+                <span>Interest Rate (% per annum)</span>
+                <span id="calc-rate-val" class="calc-val-highlight">9.5% p.a.</span>
+              </div>
+              <input type="range" id="calc-rate-slider" class="range-input" min="7" max="16" step="0.25" value="9.5">
+            </div>
+
+            <div class="calc-slider-item">
+              <div class="calc-header-flex">
+                <span>Loan Tenure (Years)</span>
+                <span id="calc-tenure-val" class="calc-val-highlight">5 Years (60 Mos)</span>
+              </div>
+              <input type="range" id="calc-tenure-slider" class="range-input" min="1" max="7" step="1" value="5">
+            </div>
+
+            <div class="calc-summary-banner">
+              <div>
+                <div style="font-size: 0.78rem; text-transform: uppercase; color: #94a3b8; font-weight: 700;">Estimated Monthly EMI</div>
+                <div id="calc-emi-result" class="calc-emi-big">₹ 16,802</div>
+              </div>
+              <div style="text-align: right; font-size: 0.8rem; color: #cbd5e1;">
+                <div>Total Interest: <strong id="calc-total-interest">₹ 2,08,120</strong></div>
+                <div>Total Payable: <strong id="calc-total-payable">₹ 10,08,120</strong></div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- SHOWROOM LOCATION & CONTACT -->
+    <section id="location-section" class="contact-block" style="padding: 3rem 0; background: #ffffff; border-top: 1px solid var(--border-light);">
+      <div class="container">
+        <div class="contact-layout">
+          <!-- Contact Details -->
+          <div class="showroom-details-box">
+            <h3 style="font-size: 1.35rem; font-weight: 800; color: #0f172a; margin-bottom: 1.25rem;">
+              <i class="fas fa-map-marked-alt text-primary"></i> Showroom Location & Contact
+            </h3>
+
+            <div class="contact-row-item">
+              <div class="contact-icon-box">
+                <i class="fas fa-building"></i>
+              </div>
+              <div>
+                <strong style="color: #0f172a; font-size: 0.95rem;">Showroom Address:</strong>
+                <p style="color: var(--text-muted); font-size: 0.88rem; margin-top: 0.2rem; line-height: 1.5;">
+                  Sri Rani Cars, Mangamma Salai, Near RTO Office, <br>
+                  Puthupalayam, Vazhapadi, Salem - 636115.
+                </p>
+              </div>
+            </div>
+
+            <div class="contact-row-item">
+              <div class="contact-icon-box">
+                <i class="fas fa-phone-alt"></i>
+              </div>
+              <div>
+                <strong style="color: #0f172a; font-size: 0.95rem;">Call Showroom:</strong>
+                <div style="margin-top: 0.2rem;">
+                  <a href="tel:9750332585" style="color: var(--primary); font-weight: 700; font-size: 1.05rem;">
+                    97503 32585
+                  </a>
+                </div>
+              </div>
+            </div>
+
+            <div class="contact-row-item">
+              <div class="contact-icon-box" style="background: #dcfce7; color: #16a34a;">
+                <i class="fab fa-whatsapp"></i>
+              </div>
+              <div>
+                <strong style="color: #0f172a; font-size: 0.95rem;">WhatsApp Inquiries:</strong>
+                <div style="margin-top: 0.2rem;">
+                  <a href="https://wa.me/917550172585" target="_blank" style="color: #16a34a; font-weight: 700; font-size: 1.05rem;">
+                    75501 72585
+                  </a>
+                </div>
+              </div>
+            </div>
+
+            <div style="display: flex; gap: 0.75rem; margin-top: 1.5rem; flex-wrap: wrap;">
+              <a href="https://maps.app.goo.gl/2sRQouxHpMTtnd2m6" target="_blank" class="btn btn-primary btn-sm">
+                <i class="fas fa-directions"></i> Get Directions
+              </a>
+              <button type="button" class="btn btn-outline btn-sm" onclick="openTestDriveModal()">
+                <i class="fas fa-calendar-check"></i> Book Visit
+              </button>
+            </div>
+          </div>
+
+          <!-- Google Maps Embed -->
+          <div class="map-frame-wrap">
+            <iframe 
+              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d15632.748364121774!2d78.3855!3d11.6565!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3babebdd1d152a57%3A0x6b4ef84c76b1f249!2sValapady%2C%20Tamil%20Nadu!5e0!3m2!1sen!2sin!4v1710920000000!5m2!1sen!2sin" 
+              allowfullscreen="" 
+              loading="lazy" 
+              referrerpolicy="no-referrer-when-downgrade"
+              title="Sri Rani Cars Showroom Location Map">
+            </iframe>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ========================================================================= -->
+  <!-- DEDICATED FULL-PAGE PRODUCT DETAILS VIEW (FLIPKART / AMAZON STYLE) -->
+  <!-- ========================================================================= -->
+  <div id="product-page-view" class="product-page-view">
+    <div class="container">
+      
+      <!-- Breadcrumbs & Back Action -->
+      <div class="breadcrumb-nav">
+        <button type="button" onclick="backToShowroom()" style="color: var(--primary); font-weight: 700; display: inline-flex; align-items: center; gap: 0.4rem;">
+          <i class="fas fa-arrow-left"></i> Back to All Cars
+        </button>
+        <span>/</span>
+        <span id="product-breadcrumb-title">Car Details</span>
+      </div>
+
+      <!-- Main Layout Grid -->
+      <div class="product-layout-grid">
+        
+        <!-- Left: Image Gallery -->
+        <div class="product-gallery-side">
+          <div class="product-gallery-main">
+            <img id="product-gallery-img" src="" alt="Car Image Preview">
+            <button type="button" class="gallery-nav-arrow gallery-arrow-left" onclick="productGalleryPrev()" aria-label="Previous Photo">
+              <i class="fas fa-chevron-left"></i>
+            </button>
+            <button type="button" class="gallery-nav-arrow gallery-arrow-right" onclick="productGalleryNext()" aria-label="Next Photo">
+              <i class="fas fa-chevron-right"></i>
+            </button>
+          </div>
+
+          <!-- Thumbnails -->
+          <div id="product-thumbs-box" class="product-gallery-thumbs">
+            <!-- Dynamic thumbnails -->
+          </div>
+
+          <!-- 140 Point Certified Guarantee Card -->
+          <div style="background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: var(--radius-md); padding: 1.15rem; margin-top: 1.25rem; display: flex; gap: 0.85rem; align-items: center;">
+            <i class="fas fa-shield-check" style="font-size: 2rem; color: #16a34a;"></i>
+            <div>
+              <strong style="color: #166534; font-size: 0.95rem;">140-Point Quality Inspection Certified</strong>
+              <p style="font-size: 0.8rem; color: #15803d; margin-top: 0.15rem;">Engine, Transmission, Suspension, Electricals, and Body structure verified 100% genuine.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right: Information & Buy Box -->
+        <div class="product-info-panel">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+            <span id="product-brand-tag" class="product-make-badge">Maruti Suzuki • Sedan</span>
+            <span id="product-status-pill" class="card-badge-status status-badge-avail" style="position: static;">Available</span>
+          </div>
+
+          <h2 id="product-title-text" class="product-main-title">Maruti Suzuki Dzire ZXi Plus</h2>
+          <div id="product-variant-text" class="product-variant-line">ZXi Plus AMT (Automatic) • 2022 Model</div>
+
+          <!-- Pricing Card -->
+          <div class="product-price-card">
+            <div style="font-size: 0.78rem; text-transform: uppercase; color: var(--text-muted); font-weight: 700;">Showroom Price</div>
+            <div style="display: flex; align-items: baseline; gap: 0.75rem; margin-top: 0.25rem;">
+              <span id="product-price-val" class="product-price-big">₹ 7.45 Lakh</span>
+              <span id="product-orig-price-val" style="font-size: 1rem; color: var(--text-light); text-decoration: line-through;"></span>
+              <span id="product-savings-badge" style="display: none; background: #fee2e2; color: #dc2626; font-size: 0.75rem; font-weight: 700; padding: 0.2rem 0.5rem; border-radius: var(--radius-sm);"></span>
+            </div>
+            <div id="product-emi-calc-note" class="product-emi-note">EMI from ₹ 14,200/month</div>
+          </div>
+
+          <!-- CTA Buttons -->
+          <div class="product-cta-cluster">
+            <a id="product-wa-btn" href="https://wa.me/917550172585" target="_blank" class="btn btn-whatsapp btn-lg" style="flex: 1;">
+              <i class="fab fa-whatsapp"></i> Chat on WhatsApp
+            </a>
+            <a href="tel:9750332585" class="btn btn-call btn-lg" style="flex: 1;">
+              <i class="fas fa-phone-alt"></i> Call Showroom
+            </a>
+            <button type="button" class="btn btn-outline btn-lg" onclick="openTestDriveModal()">
+              <i class="fas fa-calendar-alt"></i> Test Drive
+            </button>
+          </div>
+
+          <!-- Detailed Specifications Grid -->
+          <h4 style="font-size: 1rem; font-weight: 800; color: #0f172a; margin-bottom: 0.85rem;">
+            <i class="fas fa-cogs text-primary"></i> Vehicle Specifications
+          </h4>
+          <div id="product-specs-grid-box" class="product-specs-grid">
+            <!-- Dynamic specs -->
+          </div>
+
+          <!-- Features Cloud -->
+          <h4 style="font-size: 1rem; font-weight: 800; color: #0f172a; margin-bottom: 0.85rem;">
+            <i class="fas fa-star text-gold"></i> Key Features & Equipment
+          </h4>
+          <div id="product-features-cloud" class="product-features-wrap">
+            <!-- Dynamic chips -->
+          </div>
+
+          <!-- Description -->
+          <h4 style="font-size: 1rem; font-weight: 800; color: #0f172a; margin-bottom: 0.4rem;">
+            <i class="fas fa-info-circle text-primary"></i> Vehicle Overview
+          </h4>
+          <p id="product-desc-paragraph" style="font-size: 0.9rem; color: #475569; line-height: 1.6;">
+            Vehicle description.
+          </p>
+
+        </div>
+      </div>
+
+      <!-- SIMILAR / RELATED CARS YOU MAY LIKE (AMAZON / FLIPKART STYLE) -->
+      <section class="related-cars-section">
+        <div class="section-head-bar">
+          <div>
+            <h3 class="section-main-title">Similar Cars You May Like</h3>
+            <p class="section-sub-title">Explore alternative options in a similar segment</p>
+          </div>
+        </div>
+
+        <div id="similar-cars-grid" class="car-grid-container">
+          <!-- Dynamic Similar Cars (2-columns on mobile) -->
+        </div>
+      </section>
+
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-columns">
+        <!-- Col 1: Brand Info -->
+        <div>
+          <div style="display: flex; align-items: center; gap: 0.65rem; margin-bottom: 0.75rem;">
+            <img src="icons/app-logo.png" alt="Sri Rani Cars" style="width: 38px; height: 38px; border-radius: 8px; border: 1px solid rgba(132, 212, 0, 0.35);">
+            <h3 style="color: white; font-size: 1.25rem; font-weight: 800; margin-bottom: 0;">SRI RANI CARS</h3>
+          </div>
+          <p style="font-size: 0.85rem; color: #94a3b8; line-height: 1.6; margin-bottom: 1.25rem;">
+            Salem and Vazhapadi's premier pre-owned multi-brand dealership. Certified quality cars with complete background checks and easy financing.
+          </p>
+          <div class="footer-social-row">
+            <a href="https://www.youtube.com/@ShriRanicars" target="_blank" class="footer-social-icon icon-youtube" title="YouTube Channel" aria-label="YouTube">
+              <i class="fab fa-youtube"></i>
+            </a>
+            <a href="https://www.instagram.com/shri_rani_cars" target="_blank" class="footer-social-icon icon-instagram" title="Instagram Profile" aria-label="Instagram">
+              <i class="fab fa-instagram"></i>
+            </a>
+            <a href="https://www.facebook.com/mkarthi.keyan.9212" target="_blank" class="footer-social-icon icon-facebook" title="Facebook Page" aria-label="Facebook">
+              <i class="fab fa-facebook-f"></i>
+            </a>
+            <a href="https://maps.app.goo.gl/2sRQouxHpMTtnd2m6" target="_blank" class="footer-social-icon icon-maps" title="Showroom Location on Google Maps" aria-label="Google Maps">
+              <i class="fas fa-map-marker-alt"></i>
+            </a>
+            <a href="https://wa.me/917550172585" target="_blank" class="footer-social-icon icon-whatsapp" title="WhatsApp" aria-label="WhatsApp">
+              <i class="fab fa-whatsapp"></i>
+            </a>
+            <a href="tel:9750332585" class="footer-social-icon icon-phone" title="Phone Call" aria-label="Phone Call">
+              <i class="fas fa-phone-alt"></i>
+            </a>
+          </div>
+        </div>
+
+        <!-- Col 2: Inventory Links -->
+        <div>
+          <h4 class="footer-col-title">Showroom Inventory</h4>
+          <ul class="footer-nav-list">
+            <li><a href="#inventory-section" onclick="backToShowroom(); filterByBrand('all');">All Available Cars</a></li>
+            <li><a href="#inventory-section" onclick="backToShowroom(); AppState.activeFuel='Diesel'; applyFilters();">Diesel Cars</a></li>
+            <li><a href="#inventory-section" onclick="backToShowroom(); AppState.activeFuel='Petrol'; applyFilters();">Petrol Cars</a></li>
+            <li><a href="#inventory-section" onclick="backToShowroom(); AppState.activeFuel='Electric'; applyFilters();">Electric Cars (EV)</a></li>
+            <li><a href="#inventory-section" onclick="backToShowroom(); AppState.activeBodyType='SUV'; applyFilters();">SUV & 7-Seaters</a></li>
+          </ul>
+        </div>
+
+        <!-- Col 3: Customer Services -->
+        <div>
+          <h4 class="footer-col-title">Customer Services</h4>
+          <ul class="footer-nav-list">
+            <li><a href="#calculator-section" onclick="backToShowroom()">Loan EMI Calculator</a></li>
+            <li><a href="javascript:void(0)" onclick="openSellCarModal()">Sell Your Car Online</a></li>
+            <li><a href="javascript:void(0)" onclick="openTestDriveModal()">Book Test Drive</a></li>
+            <li><a href="#location-section" onclick="backToShowroom()">Showroom Location</a></li>
+            <li><a href="admin.html">Admin Portal</a></li>
+          </ul>
+        </div>
+
+        <!-- Col 4: Contact Info -->
+        <div>
+          <h4 class="footer-col-title">Showroom Contact</h4>
+          <p style="font-size: 0.85rem; color: #cbd5e1; margin-bottom: 0.5rem; line-height: 1.5;">
+            Mangamma Salai, Near RTO Office, Puthupalayam, Vazhapadi, Salem - 636115.
+          </p>
+          <div style="font-size: 0.85rem; color: #94a3b8; display: flex; flex-direction: column; gap: 0.35rem; margin-top: 0.75rem;">
+            <div><i class="fas fa-phone-alt text-primary"></i> 97503 32585</div>
+            <div><i class="fab fa-whatsapp" style="color: var(--whatsapp);"></i> 75501 72585</div>
+            <div><i class="fas fa-clock text-gold"></i> Mon - Sun: 9:00 AM - 8:30 PM</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="footer-bottom-bar">
+        <div>© 2026 Sri Rani Cars. All rights reserved.</div>
+        <div>Vazhapadi & Salem Pre-Owned Car Dealership</div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- MOBILE BOTTOM NAVIGATION BAR -->
+  <nav class="mobile-bottom-bar">
+    <a href="#home" class="mob-nav-btn active" onclick="backToShowroom()">
+      <i class="fas fa-home"></i>
+      <span>Home</span>
+    </a>
+    <a href="#inventory-section" class="mob-nav-btn" onclick="backToShowroom()">
+      <i class="fas fa-car"></i>
+      <span>Cars</span>
+    </a>
+    <button type="button" class="mob-nav-btn" onclick="openFilterModal()">
+      <i class="fas fa-sliders"></i>
+      <span>Filter</span>
+    </button>
+    <a href="#location-section" class="mob-nav-btn" onclick="backToShowroom()">
+      <i class="fas fa-map-marker-alt"></i>
+      <span>Location</span>
+    </a>
+    <a href="#location-section" class="mob-nav-btn" onclick="backToShowroom()">
+      <i class="fas fa-phone-alt"></i>
+      <span>Contact</span>
+    </a>
+  </nav>
+
+  <!-- PWA INSTALL BOTTOM BANNER -->
+  <div id="pwa-install-banner" class="pwa-install-banner">
+    <div class="pwa-banner-text">
+      <img src="icons/icon-192.png" alt="Sri Rani Cars App Icon" class="pwa-banner-icon">
+      <div>
+        <div style="font-weight: 800; font-size: 0.88rem; color: #FFFFFF; line-height: 1.2;">Sri Rani Cars</div>
+        <div style="font-size: 0.74rem; color: #94A3B8;">Get the best experience with our app!</div>
+      </div>
+    </div>
+    <div class="pwa-controls">
+      <button type="button" id="pwa-install-btn" class="pwa-install-btn" onclick="installPWAApp()">Install App</button>
+      <button type="button" class="pwa-close-btn" onclick="dismissPWABanner()" aria-label="Dismiss">×</button>
+    </div>
+  </div>
+
+  <!-- FLOATING WHATSAPP & CALL DIAL -->
+  <div class="floating-dial">
+    <a href="https://wa.me/917550172585" target="_blank" class="fab-circle fab-whatsapp-btn" title="WhatsApp" aria-label="WhatsApp">
+      <i class="fab fa-whatsapp"></i>
+    </a>
+    <a href="tel:9750332585" class="fab-circle fab-call-btn" title="Call" aria-label="Call">
+      <i class="fas fa-phone-alt"></i>
+    </a>
+  </div>
+
+  <!-- ========================================================================= -->
+  <!-- MODALS -->
+  <!-- ========================================================================= -->
+
+  <!-- 1. SEARCH & FILTER MODAL DRAWER -->
+  <div id="filterModal" class="modal-layer" role="dialog" aria-modal="true">
+    <div class="modal-window">
+      <div class="modal-top">
+        <h3 class="modal-heading"><i class="fas fa-sliders text-primary"></i> Filter & Search Cars</h3>
+        <button type="button" class="modal-dismiss" onclick="closeFilterModal()">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+      <div class="modal-content-body">
+        
+        <!-- Search -->
+        <div class="form-field-group">
+          <label class="form-field-lbl">Search by Make, Model or Year</label>
+          <div class="search-field">
+            <i class="fas fa-search"></i>
+            <input type="text" id="modal-search-input" class="form-input-ctrl" placeholder="e.g. Dzire, Thar, Creta, Diesel...">
+          </div>
+        </div>
+
+        <div class="form-columns-2">
+          <!-- Fuel Filter -->
+          <div class="form-field-group">
+            <label class="form-field-lbl">Fuel Type</label>
+            <select id="modal-fuel-select" class="form-input-ctrl">
+              <option value="all">All Fuel Types</option>
+              <option value="Diesel">Diesel</option>
+              <option value="Petrol">Petrol</option>
+              <option value="Electric">Electric (EV)</option>
+              <option value="CNG">CNG</option>
+            </select>
+          </div>
+
+          <!-- Transmission -->
+          <div class="form-field-group">
+            <label class="form-field-lbl">Transmission</label>
+            <select id="modal-trans-select" class="form-input-ctrl">
+              <option value="all">All Transmissions</option>
+              <option value="Manual">Manual</option>
+              <option value="Automatic">Automatic / DCT / AMT</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-columns-2">
+          <!-- Budget -->
+          <div class="form-field-group">
+            <label class="form-field-lbl">Budget Range</label>
+            <select id="modal-budget-select" class="form-input-ctrl">
+              <option value="all">All Budgets</option>
+              <option value="under-8">Under ₹ 8 Lakh</option>
+              <option value="8-15">₹ 8 Lakh - ₹ 15 Lakh</option>
+              <option value="15-25">₹ 15 Lakh - ₹ 25 Lakh</option>
+              <option value="above-25">Above ₹ 25 Lakh</option>
+            </select>
+          </div>
+
+          <!-- Sort -->
+          <div class="form-field-group">
+            <label class="form-field-lbl">Sort By</label>
+            <select id="modal-sort-select" class="form-input-ctrl">
+              <option value="featured">Featured First</option>
+              <option value="price-low">Price: Low to High</option>
+              <option value="price-high">Price: High to Low</option>
+              <option value="year-new">Year: Newest</option>
+              <option value="kms-low">Kms: Lowest</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Body Type -->
+        <div class="form-field-group">
+          <label class="form-field-lbl">Body Type</label>
+          <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+            <button type="button" class="pill-tag-btn" data-filter-type="body" data-filter-val="all">All</button>
+            <button type="button" class="pill-tag-btn" data-filter-type="body" data-filter-val="SUV">SUV</button>
+            <button type="button" class="pill-tag-btn" data-filter-type="body" data-filter-val="Sedan">Sedan</button>
+            <button type="button" class="pill-tag-btn" data-filter-type="body" data-filter-val="MUV">7-Seater / MUV</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-actions-bar">
+        <button type="button" class="btn btn-outline" onclick="resetFilters(); closeFilterModal();">Reset</button>
+        <button type="button" class="btn btn-primary" onclick="applyModalFilters()">
+          <i class="fas fa-check"></i> Apply Filters
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 2. TEST DRIVE MODAL -->
+  <div id="testDriveModal" class="modal-layer" role="dialog" aria-modal="true">
+    <div class="modal-window">
+      <div class="modal-top">
+        <h3 class="modal-heading"><i class="fas fa-car text-primary"></i> Book Test Drive / Showroom Visit</h3>
+        <button type="button" class="modal-dismiss" onclick="closeTestDriveModal()">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+      <form onsubmit="handleTestDriveSubmit(event)">
+        <div class="modal-content-body">
+          <div class="form-field-group">
+            <label class="form-field-lbl">Interested Vehicle</label>
+            <input type="text" id="td-car-name" class="form-input-ctrl" placeholder="Car model" required>
+          </div>
+          <div class="form-columns-2">
+            <div class="form-field-group">
+              <label class="form-field-lbl">Your Full Name</label>
+              <input type="text" id="td-user-name" class="form-input-ctrl" placeholder="Full name" required>
+            </div>
+            <div class="form-field-group">
+              <label class="form-field-lbl">Mobile Number</label>
+              <input type="tel" id="td-user-phone" class="form-input-ctrl" placeholder="10-digit mobile number" required>
+            </div>
+          </div>
+          <div class="form-columns-2">
+            <div class="form-field-group">
+              <label class="form-field-lbl">Preferred Date</label>
+              <input type="date" id="td-date" class="form-input-ctrl" required>
+            </div>
+            <div class="form-field-group">
+              <label class="form-field-lbl">Your City / Town</label>
+              <input type="text" id="td-city" class="form-input-ctrl" placeholder="e.g. Salem, Vazhapadi" required>
+            </div>
+          </div>
+        </div>
+        <div class="modal-actions-bar">
+          <button type="button" class="btn btn-outline" onclick="closeTestDriveModal()">Cancel</button>
+          <button type="submit" class="btn btn-whatsapp">
+            <i class="fab fa-whatsapp"></i> Confirm via WhatsApp
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- 3. SELL CAR MODAL -->
+  <div id="sellCarModal" class="modal-layer" role="dialog" aria-modal="true">
+    <div class="modal-window">
+      <div class="modal-top">
+        <h3 class="modal-heading"><i class="fas fa-tag text-gold"></i> Sell Your Car - Free Valuation</h3>
+        <button type="button" class="modal-dismiss" onclick="closeSellCarModal()">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+      <form onsubmit="handleSellCarSubmit(event)">
+        <div class="modal-content-body">
+          <div class="form-columns-2">
+            <div class="form-field-group">
+              <label class="form-field-lbl">Car Brand / Make</label>
+              <input type="text" id="sell-brand" class="form-input-ctrl" placeholder="e.g. Maruti Suzuki, Hyundai" required>
+            </div>
+            <div class="form-field-group">
+              <label class="form-field-lbl">Model & Variant</label>
+              <input type="text" id="sell-model" class="form-input-ctrl" placeholder="e.g. Swift VXi, Thar LX" required>
+            </div>
+          </div>
+          <div class="form-columns-3">
+            <div class="form-field-group">
+              <label class="form-field-lbl">Reg. Year</label>
+              <input type="number" id="sell-year" class="form-input-ctrl" placeholder="e.g. 2021" min="2005" max="2026" required>
+            </div>
+            <div class="form-field-group">
+              <label class="form-field-lbl">Kms Driven</label>
+              <input type="number" id="sell-kms" class="form-input-ctrl" placeholder="e.g. 35000" required>
+            </div>
+            <div class="form-field-group">
+              <label class="form-field-lbl">Expected Price</label>
+              <input type="text" id="sell-price" class="form-input-ctrl" placeholder="e.g. ₹ 6.5 Lakh" required>
+            </div>
+          </div>
+          <div class="form-columns-2">
+            <div class="form-field-group">
+              <label class="form-field-lbl">Your Name</label>
+              <input type="text" id="sell-name" class="form-input-ctrl" placeholder="Full name" required>
+            </div>
+            <div class="form-field-group">
+              <label class="form-field-lbl">Mobile Number</label>
+              <input type="tel" id="sell-phone" class="form-input-ctrl" placeholder="Contact number" required>
+            </div>
+          </div>
+          <div class="form-field-group">
+            <label class="form-field-lbl">Location / City</label>
+            <input type="text" id="sell-city" class="form-input-ctrl" placeholder="e.g. Salem, Vazhapadi, Attur" required>
+          </div>
+        </div>
+        <div class="modal-actions-bar">
+          <button type="button" class="btn btn-outline" onclick="closeSellCarModal()">Cancel</button>
+          <button type="submit" class="btn btn-primary">
+            <i class="fas fa-paper-plane"></i> Submit for Free Valuation
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- JavaScript Modules -->
+  <script src="js/supabase-config.js?v=2.6"></script>
+  <script src="js/cars-data.js?v=2.6"></script>
+  <script src="js/app.js?v=2.6"></script>
+
+  <!-- PWA & Filter Drawer Helper Scripts -->
+  <script>
+    // Register Service Worker for PWA
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('./sw.js').catch(err => console.log('SW registration error:', err));
+      });
+    }
+
+    // PWA Install prompt handling
+    let deferredPrompt;
+    window.addEventListener('beforeinstallprompt', (e) => {
+      e.preventDefault();
+      deferredPrompt = e;
+      const banner = document.getElementById('pwa-install-banner');
+      if (banner) banner.style.display = 'flex';
+    });
+
+    function installPWAApp() {
+      if (deferredPrompt) {
+        deferredPrompt.prompt();
+        deferredPrompt.userChoice.then((choiceResult) => {
+          if (choiceResult.outcome === 'accepted') {
+            dismissPWABanner();
+          }
+          deferredPrompt = null;
+        });
+      } else {
+        alert('To install Sri Rani Cars app:\n\n1. In Chrome/Edge, click the install icon in the URL bar, or\n2. On Mobile, tap browser menu (⋮) and tap "Install app" or "Add to Home screen".');
+      }
+    }
+
+    function dismissPWABanner() {
+      const banner = document.getElementById('pwa-install-banner');
+      if (banner) banner.style.display = 'none';
+      localStorage.setItem('shri_rani_pwa_dismissed', 'true');
+    }
+
+    // Filter Modal functions
+    function openFilterModal() {
+      const modal = document.getElementById('filterModal');
+      if (modal) {
+        modal.classList.add('active');
+        document.body.style.overflow = 'hidden';
+      }
+    }
+
+    function closeFilterModal() {
+      const modal = document.getElementById('filterModal');
+      if (modal) {
+        modal.classList.remove('active');
+        document.body.style.overflow = '';
+      }
+    }
+
+    function applyModalFilters() {
+      const s = document.getElementById('modal-search-input').value;
+      const f = document.getElementById('modal-fuel-select').value;
+      const t = document.getElementById('modal-trans-select').value;
+      const b = document.getElementById('modal-budget-select').value;
+      const sort = document.getElementById('modal-sort-select').value;
+
+      AppState.searchQuery = s;
+      AppState.activeFuel = f;
+      AppState.activeTransmission = t;
+      AppState.activeBudget = b;
+      AppState.sortBy = sort;
+
+      applyFilters();
+      closeFilterModal();
+      document.getElementById('inventory-section').scrollIntoView({ behavior: 'smooth' });
+    }
+  </script>
+</body>
+</html>
