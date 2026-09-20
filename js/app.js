@@ -444,216 +444,233 @@ function viewCarDetails(carId) {
   AppState.currentGalleryIdx = 0;
 
   // Hide Main Landing & Show Product Page View
-  document.getElementById('main-showroom-view').style.display = 'none';
+  const mainShowroom = document.getElementById('main-showroom-view');
+  if (mainShowroom) mainShowroom.style.display = 'none';
+  
   const productView = document.getElementById('product-page-view');
-  productView.classList.add('active');
+  if (productView) productView.classList.add('active');
   window.scrollTo({ top: 0, behavior: 'smooth' });
 
   // Update URL hash
   history.pushState(null, '', `#car/${car.id}`);
 
-  // Populate Breadcrumbs
-  document.getElementById('product-breadcrumb-title').textContent = car.title;
+  // Populate Breadcrumb
+  const breadcrumbEl = document.getElementById('breadcrumb-car-name');
+  if (breadcrumbEl) breadcrumbEl.textContent = car.title || 'Vehicle Details';
 
-  // Title, Brand & Subtitle
-  document.getElementById('product-brand-tag').textContent = `${car.brand || 'Vehicle'} • ${car.body_type || 'Car'}`;
-  document.getElementById('product-title-text').textContent = car.title;
-  document.getElementById('product-variant-text').textContent = `${car.variant || 'Standard'} • ${car.year} Model • ${car.owners || '1st Owner'}`;
+  // Title, Brand Tag & Header
+  const brandTagEl = document.getElementById('product-brand-tag');
+  if (brandTagEl) brandTagEl.textContent = `${car.brand || 'SRI RANI'}`;
 
-  // Price Card
-  document.getElementById('product-price-val').textContent = formatCurrency(car.price);
-  if (car.original_price && car.original_price > car.price) {
-    document.getElementById('product-orig-price-val').textContent = formatCurrency(car.original_price);
-    document.getElementById('product-savings-badge').textContent = `Save ${formatCurrency(car.original_price - car.price)}`;
-    document.getElementById('product-savings-badge').style.display = 'inline-block';
-  } else {
-    document.getElementById('product-orig-price-val').textContent = '';
-    document.getElementById('product-savings-badge').style.display = 'none';
+  const titleMainEl = document.getElementById('product-title-main');
+  if (titleMainEl) titleMainEl.textContent = car.title || 'Certified Pre-Owned Vehicle';
+
+  // Quick Highlights Row
+  const yearBadge = document.getElementById('product-year-badge');
+  if (yearBadge) yearBadge.textContent = car.year || '2022';
+
+  const kmBadge = document.getElementById('product-km-badge');
+  if (kmBadge) kmBadge.textContent = `${(car.kms || 0).toLocaleString('en-IN')} km`;
+
+  const fuelBadge = document.getElementById('product-fuel-badge');
+  if (fuelBadge) fuelBadge.textContent = car.fuel_type || 'Petrol';
+
+  const transBadge = document.getElementById('product-trans-badge');
+  if (transBadge) transBadge.textContent = car.transmission || 'Manual';
+
+  const ownerBadge = document.getElementById('product-owner-badge');
+  if (ownerBadge) ownerBadge.textContent = car.owners || '1st Owner';
+
+  // Price & Savings Card
+  const priceValEl = document.getElementById('product-price-val');
+  if (priceValEl) priceValEl.textContent = formatCurrency(car.price);
+
+  const origPriceWrap = document.getElementById('product-orig-price-wrap');
+  const origPriceValEl = document.getElementById('product-orig-price-val');
+  if (origPriceWrap && origPriceValEl) {
+    if (car.original_price && car.original_price > car.price) {
+      origPriceValEl.textContent = formatCurrency(car.original_price);
+      origPriceWrap.style.display = 'block';
+    } else {
+      origPriceWrap.style.display = 'none';
+    }
   }
-  document.getElementById('product-emi-calc-note').textContent = calculateMonthlyEmi(car.price);
+
+  // Monthly EMI
+  const emiValEl = document.getElementById('product-emi-val');
+  if (emiValEl) emiValEl.textContent = `EMI starts at ${calculateMonthlyEmi(car.price)}/month`;
 
   // Status Badge
-  const statusBadge = document.getElementById('product-status-pill');
+  const statusBadge = document.getElementById('product-status-tag');
   if (statusBadge) {
-    statusBadge.textContent = car.status === 'Sold' ? 'Sold Out' : 'Available in Stock';
-    statusBadge.className = `card-badge-status ${car.status === 'Sold' ? 'status-badge-sold' : 'status-badge-avail'}`;
+    const isSold = car.status === 'Sold';
+    statusBadge.textContent = isSold ? 'Sold Out' : (car.status || 'Available in Stock');
+    statusBadge.className = `product-status-badge ${isSold ? 'status-sold' : ''}`;
+  }
+
+  // Favorite Button
+  const favBtn = document.getElementById('product-fav-btn');
+  if (favBtn) {
+    const isFav = isFavorited(car.id);
+    favBtn.className = `btn-fav-round ${isFav ? 'active' : ''}`;
+    favBtn.innerHTML = `<i class="${isFav ? 'fas' : 'far'} fa-heart"></i>`;
   }
 
   // Gallery Setup
-  const gallery = (car.gallery && car.gallery.length > 0) ? car.gallery : [car.image_url || 'https://images.unsplash.com/photo-1590362891991-f776e747a588?auto=format&fit=crop&w=1000&q=80'];
+  let gallery = [];
+  if (car.gallery && Array.isArray(car.gallery) && car.gallery.length > 0) {
+    gallery = car.gallery;
+  } else if (car.image_url) {
+    gallery = [car.image_url];
+  } else {
+    gallery = ['https://images.unsplash.com/photo-1590362891991-f776e747a588?auto=format&fit=crop&w=1000&q=80'];
+  }
+  AppState.currentGallery = gallery;
   renderProductGallery(gallery);
 
-  // Specs Matrix Grid
-  const specsGrid = document.getElementById('product-specs-grid-box');
-  if (specsGrid) {
-    specsGrid.innerHTML = `
-      <div class="spec-tile">
-        <div class="spec-tile-icon"><i class="fas fa-calendar-alt"></i></div>
-        <div>
-          <div class="spec-tile-lbl">Reg. Year</div>
-          <div class="spec-tile-val">${car.year || '2022'}</div>
-        </div>
-      </div>
-      <div class="spec-tile">
-        <div class="spec-tile-icon"><i class="fas fa-tachometer-alt"></i></div>
-        <div>
-          <div class="spec-tile-lbl">Kilometers</div>
-          <div class="spec-tile-val">${(car.kms || 0).toLocaleString('en-IN')} km</div>
-        </div>
-      </div>
-      <div class="spec-tile">
-        <div class="spec-tile-icon"><i class="fas fa-gas-pump"></i></div>
-        <div>
-          <div class="spec-tile-lbl">Fuel Type</div>
-          <div class="spec-tile-val">${car.fuel_type || 'Petrol'}</div>
-        </div>
-      </div>
-      <div class="spec-tile">
-        <div class="spec-tile-icon"><i class="fas fa-cogs"></i></div>
-        <div>
-          <div class="spec-tile-lbl">Transmission</div>
-          <div class="spec-tile-val">${car.transmission || 'Manual'}</div>
-        </div>
-      </div>
-      <div class="spec-tile">
-        <div class="spec-tile-icon"><i class="fas fa-user-shield"></i></div>
-        <div>
-          <div class="spec-tile-lbl">Ownership</div>
-          <div class="spec-tile-val">${car.owners || '1st Owner'}</div>
-        </div>
-      </div>
-      <div class="spec-tile">
-        <div class="spec-tile-icon"><i class="fas fa-file-contract"></i></div>
-        <div>
-          <div class="spec-tile-lbl">Insurance</div>
-          <div class="spec-tile-val" style="font-size: 0.8rem;">${car.insurance || 'Comprehensive Valid'}</div>
-        </div>
-      </div>
-      <div class="spec-tile">
-        <div class="spec-tile-icon"><i class="fas fa-map-marker-alt"></i></div>
-        <div>
-          <div class="spec-tile-lbl">RTO Passing</div>
-          <div class="spec-tile-val">${car.rto || 'TN 54 (Salem)'}</div>
-        </div>
-      </div>
-      <div class="spec-tile">
-        <div class="spec-tile-icon"><i class="fas fa-palette"></i></div>
-        <div>
-          <div class="spec-tile-lbl">Color</div>
-          <div class="spec-tile-val">${car.color || 'Standard'}</div>
-        </div>
-      </div>
-    `;
-  }
+  // Technical Specs Grid
+  const bodyVal = document.getElementById('spec-body-val');
+  if (bodyVal) bodyVal.textContent = car.body_type || 'Sedan / Hatchback';
 
-  // Key Features
-  const featCloud = document.getElementById('product-features-cloud');
-  if (featCloud) {
-    const featList = (car.features && car.features.length > 0)
+  const colorVal = document.getElementById('spec-color-val');
+  if (colorVal) colorVal.textContent = car.color || 'Standard';
+
+  const insVal = document.getElementById('spec-ins-val');
+  if (insVal) insVal.textContent = car.insurance || 'Comprehensive Valid';
+
+  const rtoVal = document.getElementById('spec-rto-val');
+  if (rtoVal) rtoVal.textContent = car.rto || 'TN 54 (Salem)';
+
+  // Key Features & Safety Equipment
+  const featBox = document.getElementById('product-features-box');
+  if (featBox) {
+    const defaultFeatures = ['Touchscreen Infotainment', 'Dual Airbags', 'ABS with EBD', 'Power Steering & Windows', 'Reverse Parking Sensors', 'Alloy Wheels', 'Rear AC Vents', 'Remote Central Locking'];
+    const featList = (car.features && Array.isArray(car.features) && car.features.length > 0)
       ? car.features
-      : ['Touchscreen Infotainment', 'Dual Airbags', 'ABS with EBD', 'Power Steering & Windows', 'Reverse Parking Sensors', 'Alloy Wheels'];
-    
-    featCloud.innerHTML = featList.map(f => `
-      <span class="feat-tag"><i class="fas fa-check-circle text-emerald"></i> ${f}</span>
+      : defaultFeatures;
+
+    featBox.innerHTML = featList.map(f => `
+      <span class="feat-tag"><i class="fas fa-check-circle" style="color: #16a34a;"></i> ${f}</span>
     `).join('');
   }
 
-  // Vehicle Description
-  document.getElementById('product-desc-paragraph').textContent = car.description || 'Pre-owned certified vehicle in mint condition at Sri Rani Cars showroom, Salem.';
+  // Vehicle Overview Description
+  const descEl = document.getElementById('product-desc-paragraph');
+  if (descEl) {
+    descEl.textContent = car.description || `${car.title} is a genuine certified pre-owned vehicle in pristine condition. Non-accidental, fully inspected by our master technicians, and ready for immediate delivery at Sri Rani Cars showroom, Salem & Vazhapadi.`;
+  }
 
-  // CTA Links
-  const waBtn = document.getElementById('product-wa-btn');
+  // Conversion CTAs
+  const waBtn = document.getElementById('product-whatsapp-cta');
   if (waBtn) {
-    const waText = encodeURIComponent(`Hello Sri Rani Cars, I would like to purchase / inquire about *${car.title}* (${car.year}, Price: ${formatCurrency(car.price)}). Please provide more details.`);
+    const waText = encodeURIComponent(`Hello Sri Rani Cars! I am interested in purchasing / booking *${car.title}* (${car.year} Model, ${car.fuel_type}, Price: ${formatCurrency(car.price)}). Please provide more photos and financing details.`);
     waBtn.href = `https://wa.me/917550172585?text=${waText}`;
   }
 
-  // Render Amazon/Flipkart Style Similar Cars
+  const callBtn = document.getElementById('product-call-cta');
+  if (callBtn) {
+    callBtn.href = 'tel:9750332585';
+  }
+
+  // Render All Available / Similar Cars Below Details View
   renderSimilarCars(car);
 }
 
 function renderProductGallery(gallery) {
-  const mainImg = document.getElementById('product-gallery-img');
-  const thumbsBox = document.getElementById('product-thumbs-box');
+  const mainImg = document.getElementById('product-main-view-image');
+  const thumbsBox = document.getElementById('product-thumbnails-box');
 
-  if (mainImg) {
-    mainImg.src = gallery[AppState.currentGalleryIdx] || gallery[0];
+  if (mainImg && gallery.length > 0) {
+    const activeImg = gallery[AppState.currentGalleryIdx] || gallery[0];
+    mainImg.src = activeImg;
   }
 
   if (thumbsBox) {
-    thumbsBox.innerHTML = gallery.map((img, idx) => `
-      <img src="${img}" class="product-thumb-item ${idx === AppState.currentGalleryIdx ? 'active' : ''}" onclick="setProductGalleryIdx(${idx})" alt="View ${idx + 1}">
-    `).join('');
+    if (gallery.length > 1) {
+      thumbsBox.style.display = 'flex';
+      thumbsBox.innerHTML = gallery.map((img, idx) => `
+        <img src="${img}" class="product-thumb-item ${idx === AppState.currentGalleryIdx ? 'active' : ''}" onclick="setProductGalleryIdx(${idx})" alt="Thumbnail ${idx + 1}" onerror="this.src='https://images.unsplash.com/photo-1590362891991-f776e747a588?auto=format&fit=crop&w=400&q=80'">
+      `).join('');
+    } else {
+      thumbsBox.style.display = 'none';
+      thumbsBox.innerHTML = '';
+    }
   }
 }
 
 function setProductGalleryIdx(idx) {
-  if (!AppState.currentCar) return;
-  const gallery = AppState.currentCar.gallery || [AppState.currentCar.image_url];
+  const gallery = AppState.currentGallery || [];
   if (idx >= 0 && idx < gallery.length) {
     AppState.currentGalleryIdx = idx;
     renderProductGallery(gallery);
   }
 }
 
-function productGalleryNext() {
+function toggleFavoriteFromProduct() {
   if (!AppState.currentCar) return;
-  const gallery = AppState.currentCar.gallery || [AppState.currentCar.image_url];
-  AppState.currentGalleryIdx = (AppState.currentGalleryIdx + 1) % gallery.length;
-  renderProductGallery(gallery);
+  toggleFavorite(AppState.currentCar.id);
+  const favBtn = document.getElementById('product-fav-btn');
+  if (favBtn) {
+    const isFav = isFavorited(AppState.currentCar.id);
+    favBtn.className = `btn-fav-round ${isFav ? 'active' : ''}`;
+    favBtn.innerHTML = `<i class="${isFav ? 'fas' : 'far'} fa-heart"></i>`;
+  }
 }
 
-function productGalleryPrev() {
-  if (!AppState.currentCar) return;
-  const gallery = AppState.currentCar.gallery || [AppState.currentCar.image_url];
-  AppState.currentGalleryIdx = (AppState.currentGalleryIdx - 1 + gallery.length) % gallery.length;
-  renderProductGallery(gallery);
+function openTestDriveModalForCurrentCar() {
+  const carTitle = AppState.currentCar ? AppState.currentCar.title : '';
+  openTestDriveModal(carTitle);
 }
 
 // Back to Showroom List
 function backToShowroom() {
   const productView = document.getElementById('product-page-view');
-  productView.classList.remove('active');
-  document.getElementById('main-showroom-view').style.display = 'block';
+  if (productView) productView.classList.remove('active');
+  const mainShowroom = document.getElementById('main-showroom-view');
+  if (mainShowroom) mainShowroom.style.display = 'block';
   history.pushState(null, '', window.location.pathname);
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
-// Render Similar / Related Cars (Amazon / Flipkart recommendation style)
+// Render All Other Available Cars Below Product View (Grid style)
 function renderSimilarCars(currentCar) {
   const container = document.getElementById('similar-cars-grid');
   if (!container) return;
 
-  // Filter cars matching same body type or brand or price range (excluding current car)
-  let similar = AppState.cars.filter(c => String(c.id) !== String(currentCar.id));
-  
-  // Sort by similarity: same brand or same body type first
-  similar.sort((a, b) => {
-    let scoreA = (a.brand === currentCar.brand ? 2 : 0) + (a.body_type === currentCar.body_type ? 1 : 0);
-    let scoreB = (b.brand === currentCar.brand ? 2 : 0) + (b.body_type === currentCar.body_type ? 1 : 0);
+  // Get all other available cars in inventory (excluding current car)
+  let otherCars = AppState.cars.filter(c => String(c.id) !== String(currentCar.id));
+
+  // Prioritize cars with same brand or same body type, then show all remaining
+  otherCars.sort((a, b) => {
+    let scoreA = (a.brand === currentCar.brand ? 3 : 0) + (a.body_type === currentCar.body_type ? 2 : 0) + (a.fuel_type === currentCar.fuel_type ? 1 : 0);
+    let scoreB = (b.brand === currentCar.brand ? 3 : 0) + (b.body_type === currentCar.body_type ? 2 : 0) + (b.fuel_type === currentCar.fuel_type ? 1 : 0);
     return scoreB - scoreA;
   });
 
-  similar = similar.slice(0, 3); // Take top 3 similar cars
-
-  if (similar.length === 0) {
-    container.innerHTML = '<p class="text-muted">No similar cars available right now.</p>';
+  if (otherCars.length === 0) {
+    container.innerHTML = '<p style="grid-column: 1 / -1; text-align: center; color: var(--text-muted); padding: 2rem 0;">No other cars available at this moment.</p>';
     return;
   }
 
-  container.innerHTML = similar.map(car => `
+  container.innerHTML = otherCars.map(car => `
     <div class="car-item-card" onclick="viewCarDetails('${car.id}')">
-      <div class="car-thumb-wrap" style="height: 180px;">
-        <img src="${car.image_url || 'https://images.unsplash.com/photo-1590362891991-f776e747a588?auto=format&fit=crop&w=600&q=80'}" alt="${car.title}">
+      <div class="car-thumb-wrap">
+        <img src="${car.image_url || 'https://images.unsplash.com/photo-1590362891991-f776e747a588?auto=format&fit=crop&w=600&q=80'}" alt="${car.title}" onerror="this.src='https://images.unsplash.com/photo-1590362891991-f776e747a588?auto=format&fit=crop&w=600&q=80'">
         <div class="card-badge-status ${car.status === 'Sold' ? 'status-badge-sold' : 'status-badge-avail'}">
           ${car.status || 'Available'}
         </div>
       </div>
-      <div class="card-content-area" style="padding: 1rem;">
-        <div class="card-make-line">${car.brand}</div>
-        <h4 class="card-car-title" style="font-size: 1.05rem;">${car.title}</h4>
-        <div style="font-size: 0.78rem; color: var(--text-muted); margin-bottom: 0.5rem;">${car.year} • ${car.fuel_type} • ${(car.kms || 0).toLocaleString('en-IN')} km</div>
-        <div style="font-size: 1.15rem; font-weight: 800; color: #0f172a; margin-top: auto;">${formatCurrency(car.price)}</div>
+      <div class="card-content-area">
+        <div class="card-make-line">${car.brand || 'CERTIFIED'}</div>
+        <h3 class="card-car-title">${car.title}</h3>
+        <div class="card-meta-line">
+          <span><i class="fas fa-calendar-alt"></i> ${car.year}</span>
+          <span><i class="fas fa-gas-pump"></i> ${car.fuel_type}</span>
+          <span><i class="fas fa-tachometer-alt"></i> ${(car.kms || 0).toLocaleString('en-IN')} km</span>
+        </div>
+        <div class="card-price-row">
+          <div class="card-price-tag">${formatCurrency(car.price)}</div>
+        </div>
       </div>
     </div>
   `).join('');
