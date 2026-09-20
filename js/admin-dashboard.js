@@ -667,71 +667,90 @@ function removeGalleryImage(idx) {
 async function handleMasterCarFormSubmit(e) {
   e.preventDefault();
 
-  const brand = document.getElementById('form-car-brand').value;
-  const model = document.getElementById('form-car-model').value.trim();
-  const variant = document.getElementById('form-car-variant').value.trim();
-  const year = Number(document.getElementById('form-car-year').value);
-  const price = Number(document.getElementById('form-car-price').value);
-  const isNegotiable = document.getElementById('form-car-negotiable').checked;
-  const fuel = document.getElementById('form-car-fuel').value;
-  const transmission = document.getElementById('form-car-trans').value;
-  const kms = Number(document.getElementById('form-car-kms').value);
-  const bodyType = document.getElementById('form-car-body').value;
-  const color = document.getElementById('form-car-color').value.trim();
-  const owners = document.getElementById('form-car-owners').value;
-  const regYear = Number(document.getElementById('form-car-regyear').value) || year;
-  const insurance = document.getElementById('form-car-insurance').value.trim();
-  const location = document.getElementById('form-car-location').value.trim();
-  const description = document.getElementById('form-car-desc').value.trim();
-  const status = document.getElementById('form-car-status').value;
-  const isFeatured = document.getElementById('form-car-featured').checked;
+  try {
+    const getVal = (id, defaultVal = '') => {
+      const el = document.getElementById(id);
+      return el ? el.value.trim() : defaultVal;
+    };
+    const getNum = (id, defaultVal = 0) => {
+      const el = document.getElementById(id);
+      const n = Number(el ? el.value : defaultVal);
+      return isNaN(n) ? defaultVal : n;
+    };
+    const getChecked = (id) => {
+      const el = document.getElementById(id);
+      return el ? el.checked : false;
+    };
 
-  const title = `${brand} ${model} ${variant}`.trim();
+    const brand = getVal('form-car-brand', 'Maruti Suzuki');
+    const model = getVal('form-car-model', '');
+    const variant = getVal('form-car-variant', '');
+    const year = getNum('form-car-year', 2022);
+    const price = getNum('form-car-price', 0);
+    const isNegotiable = getChecked('form-car-negotiable');
+    const fuel = getVal('form-car-fuel', 'Petrol');
+    const transmission = getVal('form-car-trans', 'Manual');
+    const kms = getNum('form-car-kms', 0);
+    const bodyType = getVal('form-car-body', 'SUV');
+    const color = getVal('form-car-color', '');
+    const owners = getVal('form-car-owners', '1st Owner');
+    const regYear = getNum('form-car-regyear', year);
+    const insurance = getVal('form-car-insurance', '');
+    const location = getVal('form-car-location', 'TN 54 (Salem)');
+    const description = getVal('form-car-desc', '');
+    const status = getVal('form-car-status', 'Available');
+    const isFeatured = getChecked('form-car-featured');
 
-  // Primary image & gallery
-  const gallery = AdminDashboard.carFormImages.length > 0 
-    ? AdminDashboard.carFormImages 
-    : ['https://images.unsplash.com/photo-1590362891991-f776e747a588?auto=format&fit=crop&w=1000&q=80'];
+    const title = `${brand} ${model} ${variant}`.trim();
 
-  const primaryImage = gallery[AdminDashboard.primaryImageIndex] || gallery[0];
+    // Primary image & gallery
+    const gallery = AdminDashboard.carFormImages.length > 0 
+      ? [...AdminDashboard.carFormImages] 
+      : ['https://images.unsplash.com/photo-1590362891991-f776e747a588?auto=format&fit=crop&w=1000&q=80'];
 
-  const carPayload = {
-    title,
-    brand,
-    model,
-    variant,
-    year,
-    reg_year: regYear,
-    price,
-    is_negotiable: isNegotiable,
-    kms,
-    fuel_type: fuel,
-    transmission,
-    body_type: bodyType,
-    color,
-    owners,
-    insurance,
-    rto: location,
-    description,
-    status,
-    is_featured: isFeatured,
-    features: AdminDashboard.carFormFeatures,
-    image_url: primaryImage,
-    gallery: gallery
-  };
+    const primaryImage = gallery[AdminDashboard.primaryImageIndex] || gallery[0];
 
-  if (AdminDashboard.editingCarId) {
-    await window.CarService.updateCar(AdminDashboard.editingCarId, carPayload);
-    showToast('Car details updated successfully!');
-    logActivity(`Updated vehicle: ${title}`);
-  } else {
-    await window.CarService.addCar(carPayload);
-    showToast('New car published to showroom!');
-    logActivity(`Published new vehicle: ${title}`);
+    const carPayload = {
+      title,
+      brand,
+      model,
+      variant,
+      year,
+      reg_year: regYear,
+      price,
+      is_negotiable: isNegotiable,
+      kms,
+      fuel_type: fuel,
+      transmission,
+      body_type: bodyType,
+      color,
+      owners,
+      insurance,
+      rto: location,
+      description,
+      status,
+      is_featured: isFeatured,
+      features: [...AdminDashboard.carFormFeatures],
+      image_url: primaryImage,
+      gallery: gallery
+    };
+
+    if (AdminDashboard.editingCarId) {
+      await window.CarService.updateCar(AdminDashboard.editingCarId, carPayload);
+      showToast('Car details updated successfully!', 'success');
+      logActivity(`Updated vehicle: ${title}`);
+    } else {
+      await window.CarService.addCar(carPayload);
+      showToast('New car published to showroom!', 'success');
+      logActivity(`Published new vehicle: ${title}`);
+    }
+
+    await loadDashboardData();
+    navigateTo('cars');
+  } catch (err) {
+    console.error('Car submit error:', err);
+    showToast('Failed to save car. Please try again.', 'error');
   }
-
-  await loadDashboardData();
-  navigateTo('cars');
 }
 
 // ==========================================================================

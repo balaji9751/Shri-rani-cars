@@ -981,6 +981,21 @@ input, select, textarea {
   .sidebar-mobile-overlay.active {
     display: block;
   }
+
+  /* Clean up cluttered subtitle text on mobile devices as requested */
+  #header-view-sub,
+  .admin-header-subtitle,
+  .admin-page-subtitle,
+  .sidebar-header-desc,
+  .header-page-title-box p {
+    display: none !important;
+  }
+
+  .header-page-title-box h1 {
+    font-size: 1.15rem;
+    line-height: 1.1;
+    margin: 0;
+  }
 }
 
 /* ==========================================================================

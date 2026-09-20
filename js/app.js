@@ -197,17 +197,32 @@ function applyFilters() {
     else if (b === 'above-25') list = list.filter(c => c.price > 2500000);
   }
 
-  // Search
+  // Multi-Attribute Omni-Search Engine
   if (AppState.searchQuery.trim()) {
-    const q = AppState.searchQuery.toLowerCase().trim();
-    list = list.filter(c => 
-      (c.title && c.title.toLowerCase().includes(q)) ||
-      (c.brand && c.brand.toLowerCase().includes(q)) ||
-      (c.model && c.model.toLowerCase().includes(q)) ||
-      (c.variant && c.variant.toLowerCase().includes(q)) ||
-      (c.fuel_type && c.fuel_type.toLowerCase().includes(q)) ||
-      (String(c.year).includes(q))
-    );
+    const rawTokens = AppState.searchQuery.toLowerCase().trim().split(/\s+/).filter(t => t.length > 0);
+    
+    list = list.filter(c => {
+      const haystack = [
+        c.title || '',
+        c.brand || '',
+        c.model || '',
+        c.variant || '',
+        c.fuel_type || '',
+        c.transmission || '',
+        c.body_type || '',
+        c.owners || '',
+        c.color || '',
+        c.rto || '',
+        c.insurance || '',
+        c.description || '',
+        String(c.year || ''),
+        String(c.reg_year || ''),
+        String(c.kms || ''),
+        Array.isArray(c.features) ? c.features.join(' ') : ''
+      ].join(' ').toLowerCase();
+
+      return rawTokens.every(token => haystack.includes(token));
+    });
   }
 
   // Sort
@@ -222,6 +237,69 @@ function applyFilters() {
   
   const countBadge = document.getElementById('inventory-count-badge');
   if (countBadge) countBadge.textContent = `${AppState.filteredCars.length} Cars Available`;
+}
+
+// Omni-Search Modal Controllers
+function openSearchModal() {
+  const modal = document.getElementById('searchModal');
+  if (modal) {
+    modal.classList.add('active');
+    document.body.style.overflow = 'hidden';
+    const input = document.getElementById('omni-search-input');
+    if (input) {
+      input.value = AppState.searchQuery;
+      setTimeout(() => input.focus(), 100);
+    }
+    updateSearchFeedback();
+  }
+}
+
+function closeSearchModal() {
+  const modal = document.getElementById('searchModal');
+  if (modal) {
+    modal.classList.remove('active');
+    document.body.style.overflow = '';
+  }
+}
+
+function handleOmniSearchInput(val) {
+  AppState.searchQuery = val;
+  applyFilters();
+  updateSearchFeedback();
+}
+
+function quickOmniSearch(query) {
+  const input = document.getElementById('omni-search-input');
+  if (input) input.value = query;
+  AppState.searchQuery = query;
+  applyFilters();
+  updateSearchFeedback();
+}
+
+function clearOmniSearch() {
+  const input = document.getElementById('omni-search-input');
+  if (input) input.value = '';
+  AppState.searchQuery = '';
+  applyFilters();
+  updateSearchFeedback();
+}
+
+function executeSearchModal() {
+  closeSearchModal();
+  const invSection = document.getElementById('inventory-section');
+  if (invSection) {
+    invSection.scrollIntoView({ behavior: 'smooth' });
+  }
+}
+
+function updateSearchFeedback() {
+  const feedback = document.getElementById('search-modal-feedback');
+  if (!feedback) return;
+  if (!AppState.searchQuery.trim()) {
+    feedback.innerHTML = `Showing all <strong>${AppState.cars.length}</strong> available showroom vehicles.`;
+  } else {
+    feedback.innerHTML = `Found <strong style="color: #16a34a;">${AppState.filteredCars.length}</strong> vehicle${AppState.filteredCars.length === 1 ? '' : 's'} matching "<em>${AppState.searchQuery}</em>"`;
+  }
 }
 
 // Render Main Showroom Grid
