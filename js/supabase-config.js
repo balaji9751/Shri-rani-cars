@@ -309,13 +309,76 @@ window.CarService = {
 
     try {
       const local = localStorage.getItem(STORAGE_KEYS.HOMEPAGE);
-      if (local) return JSON.parse(local);
+      if (local) {
+        const parsed = JSON.parse(local);
+        if (!parsed.heroBanners || !Array.isArray(parsed.heroBanners)) {
+          parsed.heroBanners = [
+            {
+              id: 'banner_1',
+              tag: 'Certified Pre-Owned',
+              tagIcon: 'fa-certificate',
+              heading: 'Tested, Certified & Road Ready',
+              sub: '140-Point Quality Inspection • Instant Financing • Salem & Vazhapadi',
+              image: 'https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&w=1200&q=80',
+              active: true
+            },
+            {
+              id: 'banner_2',
+              tag: '100% Non-Accidental',
+              tagIcon: 'fa-shield-alt',
+              heading: 'Multi-Brand Pre-Owned Showroom',
+              sub: 'Verified Kilometers • Single Owner Options • Fast RC Transfer',
+              image: 'https://images.unsplash.com/photo-1580273916550-e323be2ae537?auto=format&fit=crop&w=1200&q=80',
+              active: true
+            },
+            {
+              id: 'banner_3',
+              tag: 'Instant EMI Approval',
+              tagIcon: 'fa-bolt',
+              heading: 'Lowest Interest Rates & Free Valuation',
+              sub: 'Sell or Exchange Your Car for Best Showroom Price',
+              image: 'https://images.unsplash.com/photo-1533473359331-0135ef1b58bf?auto=format&fit=crop&w=1200&q=80',
+              active: true
+            }
+          ];
+        }
+        return parsed;
+      }
     } catch (e) {}
 
     return {
-      heroHeading: 'Premium Cars. Certified Quality. Unmatched Value.',
-      heroSubtitle: "Discover Salem and Vazhapadi's most reliable collection of certified pre-owned vehicles. Rigorous 140-point technical inspection, instant financing, and transparent paperwork.",
-      heroImage: 'https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&w=1200&q=80'
+      heroHeading: 'Tested, Certified & Road Ready',
+      heroSubtitle: '140-Point Quality Inspection • Instant Financing • Salem & Vazhapadi',
+      heroImage: 'https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&w=1200&q=80',
+      heroBanners: [
+        {
+          id: 'banner_1',
+          tag: 'Certified Pre-Owned',
+          tagIcon: 'fa-certificate',
+          heading: 'Tested, Certified & Road Ready',
+          sub: '140-Point Quality Inspection • Instant Financing • Salem & Vazhapadi',
+          image: 'https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&w=1200&q=80',
+          active: true
+        },
+        {
+          id: 'banner_2',
+          tag: '100% Non-Accidental',
+          tagIcon: 'fa-shield-alt',
+          heading: 'Multi-Brand Pre-Owned Showroom',
+          sub: 'Verified Kilometers • Single Owner Options • Fast RC Transfer',
+          image: 'https://images.unsplash.com/photo-1580273916550-e323be2ae537?auto=format&fit=crop&w=1200&q=80',
+          active: true
+        },
+        {
+          id: 'banner_3',
+          tag: 'Instant EMI Approval',
+          tagIcon: 'fa-bolt',
+          heading: 'Lowest Interest Rates & Free Valuation',
+          sub: 'Sell or Exchange Your Car for Best Showroom Price',
+          image: 'https://images.unsplash.com/photo-1533473359331-0135ef1b58bf?auto=format&fit=crop&w=1200&q=80',
+          active: true
+        }
+      ]
     };
   },
 
