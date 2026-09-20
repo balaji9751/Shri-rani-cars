@@ -1049,6 +1049,182 @@
         </div>
       </form>
     </div>
+  <!-- ========================================================================= -->
+  <!-- DEDICATED VEHICLE PHOTO STUDIO & CROP EDITOR MODAL -->
+  <!-- ========================================================================= -->
+  <div id="carPhotoStudioModal" class="admin-modal-backdrop">
+    <div class="admin-modal-container studio-modal-container">
+      <div class="admin-modal-header">
+        <div>
+          <h3 style="display: flex; align-items: center; gap: 0.5rem; font-size: 1.15rem; font-weight: 800; color: #071426;">
+            <i class="fas fa-camera-retro text-primary"></i> Vehicle Photo Studio & Crop Editor
+          </h3>
+          <p style="font-size: 0.8rem; color: var(--text-muted); margin-top: 0.2rem;">
+            Crop, zoom, rotate, adjust framing, and see instant live previews for Desktop & Mobile displays
+          </p>
+        </div>
+        <button type="button" class="btn-thumb-action" onclick="closePhotoStudioModal()" title="Close">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+
+      <div class="studio-workbench">
+        <!-- LEFT COLUMN: INTERACTIVE EDITOR & CONTROLS -->
+        <div class="studio-editor-pane">
+          <!-- Aspect Ratio Switcher -->
+          <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 0.5rem;">
+            <span style="font-size: 0.78rem; font-weight: 800; color: #071426;">Aspect Ratio Preset:</span>
+            <div class="studio-aspect-pills">
+              <button type="button" class="studio-aspect-btn active" onclick="setStudioAspect('16-9', this)">16:9 (Standard)</button>
+              <button type="button" class="studio-aspect-btn" onclick="setStudioAspect('4-3', this)">4:3 (Classic)</button>
+              <button type="button" class="studio-aspect-btn" onclick="setStudioAspect('3-2', this)">3:2 (DSLR)</button>
+              <button type="button" class="studio-aspect-btn" onclick="setStudioAspect('1-1', this)">1:1 (Square)</button>
+            </div>
+          </div>
+
+          <!-- Interactive Viewport -->
+          <div class="studio-canvas-viewport aspect-16-9" id="studio-viewport">
+            <img id="studio-editor-image" src="" alt="Editing Car Photo">
+
+            <!-- Rule of Thirds WhatsApp-style Grid Overlay -->
+            <div class="crop-grid-overlay" id="studio-grid-lines">
+              <div class="grid-line-h h1"></div>
+              <div class="grid-line-h h2"></div>
+              <div class="grid-line-v v1"></div>
+              <div class="grid-line-v v2"></div>
+            </div>
+          </div>
+
+          <!-- Quick Transform Tools -->
+          <div class="studio-btn-group">
+            <button type="button" class="studio-btn-tool" onclick="rotateStudioPhoto(90)">
+              <i class="fas fa-redo"></i> Rotate 90°
+            </button>
+            <button type="button" class="studio-btn-tool" onclick="flipStudioPhoto('H')">
+              <i class="fas fa-arrows-alt-h"></i> Flip H
+            </button>
+            <button type="button" class="studio-btn-tool" onclick="flipStudioPhoto('V')">
+              <i class="fas fa-arrows-alt-v"></i> Flip V
+            </button>
+            <button type="button" class="studio-btn-tool" onclick="toggleStudioGrid()">
+              <i class="fas fa-border-all"></i> Grid Lines
+            </button>
+            <button type="button" class="studio-btn-tool" onclick="resetStudioEdits()" style="margin-left: auto; color: #EF4444;">
+              <i class="fas fa-undo"></i> Reset All
+            </button>
+          </div>
+
+          <!-- Fine-Tune Sliders -->
+          <div class="studio-control-box">
+            <!-- Zoom Slider -->
+            <div class="studio-slider-row">
+              <label><i class="fas fa-search-plus text-primary"></i> Zoom Level:</label>
+              <input type="range" id="studio-zoom" min="50" max="250" value="100" oninput="applyStudioTransforms()">
+              <span class="studio-slider-val" id="studio-zoom-val">100%</span>
+            </div>
+
+            <!-- Vertical Position (Pan Y) -->
+            <div class="studio-slider-row">
+              <label><i class="fas fa-arrows-alt-v text-primary"></i> Vertical Pan:</label>
+              <input type="range" id="studio-pan-y" min="-150" max="150" value="0" oninput="applyStudioTransforms()">
+              <span class="studio-slider-val" id="studio-pan-y-val">0px</span>
+            </div>
+
+            <!-- Horizontal Position (Pan X) -->
+            <div class="studio-slider-row">
+              <label><i class="fas fa-arrows-alt-h text-primary"></i> Horizontal Pan:</label>
+              <input type="range" id="studio-pan-x" min="-150" max="150" value="0" oninput="applyStudioTransforms()">
+              <span class="studio-slider-val" id="studio-pan-x-val">0px</span>
+            </div>
+
+            <!-- Brightness -->
+            <div class="studio-slider-row">
+              <label><i class="fas fa-sun text-primary"></i> Brightness:</label>
+              <input type="range" id="studio-brightness" min="50" max="150" value="100" oninput="applyStudioTransforms()">
+              <span class="studio-slider-val" id="studio-brightness-val">100%</span>
+            </div>
+
+            <!-- Contrast -->
+            <div class="studio-slider-row">
+              <label><i class="fas fa-adjust text-primary"></i> Contrast:</label>
+              <input type="range" id="studio-contrast" min="50" max="150" value="100" oninput="applyStudioTransforms()">
+              <span class="studio-slider-val" id="studio-contrast-val">100%</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- RIGHT COLUMN: DUAL LIVE PREVIEWS -->
+        <div class="studio-preview-pane">
+          <div class="preview-pane-header">
+            <span><i class="fas fa-eye text-primary"></i> Live User Experience Preview</span>
+            <span style="font-size: 0.72rem; color: #16A34A; font-weight: 700; background: #DCFCE7; padding: 0.15rem 0.5rem; border-radius: 999px;">Real-Time Sync</span>
+          </div>
+
+          <!-- 1. Desktop Web Preview Mockup -->
+          <div>
+            <div style="font-size: 0.75rem; font-weight: 800; color: #334155; margin-bottom: 0.4rem; display: flex; align-items: center; gap: 0.35rem;">
+              <i class="fas fa-desktop text-primary"></i> 1. Desktop Website Inventory Card:
+            </div>
+            <div class="preview-desktop-mock">
+              <div class="desktop-mock-top">
+                <img id="studio-desktop-preview-img" class="desktop-mock-img" src="" alt="Desktop Preview">
+                <span style="position: absolute; top: 8px; left: 8px; background: #071426; color: var(--admin-lime); font-size: 0.65rem; font-weight: 800; padding: 0.2rem 0.5rem; border-radius: 4px;">
+                  100% VERIFIED
+                </span>
+                <span style="position: absolute; bottom: 8px; right: 8px; background: rgba(7, 20, 38, 0.85); color: white; font-size: 0.65rem; font-weight: 700; padding: 0.15rem 0.4rem; border-radius: 4px;">
+                  <i class="fas fa-images"></i> HD Photos
+                </span>
+              </div>
+              <div class="desktop-mock-body">
+                <div style="font-weight: 800; font-size: 0.88rem; color: #071426;" id="studio-preview-car-name">Vehicle Name Preview</div>
+                <div style="font-weight: 800; font-size: 0.95rem; color: #16A34A; margin-top: 0.2rem;">₹ 8,75,000</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 2. Mobile Phone Screen Preview -->
+          <div>
+            <div style="font-size: 0.75rem; font-weight: 800; color: #334155; margin-bottom: 0.4rem; display: flex; align-items: center; gap: 0.35rem;">
+              <i class="fas fa-mobile-alt text-primary"></i> 2. Mobile Smartphone Display (App & Browser):
+            </div>
+            <div class="preview-mobile-wrapper">
+              <div class="mobile-phone-frame">
+                <div class="mobile-notch"></div>
+                <div class="mobile-screen-card">
+                  <div class="mobile-mock-img-box">
+                    <img id="studio-mobile-preview-img" class="mobile-mock-img" src="" alt="Mobile Preview">
+                    <span style="position: absolute; top: 6px; left: 6px; background: #071426; color: var(--admin-lime); font-size: 0.58rem; font-weight: 800; padding: 0.15rem 0.4rem; border-radius: 4px;">
+                      SRI RANI CERTIFIED
+                    </span>
+                  </div>
+                  <div class="mobile-mock-info">
+                    <div style="font-weight: 800; font-size: 0.78rem; color: #071426; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+                      Touchscreen • 1st Owner
+                    </div>
+                    <div style="font-weight: 800; font-size: 0.82rem; color: #16A34A; margin-top: 0.15rem;">
+                      EMI ₹ 14,500/mo
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <div class="admin-modal-footer" style="display: flex; justify-content: space-between; align-items: center;">
+        <div style="font-size: 0.78rem; color: var(--text-muted);">
+          Export: <strong style="color: #071426;">1200 × 675 px (High-Res WebP)</strong>
+        </div>
+        <div style="display: flex; gap: 0.75rem;">
+          <button type="button" class="btn btn-outline" onclick="closePhotoStudioModal()">Cancel</button>
+          <button type="button" class="btn btn-lime" onclick="saveStudioEditedPhoto()">
+            <i class="fas fa-check-circle"></i> Apply & Save to Gallery
+          </button>
+        </div>
+      </div>
+    </div>
   </div>
 
   <!-- SCRIPTS -->

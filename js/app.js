@@ -483,6 +483,10 @@ function viewCarDetails(carId) {
   if (productView) productView.classList.add('active');
   window.scrollTo({ top: 0, behavior: 'smooth' });
 
+  // Dynamic SEO Title & Schema update
+  document.title = `${car.title || 'Car'} (${car.year || ''}) for Sale | Shri Rani Cars Vazhapadi, Salem`;
+  updateCarStructuredData(car);
+
   // Update URL hash
   history.pushState(null, '', `#car/${car.id}`);
 
@@ -701,8 +705,63 @@ function backToShowroom() {
   if (productView) productView.classList.remove('active');
   const mainShowroom = document.getElementById('main-showroom-view');
   if (mainShowroom) mainShowroom.style.display = 'block';
+  
+  // Restore Homepage SEO Title & Remove Car Schema
+  document.title = 'Shri Rani Cars — Pre-Owned Luxury Cars Showroom | Vazhapadi, Salem';
+  const dynamicSchema = document.getElementById('dynamic-car-jsonld');
+  if (dynamicSchema) dynamicSchema.remove();
+
   history.pushState(null, '', window.location.pathname);
   window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// Dynamic Schema.org Car JSON-LD Generator
+function updateCarStructuredData(car) {
+  if (!car) return;
+  let dynamicScript = document.getElementById('dynamic-car-jsonld');
+  if (!dynamicScript) {
+    dynamicScript = document.createElement('script');
+    dynamicScript.id = 'dynamic-car-jsonld';
+    dynamicScript.type = 'application/ld+json';
+    document.head.appendChild(dynamicScript);
+  }
+
+  const carSchema = {
+    "@context": "https://schema.org",
+    "@type": "Car",
+    "name": car.title || "Pre-Owned Car",
+    "brand": {
+      "@type": "Brand",
+      "name": car.brand || "Multi-Brand"
+    },
+    "model": car.title || "Vehicle",
+    "productionDate": String(car.year || 2022),
+    "vehicleModelDate": String(car.year || 2022),
+    "mileageFromOdometer": {
+      "@type": "QuantitativeValue",
+      "value": car.kms || 0,
+      "unitCode": "KMT"
+    },
+    "fuelType": car.fuel_type || "Petrol",
+    "vehicleTransmission": car.transmission || "Manual",
+    "color": car.color || "Standard",
+    "bodyType": car.body_type || "Car",
+    "image": car.image_url || "https://shriranicars.com/icons/icon-512.png",
+    "offers": {
+      "@type": "Offer",
+      "price": car.price || 0,
+      "priceCurrency": "INR",
+      "availability": car.status === 'Sold' ? "https://schema.org/SoldOut" : "https://schema.org/InStock",
+      "seller": {
+        "@type": "AutoDealer",
+        "name": "Shri Rani Cars",
+        "telephone": "+919750332585",
+        "url": "https://shriranicars.com/"
+      }
+    }
+  };
+
+  dynamicScript.textContent = JSON.stringify(carSchema, null, 2);
 }
 
 // Render All Other Available Cars Below Product View (Grid style)

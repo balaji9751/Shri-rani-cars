@@ -1479,5 +1479,263 @@ select.form-input-ctrl,
   border: 1px solid rgba(132, 212, 0, 0.4);
 }
 
+/* ==========================================================================
+   VEHICLE PHOTO STUDIO & CROP EDITOR WORKBENCH
+   ========================================================================== */
+.studio-modal-container {
+  max-width: 1100px !important;
+  width: 95% !important;
+  max-height: 92vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.studio-workbench {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.5rem;
+  padding: 1.25rem;
+  overflow-y: auto;
+  max-height: calc(92vh - 140px);
+}
+
+@media (min-width: 992px) {
+  .studio-workbench {
+    grid-template-columns: 1.25fr 1fr;
+    gap: 1.75rem;
+  }
+}
+
+/* Editor Left Column */
+.studio-editor-pane {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.studio-canvas-viewport {
+  position: relative;
+  width: 100%;
+  height: 320px;
+  background: #071426;
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid #1e293b;
+  box-shadow: inset 0 2px 12px rgba(0,0,0,0.6);
+  user-select: none;
+}
+
+.studio-canvas-viewport.aspect-16-9 { aspect-ratio: 16/9; height: auto; min-height: 280px; }
+.studio-canvas-viewport.aspect-4-3 { aspect-ratio: 4/3; height: auto; min-height: 280px; }
+.studio-canvas-viewport.aspect-3-2 { aspect-ratio: 3/2; height: auto; min-height: 280px; }
+.studio-canvas-viewport.aspect-1-1 { aspect-ratio: 1/1; height: auto; max-height: 340px; }
+
+#studio-editor-image {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  transition: transform 0.1s ease, filter 0.15s ease;
+  transform-origin: center center;
+  pointer-events: none;
+}
+
+/* Control Pills & Sliders */
+.studio-aspect-pills {
+  display: flex;
+  gap: 0.4rem;
+  flex-wrap: wrap;
+}
+
+.studio-aspect-btn {
+  padding: 0.35rem 0.75rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+  border-radius: 6px;
+  border: 1px solid #CBD5E1;
+  background: #F8FAFC;
+  color: #334155;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.studio-aspect-btn:hover {
+  border-color: #071426;
+}
+
+.studio-aspect-btn.active {
+  background: #071426;
+  color: var(--admin-lime);
+  border-color: #071426;
+}
+
+.studio-control-box {
+  background: #F8FAFC;
+  border: 1px solid #E2E8F0;
+  border-radius: var(--radius-md);
+  padding: 0.85rem 1rem;
+}
+
+.studio-slider-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  margin-bottom: 0.65rem;
+}
+
+.studio-slider-row:last-child {
+  margin-bottom: 0;
+}
+
+.studio-slider-row label {
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: #334155;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  min-width: 110px;
+}
+
+.studio-slider-row input[type="range"] {
+  flex: 1;
+  accent-color: #071426;
+}
+
+.studio-slider-val {
+  font-size: 0.75rem;
+  font-weight: 800;
+  color: #0f172a;
+  min-width: 42px;
+  text-align: right;
+}
+
+.studio-btn-group {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.studio-btn-tool {
+  padding: 0.4rem 0.75rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+  border-radius: 6px;
+  border: 1px solid #CBD5E1;
+  background: white;
+  color: #0f172a;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.studio-btn-tool:hover {
+  background: #071426;
+  color: var(--admin-lime);
+  border-color: #071426;
+}
+
+/* Right Column: Dual Live Preview (Desktop & Mobile) */
+.studio-preview-pane {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.preview-pane-header {
+  font-size: 0.85rem;
+  font-weight: 800;
+  color: #071426;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-bottom: 0.5rem;
+  border-bottom: 1.5px solid #E2E8F0;
+}
+
+/* 1. Desktop Card Live Preview */
+.preview-desktop-mock {
+  background: white;
+  border-radius: var(--radius-md);
+  border: 1.5px solid #E2E8F0;
+  overflow: hidden;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.06);
+}
+
+.desktop-mock-top {
+  position: relative;
+  height: 160px;
+  background: #071426;
+  overflow: hidden;
+}
+
+.desktop-mock-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.desktop-mock-body {
+  padding: 0.75rem 0.9rem;
+}
+
+/* 2. Mobile Phone Live Mockup */
+.preview-mobile-wrapper {
+  display: flex;
+  justify-content: center;
+  padding: 0.5rem 0;
+}
+
+.mobile-phone-frame {
+  width: 250px;
+  background: #071426;
+  border-radius: 28px;
+  padding: 10px 8px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.25);
+  border: 3px solid #1E293B;
+  position: relative;
+}
+
+.mobile-notch {
+  width: 60px;
+  height: 6px;
+  background: #1E293B;
+  border-radius: 999px;
+  margin: 0 auto 8px;
+}
+
+.mobile-screen-card {
+  background: white;
+  border-radius: 16px;
+  overflow: hidden;
+}
+
+.mobile-mock-img-box {
+  position: relative;
+  height: 130px;
+  background: #071426;
+  overflow: hidden;
+}
+
+.mobile-mock-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.mobile-mock-info {
+  padding: 0.6rem 0.75rem;
+}
+
+.btn-thumb-action.edit-btn:hover {
+  background: var(--admin-lime);
+  color: #071426;
+}
+
 
 

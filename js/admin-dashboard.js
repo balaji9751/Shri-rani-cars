@@ -654,6 +654,9 @@ function renderImageGalleryThumbnails() {
         <img src="${imgUrl}" alt="Car Image ${idx + 1}">
         ${isPrimary ? '<span class="gallery-card-badge">PRIMARY</span>' : ''}
         <div class="gallery-card-actions">
+          <button type="button" class="btn-thumb-action edit-btn" onclick="openPhotoStudioForCarImage(${idx})" title="Edit / Crop / Zoom Photo">
+            <i class="fas fa-crop-alt"></i>
+          </button>
           <button type="button" class="btn-thumb-action" onclick="setAsPrimaryImage(${idx})" title="Set as Primary Cover Photo">
             <i class="fas fa-star"></i>
           </button>
@@ -1362,3 +1365,276 @@ function closeMobileSidebar() {
   if (sidebar) sidebar.classList.remove('mobile-open');
   if (overlay) overlay.classList.remove('active');
 }
+
+// ==========================================================================
+// VEHICLE PHOTO STUDIO & CROP EDITOR CONTROLLER
+// ==========================================================================
+const PhotoStudio = {
+  activeIdx: null,
+  rawSrc: '',
+  aspect: '16-9',
+  zoom: 100,
+  panX: 0,
+  panY: 0,
+  rotate: 0,
+  flipH: false,
+  flipV: false,
+  brightness: 100,
+  contrast: 100,
+  showGrid: true
+};
+
+function openPhotoStudioForCarImage(idx) {
+  const imgUrl = AdminDashboard.carFormImages[idx];
+  if (!imgUrl) return;
+
+  PhotoStudio.activeIdx = idx;
+  PhotoStudio.rawSrc = imgUrl;
+  
+  // Reset edits for fresh opening
+  PhotoStudio.aspect = '16-9';
+  PhotoStudio.zoom = 100;
+  PhotoStudio.panX = 0;
+  PhotoStudio.panY = 0;
+  PhotoStudio.rotate = 0;
+  PhotoStudio.flipH = false;
+  PhotoStudio.flipV = false;
+  PhotoStudio.brightness = 100;
+  PhotoStudio.contrast = 100;
+  PhotoStudio.showGrid = true;
+
+  // Sync Slider UI
+  syncStudioSlidersToState();
+
+  // Populate Images
+  const editorImg = document.getElementById('studio-editor-image');
+  const deskImg = document.getElementById('studio-desktop-preview-img');
+  const mobImg = document.getElementById('studio-mobile-preview-img');
+  const carNamePrev = document.getElementById('studio-preview-car-name');
+
+  const currentCarName = (document.getElementById('form-car-title') && document.getElementById('form-car-title').value.trim()) 
+    || 'Certified Vehicle';
+  if (carNamePrev) carNamePrev.textContent = currentCarName;
+
+  if (editorImg) editorImg.src = imgUrl;
+  if (deskImg) deskImg.src = imgUrl;
+  if (mobImg) mobImg.src = imgUrl;
+
+  // Apply default 16:9 aspect ratio pill
+  document.querySelectorAll('.studio-aspect-btn').forEach((btn, i) => {
+    btn.classList.toggle('active', i === 0);
+  });
+  const viewport = document.getElementById('studio-viewport');
+  if (viewport) {
+    viewport.className = 'studio-canvas-viewport aspect-16-9';
+  }
+
+  applyStudioTransforms();
+
+  const modal = document.getElementById('carPhotoStudioModal');
+  if (modal) {
+    modal.classList.add('active');
+    document.body.style.overflow = 'hidden';
+  }
+}
+
+function closePhotoStudioModal() {
+  const modal = document.getElementById('carPhotoStudioModal');
+  if (modal) {
+    modal.classList.remove('active');
+    document.body.style.overflow = '';
+  }
+}
+
+function setStudioAspect(aspectKey, btnEl) {
+  PhotoStudio.aspect = aspectKey;
+  document.querySelectorAll('.studio-aspect-btn').forEach(b => b.classList.remove('active'));
+  if (btnEl) btnEl.classList.add('active');
+
+  const viewport = document.getElementById('studio-viewport');
+  if (viewport) {
+    viewport.className = `studio-canvas-viewport aspect-${aspectKey}`;
+  }
+  applyStudioTransforms();
+}
+
+function rotateStudioPhoto(degrees) {
+  PhotoStudio.rotate = (PhotoStudio.rotate + degrees) % 360;
+  applyStudioTransforms();
+}
+
+function flipStudioPhoto(axis) {
+  if (axis === 'H') PhotoStudio.flipH = !PhotoStudio.flipH;
+  if (axis === 'V') PhotoStudio.flipV = !PhotoStudio.flipV;
+  applyStudioTransforms();
+}
+
+function toggleStudioGrid() {
+  PhotoStudio.showGrid = !PhotoStudio.showGrid;
+  const grid = document.getElementById('studio-grid-lines');
+  if (grid) grid.style.display = PhotoStudio.showGrid ? 'block' : 'none';
+}
+
+function resetStudioEdits() {
+  PhotoStudio.zoom = 100;
+  PhotoStudio.panX = 0;
+  PhotoStudio.panY = 0;
+  PhotoStudio.rotate = 0;
+  PhotoStudio.flipH = false;
+  PhotoStudio.flipV = false;
+  PhotoStudio.brightness = 100;
+  PhotoStudio.contrast = 100;
+
+  syncStudioSlidersToState();
+  applyStudioTransforms();
+  showToast('All image adjustments reset', 'info');
+}
+
+function syncStudioSlidersToState() {
+  const zEl = document.getElementById('studio-zoom');
+  const pyEl = document.getElementById('studio-pan-y');
+  const pxEl = document.getElementById('studio-pan-x');
+  const brEl = document.getElementById('studio-brightness');
+  const ctEl = document.getElementById('studio-contrast');
+
+  if (zEl) zEl.value = PhotoStudio.zoom;
+  if (pyEl) pyEl.value = PhotoStudio.panY;
+  if (pxEl) pxEl.value = PhotoStudio.panX;
+  if (brEl) brEl.value = PhotoStudio.brightness;
+  if (ctEl) ctEl.value = PhotoStudio.contrast;
+
+  updateSliderValueLabels();
+}
+
+function updateSliderValueLabels() {
+  const zLbl = document.getElementById('studio-zoom-val');
+  const pyLbl = document.getElementById('studio-pan-y-val');
+  const pxLbl = document.getElementById('studio-pan-x-val');
+  const brLbl = document.getElementById('studio-brightness-val');
+  const ctLbl = document.getElementById('studio-contrast-val');
+
+  if (zLbl) zLbl.textContent = `${PhotoStudio.zoom}%`;
+  if (pyLbl) pyLbl.textContent = `${PhotoStudio.panY}px`;
+  if (pxLbl) pxLbl.textContent = `${PhotoStudio.panX}px`;
+  if (brLbl) brLbl.textContent = `${PhotoStudio.brightness}%`;
+  if (ctLbl) ctLbl.textContent = `${PhotoStudio.contrast}%`;
+}
+
+function applyStudioTransforms() {
+  // Read current slider inputs if available
+  const zEl = document.getElementById('studio-zoom');
+  const pyEl = document.getElementById('studio-pan-y');
+  const pxEl = document.getElementById('studio-pan-x');
+  const brEl = document.getElementById('studio-brightness');
+  const ctEl = document.getElementById('studio-contrast');
+
+  if (zEl) PhotoStudio.zoom = Number(zEl.value);
+  if (pyEl) PhotoStudio.panY = Number(pyEl.value);
+  if (pxEl) PhotoStudio.panX = Number(pxEl.value);
+  if (brEl) PhotoStudio.brightness = Number(brEl.value);
+  if (ctEl) PhotoStudio.contrast = Number(ctEl.value);
+
+  updateSliderValueLabels();
+
+  const scale = PhotoStudio.zoom / 100;
+  const scaleX = PhotoStudio.flipH ? -1 : 1;
+  const scaleY = PhotoStudio.flipV ? -1 : 1;
+  const transformCss = `translate(${PhotoStudio.panX}px, ${PhotoStudio.panY}px) scale(${scale}) rotate(${PhotoStudio.rotate}deg) scaleX(${scaleX}) scaleY(${scaleY})`;
+  const filterCss = `brightness(${PhotoStudio.brightness}%) contrast(${PhotoStudio.contrast}%)`;
+
+  // Apply to Main Editor
+  const editorImg = document.getElementById('studio-editor-image');
+  if (editorImg) {
+    editorImg.style.transform = transformCss;
+    editorImg.style.filter = filterCss;
+  }
+
+  // Apply to Desktop Live Preview
+  const deskImg = document.getElementById('studio-desktop-preview-img');
+  if (deskImg) {
+    deskImg.style.transform = transformCss;
+    deskImg.style.filter = filterCss;
+  }
+
+  // Apply to Mobile Live Preview
+  const mobImg = document.getElementById('studio-mobile-preview-img');
+  if (mobImg) {
+    mobImg.style.transform = transformCss;
+    mobImg.style.filter = filterCss;
+  }
+}
+
+// Render edited photo to high-res canvas and save to inventory gallery
+async function saveStudioEditedPhoto() {
+  if (PhotoStudio.activeIdx === null || !PhotoStudio.rawSrc) return;
+
+  showToast('Rendering high-res edited car photo...', 'info');
+
+  try {
+    const canvas = document.createElement('canvas');
+    let outW = 1200;
+    let outH = 675; // 16:9
+
+    if (PhotoStudio.aspect === '4-3') { outW = 1200; outH = 900; }
+    else if (PhotoStudio.aspect === '3-2') { outW = 1200; outH = 800; }
+    else if (PhotoStudio.aspect === '1-1') { outW = 1000; outH = 1000; }
+
+    canvas.width = outW;
+    canvas.height = outH;
+    const ctx = canvas.getContext('2d');
+
+    const img = new Image();
+    img.crossOrigin = 'anonymous';
+    img.src = PhotoStudio.rawSrc;
+
+    await new Promise((resolve, reject) => {
+      img.onload = resolve;
+      img.onerror = () => reject(new Error('Failed to load image for rendering'));
+    });
+
+    // Draw background
+    ctx.fillStyle = '#071426';
+    ctx.fillRect(0, 0, outW, outH);
+
+    // Apply Filter on Canvas Context
+    ctx.filter = `brightness(${PhotoStudio.brightness}%) contrast(${PhotoStudio.contrast}%)`;
+
+    // Apply Transformations
+    ctx.save();
+    ctx.translate(outW / 2 + PhotoStudio.panX * (outW / 360), outH / 2 + PhotoStudio.panY * (outH / 240));
+    ctx.rotate((PhotoStudio.rotate * Math.PI) / 180);
+    ctx.scale(
+      (PhotoStudio.zoom / 100) * (PhotoStudio.flipH ? -1 : 1), 
+      (PhotoStudio.zoom / 100) * (PhotoStudio.flipV ? -1 : 1)
+    );
+
+    // Draw image centered
+    const imgAspect = img.width / img.height;
+    const targetAspect = outW / outH;
+    let renderW = outW;
+    let renderH = outH;
+
+    if (imgAspect > targetAspect) {
+      renderW = outH * imgAspect;
+      renderH = outH;
+    } else {
+      renderW = outW;
+      renderH = outW / imgAspect;
+    }
+
+    ctx.drawImage(img, -renderW / 2, -renderH / 2, renderW, renderH);
+    ctx.restore();
+
+    // Export as high-quality WebP
+    const editedDataUrl = canvas.toDataURL('image/webp', 0.88);
+    AdminDashboard.carFormImages[PhotoStudio.activeIdx] = editedDataUrl;
+
+    renderImageGalleryThumbnails();
+    closePhotoStudioModal();
+    showToast('✨ Photo edits & framing applied to vehicle gallery!', 'success');
+  } catch (err) {
+    console.error('Studio render error:', err);
+    showToast('Failed to render edited photo: ' + err.message, 'error');
+  }
+}
+

@@ -1,0 +1,9 @@
+# Robots.txt for Shri Rani Cars (https://shriranicars.com)
+User-agent: *
+Allow: /
+Disallow: /admin.html
+Disallow: /js/admin.js
+Disallow: /js/admin-dashboard.js
+
+# Sitemap location for Googlebot, Bingbot & Search Indexers
+Sitemap: https://shriranicars.com/sitemap.xml

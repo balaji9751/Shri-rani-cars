@@ -1161,7 +1161,7 @@ input, select, textarea {
   background: #071426;
   color: white;
   padding: 0.65rem 0.85rem;
-  display: flex;
+  display: none; /* Hidden by default until prompted on eligible browser */
   align-items: center;
   justify-content: space-between;
   gap: 0.65rem;
@@ -1170,6 +1170,17 @@ input, select, textarea {
   box-shadow: 0 8px 30px rgba(0, 0, 0, 0.5);
   border: 1px solid rgba(132, 212, 0, 0.45);
   animation: slideUp 0.3s ease;
+}
+
+/* Hide permanently in Standalone PWA / Desktop App / Mobile App Mode */
+@media all and (display-mode: standalone), 
+       all and (display-mode: window-controls-overlay), 
+       all and (display-mode: fullscreen), 
+       all and (display-mode: minimal-ui) {
+  .pwa-install-banner,
+  #pwa-install-banner {
+    display: none !important;
+  }
 }
 
 @media (min-width: 992px) {
