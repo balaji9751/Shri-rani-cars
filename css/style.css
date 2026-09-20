@@ -147,25 +147,22 @@ input, select, textarea {
 .brand-link {
   display: flex;
   align-items: center;
-  gap: 0.75rem;
+  text-decoration: none;
+  padding: 4px 0;
 }
 
 .brand-logo-img {
-  width: 48px;
-  height: 38px;
-  border-radius: var(--radius-sm);
+  height: 52px;
+  width: auto;
+  max-width: 210px;
   object-fit: contain;
-  background: #FFFFFF;
-  padding: 2px 4px;
-  box-shadow: 0 4px 15px rgba(7, 20, 38, 0.12);
-  flex-shrink: 0;
-  border: 1px solid rgba(132, 212, 0, 0.4);
+  background: transparent;
+  display: block;
   transition: var(--transition);
 }
 
 .brand-link:hover .brand-logo-img {
-  transform: scale(1.05);
-  box-shadow: var(--lime-glow);
+  transform: scale(1.04);
 }
 
 .brand-badge-icon {
@@ -214,9 +211,10 @@ input, select, textarea {
     display: none; /* Icon-only for Search/Admin on mobile */
   }
   .brand-logo-img {
-    width: 42px;
-    height: 34px;
-    padding: 1px 3px;
+    height: 44px;
+    width: auto;
+    max-width: 170px;
+    padding: 0;
   }
 }
 

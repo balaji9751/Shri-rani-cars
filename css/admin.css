@@ -143,12 +143,12 @@ input, select, textarea {
 }
 
 .sidebar-logo-img {
-  width: 44px;
-  height: 38px;
-  border-radius: var(--radius-sm);
+  width: 50px;
+  height: 42px;
+  border-radius: 8px;
   object-fit: contain;
   background: #FFFFFF;
-  padding: 2px 4px;
+  padding: 2px 5px;
   flex-shrink: 0;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
   border: 1px solid rgba(132, 212, 0, 0.45);
