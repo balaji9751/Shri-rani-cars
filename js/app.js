@@ -24,8 +24,9 @@ document.addEventListener('DOMContentLoaded', async () => {
   initStandaloneCalculator();
   updateWishlistCount();
 
-  // Check URL hash for direct car linking e.g. #car_101
+  // Check URL hash & browser/phone back button navigation
   handleHashNavigation();
+  window.addEventListener('popstate', handleHashNavigation);
   window.addEventListener('hashchange', handleHashNavigation);
 
   // Realtime Supabase Sync Listeners
@@ -468,7 +469,7 @@ function resetFilters() {
 // ==========================================================================
 // FULL-PAGE FLIPKART/AMAZON STYLE CAR PRODUCT VIEW
 // ==========================================================================
-function viewCarDetails(carId) {
+function viewCarDetails(carId, updateHistory = true) {
   const car = AppState.cars.find(c => String(c.id) === String(carId));
   if (!car) return;
 
@@ -487,8 +488,10 @@ function viewCarDetails(carId) {
   document.title = `${car.title || 'Car'} (${car.year || ''}) for Sale | Shri Rani Cars Vazhapadi, Salem`;
   updateCarStructuredData(car);
 
-  // Update URL hash
-  history.pushState(null, '', `#car/${car.id}`);
+  // Update URL hash & push history state if initiated by user click
+  if (updateHistory) {
+    history.pushState({ view: 'product', carId: car.id }, '', `#car/${car.id}`);
+  }
 
   // Populate Breadcrumb
   const breadcrumbEl = document.getElementById('breadcrumb-car-name');
@@ -700,7 +703,7 @@ function openTestDriveModalForCurrentCar() {
 }
 
 // Back to Showroom List
-function backToShowroom() {
+function backToShowroom(updateHistory = true) {
   const productView = document.getElementById('product-page-view');
   if (productView) productView.classList.remove('active');
   const mainShowroom = document.getElementById('main-showroom-view');
@@ -711,7 +714,9 @@ function backToShowroom() {
   const dynamicSchema = document.getElementById('dynamic-car-jsonld');
   if (dynamicSchema) dynamicSchema.remove();
 
-  history.pushState(null, '', window.location.pathname);
+  if (updateHistory && window.location.hash.startsWith('#car/')) {
+    history.pushState({ view: 'home' }, '', window.location.pathname);
+  }
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
@@ -808,17 +813,37 @@ function renderSimilarCars(currentCar) {
   `).join('');
 }
 
-// Handle Direct URL hash navigation e.g. #car/car_101
+// Handle Direct URL hash & Browser / Mobile Back Button Navigation
 function handleHashNavigation() {
   const hash = window.location.hash;
-  if (hash.startsWith('#car/')) {
+  if (hash && hash.startsWith('#car/')) {
     const carId = hash.replace('#car/', '');
     if (AppState.cars.length > 0) {
-      viewCarDetails(carId);
+      viewCarDetails(carId, false);
     } else {
-      setTimeout(() => viewCarDetails(carId), 500);
+      setTimeout(() => viewCarDetails(carId, false), 400);
     }
+  } else {
+    // If user clicked browser / phone back button while viewing product page, return to showroom
+    const productView = document.getElementById('product-page-view');
+    if (productView && productView.classList.contains('active')) {
+      backToShowroom(false);
+    }
+    
+    // Close any open modals when navigating back
+    closeAllOpenModals();
   }
+}
+
+function closeAllOpenModals() {
+  const modalIds = ['searchModal', 'filterModal', 'favsModal', 'favoritesModal', 'sellCarModal', 'testDriveModal'];
+  modalIds.forEach(id => {
+    const m = document.getElementById(id);
+    if (m && m.classList.contains('active')) {
+      m.classList.remove('active');
+    }
+  });
+  document.body.style.overflow = '';
 }
 
 // Standalone EMI Calculator

@@ -214,15 +214,21 @@
           <a href="#location-section" class="nav-link" onclick="backToShowroom()">Contact</a>
         </nav>
 
-        <!-- Header Actions -->
+        <!-- Header Actions: Unified Round Action Cluster -->
         <div class="header-right">
-          <a href="admin.html" class="btn btn-outline btn-sm" title="Admin Portal">
-            <i class="fas fa-lock"></i> <span>Admin</span>
+          <a href="tel:9750332585" class="header-action-btn header-call-btn" title="Call Showroom" aria-label="Call Showroom">
+            <i class="fas fa-phone-alt"></i>
           </a>
-          <button type="button" class="btn-fav-header" id="header-fav-btn" onclick="openFavoritesModal()" title="Saved / Favorite Cars">
+          <a href="https://wa.me/917550172585" target="_blank" class="header-action-btn header-wa-btn" title="WhatsApp Inquiry" aria-label="WhatsApp">
+            <i class="fab fa-whatsapp"></i>
+          </a>
+          <button type="button" class="header-action-btn header-fav-btn" id="header-fav-btn" onclick="openFavoritesModal()" title="Saved / Favorite Cars" aria-label="Saved Cars">
             <i class="fas fa-heart"></i>
             <span class="fav-count-badge" id="header-fav-count" style="display: none;">0</span>
           </button>
+          <a href="admin.html" class="header-action-btn header-admin-btn" title="Admin Portal" aria-label="Admin Portal">
+            <i class="fas fa-lock"></i>
+          </a>
         </div>
       </div>
     </div>
