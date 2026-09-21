@@ -51,7 +51,7 @@ async function syncHomepageFromConfig() {
         if (activeBanners.length > 0) {
           const slidesHtml = activeBanners.map((banner, idx) => `
             <div class="hero-slide ${idx === 0 ? 'active' : ''}">
-              <img src="${banner.image}" alt="${banner.heading || 'Sri Rani Cars'}" loading="lazy">
+              <img src="${banner.image}" alt="${banner.heading || 'Shri Rani Cars'}" loading="lazy">
               <div class="hero-slide-caption">
                 <span class="hero-slide-tag"><i class="fas ${banner.tagIcon || 'fa-certificate'} text-primary"></i> ${banner.tag || 'Certified Pre-Owned'}</span>
                 <h2>${banner.heading || 'Tested, Certified & Road Ready'}</h2>
@@ -132,7 +132,7 @@ async function loadInventory() {
       <div style="grid-column: 1/-1; text-align: center; padding: 3.5rem 1rem;">
         <i class="fas fa-spinner fa-spin" style="font-size: 2.5rem; color: var(--primary);"></i>
         <h3 style="margin-top: 1rem; font-weight: 700; color: #0f172a;">Loading Showroom Cars...</h3>
-        <p class="text-muted">Fetching certified pre-owned vehicles from Sri Rani Cars.</p>
+        <p class="text-muted">Fetching certified pre-owned vehicles from Shri Rani Cars.</p>
       </div>
     `;
   }
@@ -499,7 +499,7 @@ function viewCarDetails(carId, updateHistory = true) {
 
   // Title, Brand Tag & Header
   const brandTagEl = document.getElementById('product-brand-tag');
-  if (brandTagEl) brandTagEl.textContent = `${car.brand || 'SRI RANI'}`;
+  if (brandTagEl) brandTagEl.textContent = `${car.brand || 'SHRI RANI'}`;
 
   const titleMainEl = document.getElementById('product-title-main');
   if (titleMainEl) titleMainEl.textContent = car.title || 'Certified Pre-Owned Vehicle';
@@ -610,7 +610,7 @@ function viewCarDetails(carId, updateHistory = true) {
   // Vehicle Overview Description
   const descEl = document.getElementById('product-desc-paragraph');
   if (descEl) {
-    descEl.textContent = car.description || `${car.title} is a genuine certified pre-owned vehicle in pristine condition. Non-accidental, fully inspected by our master technicians, and ready for immediate delivery at Sri Rani Cars showroom, Salem & Vazhapadi.`;
+    descEl.textContent = car.description || `${car.title} is a genuine certified pre-owned vehicle in pristine condition. Non-accidental, fully inspected by our master technicians, and ready for immediate delivery at Shri Rani Cars showroom, Salem & Vazhapadi.`;
   }
 
   // Conversion CTAs
@@ -637,7 +637,7 @@ function handleProductWhatsAppInquiry(e) {
   const phone = '917550172585';
   const priceText = formatCurrency(car.price);
   const msg = [
-    `🚗 *SRI RANI CARS — SHOWROOM VEHICLE INQUIRY*`,
+    `🚗 *SHRI RANI CARS — SHOWROOM VEHICLE INQUIRY*`,
     `---------------------------------------------`,
     `📌 *Vehicle:* ${car.title || 'Car'}`,
     `💰 *Price:* ${priceText}`,
@@ -649,7 +649,7 @@ function handleProductWhatsAppInquiry(e) {
     `🎨 *Color:* ${car.color || 'Standard'}`,
     `📍 *RTO / Location:* ${car.rto || 'TN 54 (Salem)'}`,
     `---------------------------------------------`,
-    `Hello Sri Rani Cars! I am interested in purchasing / inspecting this vehicle. Please share full photos, service records, and test drive booking details.`
+    `Hello Shri Rani Cars! I am interested in purchasing / inspecting this vehicle. Please share full photos, service records, and test drive booking details.`
   ].join('\n');
 
   const waUrl = `https://api.whatsapp.com/send?phone=${phone}&text=${encodeURIComponent(msg)}`;
@@ -928,7 +928,7 @@ async function handleTestDriveSubmit(e) {
   showToast('Test drive request submitted! Opening WhatsApp confirmation...');
   closeTestDriveModal();
 
-  const waMsg = encodeURIComponent(`Hello Sri Rani Cars, I would like to book a Test Drive for *${carName}* on ${date}. My Name: ${name}, Phone: ${phone}, City: ${city}.`);
+  const waMsg = encodeURIComponent(`Hello Shri Rani Cars, I would like to book a Test Drive for *${carName}* on ${date}. My Name: ${name}, Phone: ${phone}, City: ${city}.`);
   window.open(`https://wa.me/917550172585?text=${waMsg}`, '_blank');
 }
 
@@ -972,7 +972,7 @@ async function handleSellCarSubmit(e) {
   showToast('Valuation request submitted! Opening WhatsApp...');
   closeSellCarModal();
 
-  const waMsg = encodeURIComponent(`Hello Sri Rani Cars, I want to SELL my car:\n- Vehicle: ${year} ${brand} ${model}\n- Kms Driven: ${kms}\n- Expected Price: ${expectedPrice}\n- Name: ${name}\n- Mobile: ${phone}\n- Location: ${city}`);
+  const waMsg = encodeURIComponent(`Hello Shri Rani Cars, I want to SELL my car:\n- Vehicle: ${year} ${brand} ${model}\n- Kms Driven: ${kms}\n- Expected Price: ${expectedPrice}\n- Name: ${name}\n- Mobile: ${phone}\n- Location: ${city}`);
   window.open(`https://wa.me/917550172585?text=${waMsg}`, '_blank');
 }
 

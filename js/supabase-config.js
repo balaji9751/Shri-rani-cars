@@ -1,5 +1,5 @@
 // ==========================================================================
-// SRI RANI CARS — MASTER SUPABASE & REALTIME DATA SERVICE
+// SHRI RANI CARS — MASTER SUPABASE & REALTIME DATA SERVICE
 // Fast Real-Time Synchronization with Postgres & Optimistic Local Cache
 // ==========================================================================
 
@@ -264,7 +264,7 @@ window.CarService = {
     } catch (e) {}
 
     return {
-      businessName: 'Sri Rani Cars',
+      businessName: 'Shri Rani Cars',
       phone1: '9750332585',
       phone2: '7550172585',
       whatsapp: '7550172585',

@@ -1,5 +1,5 @@
-// Service Worker for Sri Rani Cars PWA
-const CACHE_NAME = 'sri-rani-cars-v7';
+// Service Worker for Shri Rani Cars PWA
+const CACHE_NAME = 'shri-rani-cars-v8';
 const ASSETS_TO_CACHE = [
   './',
   './index.html',
