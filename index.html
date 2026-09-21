@@ -236,7 +236,7 @@
       <div class="header-container">
         <!-- Logo -->
         <a href="#home" class="brand-link" onclick="backToShowroom()" title="Shri Rani Cars — Return to Home">
-          <img src="icons/app-logo.png" alt="Shri Rani Cars Dealership Logo" title="Shri Rani Cars Dealership Logo" width="160" height="42" class="brand-logo-img" fetchpriority="high">
+          <img src="icons/app-logo-clean.png" alt="Shri Rani Cars Dealership Logo" title="Shri Rani Cars Dealership Logo" width="160" height="42" class="brand-logo-img" fetchpriority="high">
         </a>
 
         <!-- Desktop Navigation -->
@@ -280,7 +280,9 @@
         <div class="quick-search-placeholder">
           <span>Search by Brand, Model, Year, Fuel, Budget...</span>
         </div>
-        <span class="quick-search-btn-badge"><i class="fas fa-arrow-right"></i></span>
+        <button type="button" class="quick-search-btn-badge" onclick="event.stopPropagation(); openFilterModal();" title="Filter Vehicles" aria-label="Filter Vehicles">
+          <i class="fas fa-sliders-h"></i>
+        </button>
       </div>
     </div>
   </div>
@@ -294,11 +296,11 @@
         <div class="hero-slider-wrap" id="hero-slider-wrap">
           <!-- Slide 1 -->
           <div class="hero-slide active">
-            <img src="https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&w=900&q=75" alt="Certified Luxury Pre-Owned Cars" title="Certified Luxury Pre-Owned Cars at Shri Rani Cars" width="900" height="506" id="hero-main-img" fetchpriority="high">
+            <img src="https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&w=900&q=75" alt="Certified Luxury Pre-Owned Cars" title="Certified Luxury Pre-Owned Cars at Shri Rani Cars Salem" width="900" height="506" id="hero-main-img" fetchpriority="high">
             <div class="hero-slide-caption">
-              <span class="hero-slide-tag"><i class="fas fa-certificate text-primary"></i> Certified Pre-Owned</span>
-              <h2 id="hero-main-heading">Tested, Certified & Road Ready</h2>
-              <p id="hero-main-sub">140-Point Quality Inspection • Instant Financing • Salem & Vazhapadi</p>
+              <span class="hero-slide-tag"><i class="fas fa-shield-alt"></i> 100% Non-Accidental</span>
+              <h2 id="hero-main-heading">Multi-Brand Pre-Owned Cars</h2>
+              <p class="hero-slide-sub" id="hero-main-sub">Quality • Trust • Great Value</p>
             </div>
           </div>
           <!-- Slide 2 -->
@@ -333,12 +335,12 @@
     <!-- BRAND FILTER BAR -->
     <section class="brand-bar-section">
       <div class="container">
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
-          <div style="font-size: 0.8rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted);">
-            <i class="fas fa-tags text-primary"></i> Browse by Brand
+        <div class="brand-bar-header">
+          <div class="brand-bar-title">
+            <i class="fas fa-tag" style="color: var(--lime);"></i> Browse by Brand
           </div>
-          <button type="button" style="font-size: 0.8rem; font-weight: 700; color: var(--primary);" onclick="openFilterModal()">
-            <i class="fas fa-sliders"></i> All Filters
+          <button type="button" class="brand-filters-link-btn" onclick="openFilterModal()">
+            <i class="fas fa-sliders-h"></i> Filters <i class="fas fa-chevron-right" style="font-size: 0.65rem; margin-left: 2px;"></i>
           </button>
         </div>
         <div class="brand-scroller" id="brand-scroller-box">
@@ -953,31 +955,6 @@
     </a>
   </nav>
 
-  <!-- PWA INSTALL BOTTOM BANNER -->
-  <div id="pwa-install-banner" class="pwa-install-banner">
-    <div class="pwa-banner-text">
-      <img src="icons/icon-192.png" alt="Shri Rani Cars App Icon" title="Shri Rani Cars App" width="44" height="44" style="width: 44px; height: 44px; object-fit: contain;" class="pwa-banner-icon" loading="lazy">
-      <div>
-        <strong>Install Shri Rani Cars App</strong>
-        <p>Instant Car Booking & Price Alerts</p>
-      </div>
-    </div>
-    <div class="pwa-controls">
-      <button type="button" class="pwa-btn-install" onclick="installPWAApp()">Install</button>
-      <button type="button" class="pwa-btn-close" onclick="dismissPWABanner()" aria-label="Dismiss">&times;</button>
-    </div>
-  </div>
-      <div>
-        <strong>Shri Rani Cars App</strong>
-        <p>Install for faster booking & instant vehicle alerts</p>
-      </div>
-    </div>
-    <div style="display: flex; gap: 0.5rem; align-items: center;">
-      <button type="button" class="pwa-btn-install" onclick="installPWAApp()">Install</button>
-      <button type="button" class="pwa-btn-close" onclick="dismissPWABanner()"><i class="fas fa-times"></i></button>
-    </div>
-  </div>
-
   <!-- FLOATING WHATSAPP & CALL DIAL -->
   <div class="floating-dial">
     <a href="https://wa.me/917550172585" target="_blank" class="fab-circle fab-whatsapp-btn" title="WhatsApp" aria-label="WhatsApp">
@@ -992,7 +969,26 @@
   <!-- MODALS -->
   <!-- ========================================================================= -->
 
-  <!-- 0. DEDICATED OMNI SEARCH MODAL -->
+  <!-- 0. PWA CENTER INSTALL POPUP MODAL -->
+  <div id="pwaInstallModal" class="modal-layer" role="dialog" aria-modal="true" style="display: none;">
+    <div class="modal-window" style="max-width: 440px; text-align: center; padding: 2.2rem 1.75rem; border-radius: 20px; border: 1.5px solid rgba(132, 212, 0, 0.4); box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);">
+      <div style="width: 80px; height: 80px; margin: 0 auto 1.25rem; border-radius: 20px; background: #071426; border: 2px solid #84D400; box-shadow: 0 8px 25px rgba(132, 212, 0, 0.35); display: flex; align-items: center; justify-content: center; padding: 8px;">
+        <img src="icons/icon-192.png" alt="Shri Rani Cars App" style="width: 100%; height: 100%; object-fit: contain;">
+      </div>
+      <h3 style="font-size: 1.35rem; font-weight: 800; color: var(--primary-navy); margin-bottom: 0.5rem; letter-spacing: -0.01em;">Install Shri Rani Cars App</h3>
+      <p style="font-size: 0.88rem; color: var(--text-muted); line-height: 1.5; margin-bottom: 1.5rem;">
+        Enjoy instant vehicle alerts, one-tap booking, and 10x faster showroom browsing directly from your home screen.
+      </p>
+      <div style="display: flex; gap: 0.75rem; justify-content: center;">
+        <button type="button" class="btn btn-outline" style="flex: 1; padding: 0.75rem 1rem;" onclick="dismissPWAModal()">Maybe Later</button>
+        <button type="button" class="btn btn-primary" style="flex: 1.3; padding: 0.75rem 1rem; font-weight: 800; display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem;" onclick="installPWAFromModal()">
+          <i class="fas fa-download"></i> Install Now
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 0.5. DEDICATED OMNI SEARCH MODAL -->
   <div id="searchModal" class="modal-layer" role="dialog" aria-modal="true">
     <div class="modal-window">
       <div class="modal-top">
@@ -1270,57 +1266,73 @@
       return isStandalone || isMarkedInstalled;
     }
 
-    // PWA Install prompt handling
-    let deferredPrompt;
+    // PWA Install Center Popup Modal Handling
+    let deferredPrompt = null;
+
     window.addEventListener('beforeinstallprompt', (e) => {
       e.preventDefault();
       deferredPrompt = e;
       
-      // If already installed or running inside standalone app, do not show
+      // If already installed or running inside standalone app, do not prompt
       if (isPWAInstalledOrStandalone()) {
-        dismissPWABanner();
         return;
       }
       
-      if (localStorage.getItem('shri_rani_pwa_dismissed') === 'true') {
+      if (sessionStorage.getItem('shri_rani_pwa_dismissed') === 'true' || localStorage.getItem('shri_rani_pwa_dismissed') === 'true') {
         return;
       }
 
-      const banner = document.getElementById('pwa-install-banner');
-      if (banner) banner.style.display = 'flex';
+      // Show center popup after 2.5s if not installed and not dismissed
+      setTimeout(() => {
+        if (!isPWAInstalledOrStandalone() && !sessionStorage.getItem('shri_rani_pwa_dismissed')) {
+          openPWAModal();
+        }
+      }, 2500);
     });
 
     // Detect when user successfully installs the app
     window.addEventListener('appinstalled', () => {
       localStorage.setItem('shri_rani_pwa_installed', 'true');
       deferredPrompt = null;
-      dismissPWABanner();
+      dismissPWAModal();
     });
 
-    function installPWAApp() {
+    function openPWAModal() {
+      const modal = document.getElementById('pwaInstallModal');
+      if (modal && !isPWAInstalledOrStandalone()) {
+        modal.style.display = 'flex';
+        modal.classList.add('active');
+      }
+    }
+
+    function dismissPWAModal() {
+      const modal = document.getElementById('pwaInstallModal');
+      if (modal) {
+        modal.classList.remove('active');
+        modal.style.display = 'none';
+      }
+      sessionStorage.setItem('shri_rani_pwa_dismissed', 'true');
+    }
+
+    function installPWAFromModal() {
       if (deferredPrompt) {
         deferredPrompt.prompt();
         deferredPrompt.userChoice.then((choiceResult) => {
           if (choiceResult.outcome === 'accepted') {
             localStorage.setItem('shri_rani_pwa_installed', 'true');
-            dismissPWABanner();
           }
           deferredPrompt = null;
+          dismissPWAModal();
         });
       } else {
-        alert('To install Shri Rani Cars app:\n\n1. In Chrome/Edge on Laptop, click the install icon in the URL bar, or\n2. On Mobile, tap browser menu (⋮) and tap "Install app" or "Add to Home screen".');
+        alert('To install Shri Rani Cars app:\n\n• On Laptop / Desktop: Click the Install icon in your browser address bar.\n• On Mobile: Tap browser menu (⋮) and tap "Install app" or "Add to Home screen".');
+        dismissPWAModal();
       }
     }
 
-    function dismissPWABanner() {
-      const banner = document.getElementById('pwa-install-banner');
-      if (banner) banner.style.display = 'none';
-      localStorage.setItem('shri_rani_pwa_dismissed', 'true');
-    }
-
-    // Immediately hide banner if running in standalone app mode on startup
+    // Immediately hide if running in standalone app mode
     if (isPWAInstalledOrStandalone()) {
-      dismissPWABanner();
+      dismissPWAModal();
     }
 
     // Filter Modal functions
