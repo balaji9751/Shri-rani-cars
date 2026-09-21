@@ -1841,8 +1841,15 @@ input, select, textarea {
 .site-footer {
   background: var(--primary-navy);
   color: #CBD5E1;
-  padding: 4rem 0 2rem;
+  padding: 3.5rem 0 5.5rem;
   border-top: 3px solid var(--lime);
+  margin-bottom: 0 !important;
+}
+
+@media (min-width: 992px) {
+  .site-footer {
+    padding: 4rem 0 2.5rem;
+  }
 }
 
 .footer-columns {
@@ -1973,24 +1980,23 @@ input, select, textarea {
 }
 
 /* ==========================================================================
-   MOBILE BOTTOM NAVIGATION BAR (5 FAST RESPONSIVE TABS)
+   MOBILE BOTTOM NAVIGATION BAR (CLEAN WHITE LUXURY THEME)
    ========================================================================== */
 .mobile-bottom-bar {
   position: fixed;
   bottom: 0;
   left: 0;
   right: 0;
-  height: 62px;
-  background: rgba(7, 20, 38, 0.97);
-  backdrop-filter: blur(14px);
-  -webkit-backdrop-filter: blur(14px);
-  border-top: 1.5px solid rgba(132, 212, 0, 0.35);
+  height: 60px;
+  background: #FFFFFF;
+  border-top: 1px solid #E2E8F0;
   display: flex;
   align-items: center;
   justify-content: space-around;
   z-index: 999;
   padding: 0 0.25rem;
-  box-shadow: 0 -4px 25px rgba(0, 0, 0, 0.35);
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+  box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.06);
 }
 
 @media (min-width: 992px) {
@@ -2006,8 +2012,8 @@ input, select, textarea {
   align-items: center;
   justify-content: center;
   gap: 3px;
-  color: #94A3B8;
-  font-size: 0.7rem;
+  color: #64748B;
+  font-size: 0.72rem;
   font-weight: 700;
   text-decoration: none;
   padding: 5px 2px;
@@ -2018,17 +2024,29 @@ input, select, textarea {
   cursor: pointer;
   border: none;
   background: none;
+  font-family: inherit;
 }
 
 .mob-nav-btn i {
-  font-size: 1.12rem;
-  transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  font-size: 1.15rem;
+  color: #64748B;
+  transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1), color 0.2s ease;
 }
 
-.mob-nav-btn:hover,
-.mob-nav-btn:focus,
 .mob-nav-btn.active {
-  color: var(--lime);
+  color: #4D7C0F;
+}
+
+.mob-nav-btn.active i {
+  color: #84D400;
+}
+
+.mob-nav-btn:hover {
+  color: var(--primary-navy);
+}
+
+.mob-nav-btn:hover i {
+  color: var(--primary-navy);
 }
 
 .mob-nav-btn:active i {
