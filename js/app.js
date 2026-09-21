@@ -148,19 +148,8 @@ function initToastShelf() {
   }
 }
 
-// Fetch Inventory from Supabase / Data Service
+// Fetch Inventory from Supabase / Data Service (Instant Local-First)
 async function loadInventory() {
-  const grid = document.getElementById('inventory-grid');
-  if (grid) {
-    grid.innerHTML = `
-      <div style="grid-column: 1/-1; text-align: center; padding: 3.5rem 1rem;">
-        <i class="fas fa-spinner fa-spin" style="font-size: 2.5rem; color: var(--primary);"></i>
-        <h3 style="margin-top: 1rem; font-weight: 700; color: #0f172a;">Loading Showroom Cars...</h3>
-        <p class="text-muted">Fetching certified pre-owned vehicles from Shri Rani Cars.</p>
-      </div>
-    `;
-  }
-
   const rawCars = await window.CarService.getCars();
   AppState.cars = rawCars.filter(c => c.status !== 'Hidden' && c.status !== 'Draft');
   renderBrandScroller();

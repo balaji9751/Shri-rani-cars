@@ -932,7 +932,7 @@ input, select, textarea {
 
 .price-val-orig {
   font-size: 0.68rem;
-  color: var(--text-light);
+  color: #64748B;
   text-decoration: line-through;
   white-space: nowrap;
 }
@@ -947,7 +947,7 @@ input, select, textarea {
 
 .price-emi-text {
   font-size: 0.68rem;
-  color: #16a34a;
+  color: #047857;
   font-weight: 700;
   white-space: nowrap;
   overflow: hidden;
@@ -1920,7 +1920,7 @@ input, select, textarea {
    ========================================================================== */
 .site-footer {
   background: var(--primary-navy);
-  color: #94A3B8;
+  color: #CBD5E1;
   padding: 4rem 0 2rem;
   border-top: 3px solid var(--lime);
 }
@@ -1976,7 +1976,7 @@ input, select, textarea {
 }
 
 .footer-nav-list li a {
-  color: #94A3B8;
+  color: #CBD5E1;
   font-size: 0.88rem;
   font-weight: 500;
   transition: var(--transition);
@@ -1996,7 +1996,7 @@ input, select, textarea {
   flex-wrap: wrap;
   gap: 1rem;
   font-size: 0.82rem;
-  color: #64748B;
+  color: #CBD5E1;
 }
 
 .footer-social-row {
@@ -3152,11 +3152,12 @@ input, select, textarea {
   border-radius: 999px;
   background: rgba(255, 255, 255, 0.45);
   cursor: pointer;
-  transition: var(--transition);
+  transform-origin: center;
+  transition: transform 0.25s ease, background-color 0.25s ease;
 }
 
 .hero-carousel-dots .dot.active {
-  width: 22px;
+  transform: scaleX(2.75);
   background: var(--lime);
 }
 

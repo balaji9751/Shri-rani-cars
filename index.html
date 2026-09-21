@@ -46,19 +46,20 @@
   <link rel="manifest" href="manifest.json">
   <meta name="theme-color" content="#071426">
 
-  <!-- Google Fonts: Plus Jakarta Sans with Preconnect & Swap -->
+  <!-- Google Fonts: Plus Jakarta Sans with Preconnect & Asynchronous Non-Blocking Load -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" media="print" onload="this.media='all'">
+  <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap"></noscript>
 
-  <!-- Font Awesome 6 -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-
-  <!-- Supabase Client -->
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <!-- Font Awesome 6 (Asynchronously Loaded) -->
+  <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" media="print" onload="this.media='all'">
+  <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"></noscript>
 
   <!-- Clean Luxury Unified Stylesheet -->
-  <link rel="stylesheet" href="css/style.css?v=3.3">
+  <link rel="stylesheet" href="css/style.css?v=3.4">
 
   <!-- ========================================================================= -->
   <!-- STRUCTURED DATA SCHEMAS (JSON-LD) FOR GOOGLE SEARCH RICH SNIPPETS -->
@@ -265,7 +266,7 @@
         <div class="hero-slider-wrap" id="hero-slider-wrap">
           <!-- Slide 1 -->
           <div class="hero-slide active">
-            <img src="https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&w=1200&q=80" alt="Certified Luxury Pre-Owned Cars" title="Certified Luxury Pre-Owned Cars at Shri Rani Cars" width="1200" height="675" id="hero-main-img" fetchpriority="high">
+            <img src="https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&w=900&q=75" alt="Certified Luxury Pre-Owned Cars" title="Certified Luxury Pre-Owned Cars at Shri Rani Cars" width="900" height="506" id="hero-main-img" fetchpriority="high">
             <div class="hero-slide-caption">
               <span class="hero-slide-tag"><i class="fas fa-certificate text-primary"></i> Certified Pre-Owned</span>
               <h2 id="hero-main-heading">Tested, Certified & Road Ready</h2>
@@ -274,7 +275,7 @@
           </div>
           <!-- Slide 2 -->
           <div class="hero-slide">
-            <img src="https://images.unsplash.com/photo-1580273916550-e323be2ae537?auto=format&fit=crop&w=1200&q=80" alt="Premium SUV & Sedan Collection" title="Premium SUV and Sedan Collection" width="1200" height="675" loading="lazy">
+            <img src="https://images.unsplash.com/photo-1580273916550-e323be2ae537?auto=format&fit=crop&w=900&q=75" alt="Premium SUV & Sedan Collection" title="Premium SUV and Sedan Collection" width="900" height="506" loading="lazy">
             <div class="hero-slide-caption">
               <span class="hero-slide-tag"><i class="fas fa-shield-alt text-primary"></i> 100% Non-Accidental</span>
               <h2>Multi-Brand Pre-Owned Showroom</h2>
@@ -283,7 +284,7 @@
           </div>
           <!-- Slide 3 -->
           <div class="hero-slide">
-            <img src="https://images.unsplash.com/photo-1533473359331-0135ef1b58bf?auto=format&fit=crop&w=1200&q=80" alt="Easy EMI & Car Exchange" title="Easy EMI and Car Exchange" width="1200" height="675" loading="lazy">
+            <img src="https://images.unsplash.com/photo-1533473359331-0135ef1b58bf?auto=format&fit=crop&w=900&q=75" alt="Easy EMI & Car Exchange" title="Easy EMI and Car Exchange" width="900" height="506" loading="lazy">
             <div class="hero-slide-caption">
               <span class="hero-slide-tag"><i class="fas fa-bolt text-primary"></i> Instant EMI Approval</span>
               <h2>Lowest Interest Rates & Free Valuation</h2>
@@ -410,7 +411,7 @@
                 <span>Loan Amount</span>
                 <span id="calc-amount-val" class="calc-val-highlight">₹ 8,00,000</span>
               </div>
-              <input type="range" id="calc-amount-slider" class="range-input" min="100000" max="4000000" step="50000" value="800000">
+              <input type="range" id="calc-amount-slider" class="range-input" min="100000" max="4000000" step="50000" value="800000" aria-label="Vehicle Loan Amount">
             </div>
 
             <div class="calc-slider-item">
@@ -418,7 +419,7 @@
                 <span>Interest Rate (% per annum)</span>
                 <span id="calc-rate-val" class="calc-val-highlight">9.5% p.a.</span>
               </div>
-              <input type="range" id="calc-rate-slider" class="range-input" min="7" max="16" step="0.25" value="9.5">
+              <input type="range" id="calc-rate-slider" class="range-input" min="7" max="16" step="0.25" value="9.5" aria-label="Loan Interest Rate per annum">
             </div>
 
             <div class="calc-slider-item">
@@ -426,7 +427,7 @@
                 <span>Loan Tenure (Years)</span>
                 <span id="calc-tenure-val" class="calc-val-highlight">5 Years (60 Mos)</span>
               </div>
-              <input type="range" id="calc-tenure-slider" class="range-input" min="1" max="7" step="1" value="5">
+              <input type="range" id="calc-tenure-slider" class="range-input" min="1" max="7" step="1" value="5" aria-label="Loan Tenure in Years">
             </div>
 
             <div class="calc-summary-banner">
@@ -459,28 +460,28 @@
               <div class="about-point-card">
                 <div class="about-point-icon"><i class="fas fa-clipboard-check"></i></div>
                 <div>
-                  <h4>140-Point Inspection</h4>
+                  <h3>140-Point Inspection</h3>
                   <p>Engine, transmission, suspension, brakes, electricals and chassis thoroughly tested by technicians.</p>
                 </div>
               </div>
               <div class="about-point-card">
                 <div class="about-point-icon"><i class="fas fa-shield-alt"></i></div>
                 <div>
-                  <h4>Non-Accidental Guarantee</h4>
+                  <h3>Non-Accidental Guarantee</h3>
                   <p>Strict policy against flood-damaged or accidental vehicles with 100% genuine odometer guarantee.</p>
                 </div>
               </div>
               <div class="about-point-card">
                 <div class="about-point-icon"><i class="fas fa-file-signature"></i></div>
                 <div>
-                  <h4>Hassle-Free RC Transfer</h4>
+                  <h3>Hassle-Free RC Transfer</h3>
                   <p>Complete transparent paperwork, clear title documentation, and fast RTO passing support.</p>
                 </div>
               </div>
               <div class="about-point-card">
                 <div class="about-point-icon"><i class="fas fa-hand-holding-usd"></i></div>
                 <div>
-                  <h4>Instant Financing &amp; EMI</h4>
+                  <h3>Instant Financing &amp; EMI</h3>
                   <p>Tie-ups with leading nationalized and private banks for lowest interest rates and quick loan approval.</p>
                 </div>
               </div>
@@ -488,7 +489,7 @@
           </div>
           <div class="about-visual-col">
             <div class="about-visual-card">
-              <img src="icons/app-logo.png" alt="Shri Rani Cars Dealership Logo" class="about-brand-logo">
+              <img src="icons/app-logo.png" alt="Shri Rani Cars Dealership Logo" title="Shri Rani Cars" width="140" height="93" style="max-width: 140px; height: auto; object-fit: contain; margin-bottom: 0.5rem;" class="about-brand-logo" loading="lazy">
               <h3>SHRI RANI CARS</h3>
               <p class="text-lime" style="font-weight: 800; font-size: 0.85rem; letter-spacing: 0.05em; text-transform: uppercase;">Certified Pre-Owned Showroom</p>
               <div class="about-stats-row">
@@ -624,7 +625,7 @@
               <div>
                 <strong style="color: #0f172a; font-size: 0.95rem;">WhatsApp Inquiries:</strong>
                 <div style="margin-top: 0.2rem;">
-                  <a href="https://wa.me/917550172585" target="_blank" style="color: #16a34a; font-weight: 700; font-size: 1.05rem;">
+                  <a href="https://wa.me/917550172585" target="_blank" style="color: #15803d; font-weight: 700; font-size: 1.05rem;" aria-label="WhatsApp 75501 72585">
                     75501 72585
                   </a>
                 </div>
@@ -738,21 +739,21 @@
 
           <!-- Big Conversion Action Buttons -->
           <div class="product-cta-cluster">
-            <a id="product-whatsapp-cta" href="javascript:void(0)" onclick="handleProductWhatsAppInquiry(event)" class="btn btn-whatsapp btn-lg" style="flex: 1;">
+            <a id="product-whatsapp-cta" href="https://wa.me/917550172585" target="_blank" onclick="handleProductWhatsAppInquiry(event)" class="btn btn-whatsapp btn-lg" style="flex: 1;" aria-label="Inquire about this car on WhatsApp">
               <i class="fab fa-whatsapp" style="font-size: 1.25rem;"></i> Buy / Inquire on WhatsApp
             </a>
             <button type="button" class="btn btn-outline btn-lg" onclick="openTestDriveModalForCurrentCar()">
               <i class="fas fa-calendar-check"></i> Book Test Drive
             </button>
-            <a id="product-call-cta" href="tel:9750332585" class="btn btn-primary btn-lg">
+            <a id="product-call-cta" href="tel:9750332585" class="btn btn-primary btn-lg" aria-label="Call Shri Rani Cars">
               <i class="fas fa-phone-alt"></i> Call Us
             </a>
           </div>
 
           <!-- Full Technical Specs Matrix -->
-          <h4 style="font-size: 1.05rem; font-weight: 800; color: #0f172a; margin-bottom: 0.85rem; display: flex; align-items: center; gap: 0.4rem;">
+          <h3 style="font-size: 1.05rem; font-weight: 800; color: #0f172a; margin-bottom: 0.85rem; display: flex; align-items: center; gap: 0.4rem;">
             <i class="fas fa-info-circle text-primary"></i> Technical Specifications
-          </h4>
+          </h3>
 
           <div class="product-specs-grid">
             <div class="spec-tile">
@@ -789,17 +790,17 @@
           </div>
 
           <!-- Key Equipment & Safety Features List -->
-          <h4 style="font-size: 1.05rem; font-weight: 800; color: #0f172a; margin-bottom: 0.85rem; display: flex; align-items: center; gap: 0.4rem;">
+          <h3 style="font-size: 1.05rem; font-weight: 800; color: #0f172a; margin-bottom: 0.85rem; display: flex; align-items: center; gap: 0.4rem;">
             <i class="fas fa-check-circle text-primary"></i> Features & Safety Equipment
-          </h4>
+          </h3>
           <div class="product-features-checklist" id="product-features-box">
             <!-- Dynamic Feature Badges -->
           </div>
 
           <!-- Overview & Description -->
-          <h4 style="font-size: 1.05rem; font-weight: 800; color: #0f172a; margin-top: 1.5rem; margin-bottom: 0.65rem; display: flex; align-items: center; gap: 0.4rem;">
+          <h3 style="font-size: 1.05rem; font-weight: 800; color: #0f172a; margin-top: 1.5rem; margin-bottom: 0.65rem; display: flex; align-items: center; gap: 0.4rem;">
             <i class="fas fa-align-left text-primary"></i> Vehicle Overview
-          </h4>
+          </h3>
           <p id="product-desc-paragraph" style="font-size: 0.9rem; color: #475569; line-height: 1.6;">
             Vehicle description.
           </p>
@@ -831,29 +832,29 @@
         <!-- Col 1: Brand Info -->
         <div>
           <div style="display: flex; align-items: center; gap: 0.65rem; margin-bottom: 0.75rem;">
-            <img src="icons/app-logo.png" alt="Shri Rani Cars" style="width: 38px; height: 38px; border-radius: 8px; border: 1px solid rgba(132, 212, 0, 0.35);">
+            <img src="icons/app-logo.png" alt="Shri Rani Cars Dealership Logo" title="Shri Rani Cars" width="48" height="32" style="width: 48px; height: auto; object-fit: contain; border-radius: 6px; border: 1px solid rgba(132, 212, 0, 0.35);" loading="lazy">
             <h3 style="color: white; font-size: 1.25rem; font-weight: 800; margin-bottom: 0;">SHRI RANI CARS</h3>
           </div>
-          <p style="font-size: 0.85rem; color: #94a3b8; line-height: 1.6; margin-bottom: 1.25rem;">
+          <p style="font-size: 0.85rem; color: #cbd5e1; line-height: 1.6; margin-bottom: 1.25rem;">
             Salem and Vazhapadi's premier pre-owned multi-brand dealership. Certified quality cars with complete background checks and easy financing.
           </p>
           <div class="footer-social-row">
-            <a href="https://www.youtube.com/@ShriRanicars" target="_blank" class="footer-social-icon icon-youtube" title="YouTube Channel" aria-label="YouTube">
+            <a href="https://www.youtube.com/@ShriRanicars" target="_blank" class="footer-social-icon icon-youtube" title="YouTube Channel" aria-label="YouTube Channel">
               <i class="fab fa-youtube"></i>
             </a>
-            <a href="https://www.instagram.com/shri_rani_cars" target="_blank" class="footer-social-icon icon-instagram" title="Instagram Profile" aria-label="Instagram">
+            <a href="https://www.instagram.com/shri_rani_cars" target="_blank" class="footer-social-icon icon-instagram" title="Instagram Profile" aria-label="Instagram Profile">
               <i class="fab fa-instagram"></i>
             </a>
-            <a href="https://www.facebook.com/mkarthi.keyan.9212" target="_blank" class="footer-social-icon icon-facebook" title="Facebook Page" aria-label="Facebook">
+            <a href="https://www.facebook.com/mkarthi.keyan.9212" target="_blank" class="footer-social-icon icon-facebook" title="Facebook Page" aria-label="Facebook Page">
               <i class="fab fa-facebook-f"></i>
             </a>
-            <a href="https://maps.app.goo.gl/2sRQouxHpMTtnd2m6" target="_blank" class="footer-social-icon icon-maps" title="Showroom Location on Google Maps" aria-label="Google Maps">
+            <a href="https://maps.app.goo.gl/2sRQouxHpMTtnd2m6" target="_blank" class="footer-social-icon icon-maps" title="Showroom Location on Google Maps" aria-label="Google Maps Location">
               <i class="fas fa-map-marker-alt"></i>
             </a>
-            <a href="https://wa.me/917550172585" target="_blank" class="footer-social-icon icon-whatsapp" title="WhatsApp" aria-label="WhatsApp">
+            <a href="https://wa.me/917550172585" target="_blank" class="footer-social-icon icon-whatsapp" title="WhatsApp Contact" aria-label="Contact on WhatsApp">
               <i class="fab fa-whatsapp"></i>
             </a>
-            <a href="tel:9750332585" class="footer-social-icon icon-phone" title="Phone Call" aria-label="Phone Call">
+            <a href="tel:9750332585" class="footer-social-icon icon-phone" title="Phone Call" aria-label="Call Showroom Phone">
               <i class="fas fa-phone-alt"></i>
             </a>
           </div>
@@ -876,8 +877,8 @@
           <h4 class="footer-col-title">Customer Services</h4>
           <ul class="footer-nav-list">
             <li><a href="#calculator-section" onclick="backToShowroom()">Loan EMI Calculator</a></li>
-            <li><a href="javascript:void(0)" onclick="openSellCarModal()">Sell Your Car Online</a></li>
-            <li><a href="javascript:void(0)" onclick="openTestDriveModal()">Book Test Drive</a></li>
+            <li><a href="#sell-section" onclick="openSellCarModal(); return false;">Sell Your Car Online</a></li>
+            <li><a href="#location-section" onclick="openTestDriveModal(); return false;">Book Test Drive</a></li>
             <li><a href="#location-section" onclick="backToShowroom()">Showroom Location</a></li>
             <li><a href="admin.html">Admin Portal</a></li>
           </ul>
@@ -889,7 +890,7 @@
           <p style="font-size: 0.85rem; color: #cbd5e1; margin-bottom: 0.5rem; line-height: 1.5;">
             Mangamma Salai, Near RTO Office, Puthupalayam, Vazhapadi, Salem - 636115.
           </p>
-          <div style="font-size: 0.85rem; color: #94a3b8; display: flex; flex-direction: column; gap: 0.35rem; margin-top: 0.75rem;">
+          <div style="font-size: 0.85rem; color: #e2e8f0; display: flex; flex-direction: column; gap: 0.35rem; margin-top: 0.75rem;">
             <div><i class="fas fa-phone-alt text-primary"></i> 97503 32585</div>
             <div><i class="fab fa-whatsapp" style="color: var(--whatsapp);"></i> 75501 72585</div>
             <div><i class="fas fa-clock text-gold"></i> Mon - Sun: 9:00 AM - 8:30 PM</div>
@@ -898,27 +899,27 @@
       </div>
 
       <div class="footer-bottom-bar">
-        <div>© 2026 Shri Rani Cars. All rights reserved.</div>
-        <div>Vazhapadi & Salem Pre-Owned Car Dealership</div>
+        <div style="color: #cbd5e1;">© 2026 Shri Rani Cars. All rights reserved.</div>
+        <div style="color: #cbd5e1;">Vazhapadi & Salem Pre-Owned Car Dealership</div>
       </div>
     </div>
   </footer>
 
   <!-- MOBILE BOTTOM NAVIGATION BAR -->
-  <nav class="mobile-bottom-bar">
-    <a href="#home" class="mob-nav-btn active" onclick="backToShowroom()">
+  <nav class="mobile-bottom-bar" aria-label="Mobile Bottom Navigation">
+    <a href="#home" class="mob-nav-btn active" onclick="backToShowroom()" aria-label="Home">
       <i class="fas fa-home"></i>
       <span>Home</span>
     </a>
-    <a href="#inventory-section" class="mob-nav-btn" onclick="backToShowroom()">
+    <a href="#inventory-section" class="mob-nav-btn" onclick="backToShowroom()" aria-label="Showroom Cars">
       <i class="fas fa-car"></i>
       <span>Cars</span>
     </a>
-    <button type="button" class="mob-nav-btn" onclick="openFilterModal()">
+    <button type="button" class="mob-nav-btn" onclick="openFilterModal()" aria-label="Filter Cars">
       <i class="fas fa-sliders"></i>
       <span>Filter</span>
     </button>
-    <a href="#location-section" class="mob-nav-btn" onclick="backToShowroom()">
+    <a href="#location-section" class="mob-nav-btn" onclick="backToShowroom()" aria-label="Showroom Contact">
       <i class="fas fa-phone-alt"></i>
       <span>Contact</span>
     </a>
@@ -927,7 +928,17 @@
   <!-- PWA INSTALL BOTTOM BANNER -->
   <div id="pwa-install-banner" class="pwa-install-banner">
     <div class="pwa-banner-text">
-      <img src="icons/icon-192.png" alt="Shri Rani Cars App Icon" class="pwa-banner-icon">
+      <img src="icons/icon-192.png" alt="Shri Rani Cars App Icon" title="Shri Rani Cars App" width="44" height="44" style="width: 44px; height: 44px; object-fit: contain;" class="pwa-banner-icon" loading="lazy">
+      <div>
+        <strong>Install Shri Rani Cars App</strong>
+        <p>Instant Car Booking & Price Alerts</p>
+      </div>
+    </div>
+    <div class="pwa-controls">
+      <button type="button" class="pwa-btn-install" onclick="installPWAApp()">Install</button>
+      <button type="button" class="pwa-btn-close" onclick="dismissPWABanner()" aria-label="Dismiss">&times;</button>
+    </div>
+  </div>
       <div>
         <strong>Shri Rani Cars App</strong>
         <p>Install for faster booking & instant vehicle alerts</p>
@@ -1205,9 +1216,10 @@
   </div>
 
   <!-- JavaScript Modules -->
-  <script src="js/supabase-config.js?v=3.2"></script>
-  <script src="js/cars-data.js?v=3.2"></script>
-  <script src="js/app.js?v=3.2"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script defer src="js/supabase-config.js?v=3.4"></script>
+  <script defer src="js/cars-data.js?v=3.4"></script>
+  <script defer src="js/app.js?v=3.4"></script>
 
   <!-- PWA & Filter Drawer Helper Scripts -->
   <script>

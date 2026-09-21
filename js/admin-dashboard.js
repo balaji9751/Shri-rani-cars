@@ -929,48 +929,48 @@ function renderHeroBannersList() {
     const isActive = banner.active !== false;
     const hasText = !!(banner.heading?.trim() || banner.tag?.trim() || banner.sub?.trim());
     return `
-      <div class="banner-slide-admin-card" style="background: white; border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 1rem; display: flex; align-items: center; gap: 1.25rem; justify-content: space-between; flex-wrap: wrap;">
+      <div class="banner-slide-admin-card">
         <!-- Left info -->
-        <div style="display: flex; align-items: center; gap: 1rem; min-width: 0; flex: 1;">
-          <div style="width: 110px; height: 68px; border-radius: var(--radius-sm); overflow: hidden; background: #071426; flex-shrink: 0; border: 1px solid var(--border-color);">
-            <img src="${banner.image}" alt="${banner.heading || 'Banner'}" style="width: 100%; height: 100%; object-fit: cover; ${banner.pos ? `object-position: ${banner.pos};` : ''} ${banner.filter && banner.filter !== 'none' ? `filter: ${banner.filter};` : ''}">
+        <div class="banner-slide-main-info">
+          <div class="banner-slide-thumb-box">
+            <img src="${banner.image}" alt="${banner.heading || 'Banner'}" style="${banner.pos ? `object-position: ${banner.pos};` : ''} ${banner.filter && banner.filter !== 'none' ? `filter: ${banner.filter};` : ''}">
           </div>
-          <div style="min-width: 0;">
-            <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.25rem; flex-wrap: wrap;">
-              <span style="font-size: 0.7rem; font-weight: 800; background: rgba(7, 20, 38, 0.08); color: #071426; padding: 0.15rem 0.5rem; border-radius: var(--radius-full);">
+          <div class="banner-slide-details">
+            <div class="banner-slide-badges">
+              <span class="slide-num-badge">
                 Slide #${index + 1}
               </span>
-              <span style="font-size: 0.75rem; font-weight: 700; color: ${isActive ? '#059669' : '#DC2626'}; background: ${isActive ? '#ECFDF5' : '#FEE2E2'}; padding: 0.15rem 0.5rem; border-radius: var(--radius-full);">
+              <span class="slide-status-badge ${isActive ? 'status-live' : 'status-disabled'}">
                 ${isActive ? '● Live on Showroom' : '○ Disabled'}
               </span>
               ${hasText ? `
-                <span style="font-size: 0.72rem; font-weight: 700; color: #4B5563;">
+                <span class="slide-tag-badge">
                   <i class="fas ${banner.tagIcon || 'fa-certificate'}"></i> ${banner.tag || 'Caption'}
                 </span>
               ` : `
-                <span style="font-size: 0.72rem; font-weight: 700; color: #059669; background: #ECFDF5; padding: 0.15rem 0.45rem; border-radius: var(--radius-full);">
+                <span class="slide-bright-badge">
                   ✨ 100% Brightness Photo
                 </span>
               `}
             </div>
-            <h4 style="font-size: 0.95rem; font-weight: 800; color: #071426; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-bottom: 0.15rem;">
-              ${banner.heading ? banner.heading : '<span style="color: #64748B; font-weight: 600; font-style: italic;">📸 Pure Photo Banner (No Text Overlay)</span>'}
+            <h4 class="slide-heading-text">
+              ${banner.heading ? banner.heading : '<span class="slide-pure-photo-hint">📸 Pure Photo Banner (No Text Overlay)</span>'}
             </h4>
-            <p style="font-size: 0.8rem; color: var(--text-muted); margin: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+            <p class="slide-sub-text">
               ${banner.sub ? banner.sub : 'Displays in full original brightness and clarity on showroom.'}
             </p>
           </div>
         </div>
 
         <!-- Right actions -->
-        <div style="display: flex; align-items: center; gap: 0.5rem;">
-          <button type="button" class="btn btn-outline btn-sm" onclick="toggleBannerActive('${banner.id}')" title="${isActive ? 'Disable from Showroom' : 'Enable in Showroom'}">
-            <i class="fas ${isActive ? 'fa-eye-slash' : 'fa-eye'}"></i> ${isActive ? 'Disable' : 'Enable'}
+        <div class="banner-slide-actions-bar">
+          <button type="button" class="btn btn-outline btn-sm btn-slide-toggle" onclick="toggleBannerActive('${banner.id}')" title="${isActive ? 'Disable from Showroom' : 'Enable in Showroom'}">
+            <i class="fas ${isActive ? 'fa-eye-slash' : 'fa-eye'}"></i> <span>${isActive ? 'Disable' : 'Enable'}</span>
           </button>
-          <button type="button" class="btn btn-outline btn-sm" onclick="openEditBannerModal('${banner.id}')" title="Edit Slide">
-            <i class="fas fa-edit"></i> Edit
+          <button type="button" class="btn btn-outline btn-sm btn-slide-edit" onclick="openEditBannerModal('${banner.id}')" title="Edit Slide">
+            <i class="fas fa-edit"></i> <span>Edit</span>
           </button>
-          <button type="button" class="btn btn-danger-outline btn-sm" onclick="deleteBannerSlide('${banner.id}')" title="Delete Slide">
+          <button type="button" class="btn btn-danger-outline btn-sm btn-slide-delete" onclick="deleteBannerSlide('${banner.id}')" title="Delete Slide">
             <i class="fas fa-trash"></i>
           </button>
         </div>

@@ -1301,16 +1301,171 @@ select.form-input-ctrl,
   }
 }
 
+/* Banner Slide Admin Cards */
+.banner-slide-admin-card {
+  background: #FFFFFF;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  padding: 1rem 1.25rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.25rem;
+  transition: var(--transition);
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.banner-slide-admin-card:hover {
+  border-color: #CBD5E1;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.05);
+}
+
+.banner-slide-main-info {
+  display: flex;
+  align-items: center;
+  gap: 1.15rem;
+  min-width: 0;
+  flex: 1;
+}
+
+.banner-slide-thumb-box {
+  width: 110px;
+  height: 68px;
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+  background: #071426;
+  flex-shrink: 0;
+  border: 1px solid var(--border-color);
+}
+
+.banner-slide-thumb-box img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.banner-slide-details {
+  min-width: 0;
+  flex: 1;
+}
+
+.banner-slide-badges {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  margin-bottom: 0.35rem;
+  flex-wrap: wrap;
+}
+
+.slide-num-badge {
+  font-size: 0.7rem;
+  font-weight: 800;
+  background: rgba(7, 20, 38, 0.08);
+  color: #071426;
+  padding: 0.15rem 0.5rem;
+  border-radius: var(--radius-full);
+}
+
+.slide-status-badge {
+  font-size: 0.72rem;
+  font-weight: 700;
+  padding: 0.15rem 0.5rem;
+  border-radius: var(--radius-full);
+}
+
+.slide-status-badge.status-live {
+  color: #059669;
+  background: #ECFDF5;
+}
+
+.slide-status-badge.status-disabled {
+  color: #DC2626;
+  background: #FEE2E2;
+}
+
+.slide-tag-badge {
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: #4B5563;
+}
+
+.slide-bright-badge {
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: #059669;
+  background: #ECFDF5;
+  padding: 0.15rem 0.45rem;
+  border-radius: var(--radius-full);
+}
+
+.slide-heading-text {
+  font-size: 0.95rem;
+  font-weight: 800;
+  color: #071426;
+  margin: 0 0 0.2rem 0;
+  line-height: 1.3;
+  word-break: break-word;
+}
+
+.slide-sub-text {
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  margin: 0;
+  line-height: 1.4;
+  word-break: break-word;
+}
+
+.slide-pure-photo-hint {
+  color: #64748B;
+  font-weight: 600;
+  font-style: italic;
+}
+
+.banner-slide-actions-bar {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  flex-shrink: 0;
+}
+
 @media (max-width: 768px) {
   .admin-top-header {
     height: auto;
-    padding: 0.75rem 1rem;
-    flex-wrap: wrap;
-    gap: 0.65rem;
+    min-height: 56px;
+    padding: 0.6rem 0.85rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: nowrap;
+    gap: 0.5rem;
+  }
+
+  .header-left-group {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    min-width: 0;
+    flex: 1;
+  }
+
+  .header-toggle-btn {
+    width: 36px;
+    height: 36px;
+    font-size: 0.95rem;
+    flex-shrink: 0;
+  }
+
+  .header-page-title-box {
+    min-width: 0;
   }
 
   .header-page-title-box h1 {
-    font-size: 1.15rem;
+    font-size: 1.05rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 
   .header-page-title-box p {
@@ -1318,22 +1473,77 @@ select.form-input-ctrl,
   }
 
   .header-search-wrap {
-    order: 3;
-    width: 100%;
-    margin: 0;
+    display: none;
   }
 
   .header-right-group {
+    display: flex;
+    align-items: center;
     gap: 0.35rem;
+    flex-shrink: 0;
   }
 
-  .header-right-group .btn-sm {
-    padding: 0.4rem 0.65rem;
-    font-size: 0.75rem;
+  .header-right-group .btn-outline {
+    width: 36px;
+    height: 36px;
+    padding: 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: var(--radius-md);
   }
 
   .header-right-group .btn-outline span {
     display: none;
+  }
+
+  .header-right-group .btn-header-action {
+    width: 36px;
+    height: 36px;
+    font-size: 0.95rem;
+  }
+
+  .header-right-group .btn-lime {
+    padding: 0.45rem 0.75rem;
+    font-size: 0.8rem;
+    font-weight: 700;
+  }
+
+  .banner-slide-admin-card {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.85rem;
+    padding: 0.85rem;
+  }
+
+  .banner-slide-main-info {
+    align-items: flex-start;
+    gap: 0.75rem;
+  }
+
+  .banner-slide-thumb-box {
+    width: 90px;
+    height: 58px;
+  }
+
+  .slide-heading-text {
+    font-size: 0.88rem;
+  }
+
+  .banner-slide-actions-bar {
+    width: 100%;
+    display: grid;
+    grid-template-columns: 1fr 1fr auto;
+    gap: 0.45rem;
+    margin-top: 0.25rem;
+    padding-top: 0.65rem;
+    border-top: 1px dashed var(--border-color);
+  }
+
+  .banner-slide-actions-bar .btn {
+    padding: 0.45rem 0.5rem;
+    font-size: 0.78rem;
+    justify-content: center;
   }
 
   .stat-cards-grid {
@@ -1357,11 +1567,11 @@ select.form-input-ctrl,
   }
 
   .admin-card-header {
-    padding: 1rem !important;
+    padding: 0.85rem !important;
   }
 
   .admin-content-scroll {
-    padding: 1rem !important;
+    padding: 0.85rem !important;
   }
 
   .quick-actions-btns {
@@ -1374,13 +1584,30 @@ select.form-input-ctrl,
   }
 }
 
-@media (max-width: 420px) {
+@media (max-width: 480px) {
   .stat-cards-grid {
     grid-template-columns: 1fr !important;
   }
 
   .admin-card-title {
     font-size: 1rem;
+  }
+
+  .banner-slide-thumb-box {
+    width: 80px;
+    height: 52px;
+  }
+
+  .banner-slide-badges {
+    gap: 0.25rem;
+  }
+
+  .slide-num-badge,
+  .slide-status-badge,
+  .slide-tag-badge,
+  .slide-bright-badge {
+    font-size: 0.68rem;
+    padding: 0.1rem 0.4rem;
   }
 }
 
@@ -1392,27 +1619,6 @@ select.form-input-ctrl,
 
 .table-responsive-box table {
   min-width: 650px;
-}
-
-.banner-slide-admin-card {
-  transition: var(--transition);
-}
-
-.banner-slide-admin-card:hover {
-  border-color: var(--admin-navy-dark) !important;
-  box-shadow: var(--shadow-md) !important;
-}
-
-@media (max-width: 640px) {
-  .banner-slide-admin-card {
-    flex-direction: column;
-    align-items: stretch !important;
-    gap: 0.85rem !important;
-  }
-
-  .banner-slide-admin-card > div:last-child {
-    justify-content: flex-end;
-  }
 }
 
 /* ==========================================================================
