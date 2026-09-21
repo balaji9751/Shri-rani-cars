@@ -233,6 +233,30 @@ function calculateMonthlyEmi(price) {
   return `EMI from ₹ ${Math.round(emi).toLocaleString('en-IN')}/mo`;
 }
 
+// Brand Logo Assets Mapping for Visual Filter Pills
+const BRAND_LOGOS = {
+  'bmw': 'https://www.carlogos.org/car-logos/bmw-logo-2020-grey.png',
+  'hyundai': 'https://www.carlogos.org/car-logos/hyundai-logo.png',
+  'mercedes': 'https://www.carlogos.org/car-logos/mercedes-benz-logo.png',
+  'mercedes-benz': 'https://www.carlogos.org/car-logos/mercedes-benz-logo.png',
+  'mahindra': 'https://www.carlogos.org/car-logos/mahindra-logo.png',
+  'toyota': 'https://www.carlogos.org/car-logos/toyota-logo.png',
+  'tata': 'https://www.carlogos.org/car-logos/tata-logo.png',
+  'maruti': 'https://www.carlogos.org/car-logos/suzuki-logo.png',
+  'maruti suzuki': 'https://www.carlogos.org/car-logos/suzuki-logo.png',
+  'suzuki': 'https://www.carlogos.org/car-logos/suzuki-logo.png',
+  'kia': 'https://www.carlogos.org/car-logos/kia-logo.png',
+  'honda': 'https://www.carlogos.org/car-logos/honda-logo.png',
+  'audi': 'https://www.carlogos.org/car-logos/audi-logo.png',
+  'volkswagen': 'https://www.carlogos.org/car-logos/volkswagen-logo.png',
+  'skoda': 'https://www.carlogos.org/car-logos/skoda-logo.png',
+  'jeep': 'https://www.carlogos.org/car-logos/jeep-logo.png',
+  'mg': 'https://www.carlogos.org/car-logos/mg-logo.png',
+  'ford': 'https://www.carlogos.org/car-logos/ford-logo.png',
+  'renault': 'https://www.carlogos.org/car-logos/renault-logo.png',
+  'nissan': 'https://www.carlogos.org/car-logos/nissan-logo.png'
+};
+
 // Brand Filter Scroller
 function renderBrandScroller() {
   const box = document.getElementById('brand-scroller-box');
@@ -249,11 +273,15 @@ function renderBrandScroller() {
   box.innerHTML = brands.map(brand => {
     const isAll = brand === 'all';
     const label = isAll ? 'All Brands' : brand;
-    const isActive = AppState.activeBrand === brand;
+    const isActive = AppState.activeBrand.toLowerCase() === brand.toLowerCase();
+    const logoUrl = BRAND_LOGOS[brand.toLowerCase()];
+    const logoHtml = logoUrl ? `<img src="${logoUrl}" alt="${brand}" class="brand-pill-icon" onerror="this.style.display='none'">` : '';
+
     return `
       <button type="button" class="brand-pill ${isActive ? 'active' : ''}" onclick="filterByBrand('${brand}')">
+        ${logoHtml}
         <span>${label}</span>
-        <span class="pill-count">${counts[brand] || 0}</span>
+        ${counts[brand] ? `<span class="pill-count">${counts[brand]}</span>` : ''}
       </button>
     `;
   }).join('');
@@ -298,46 +326,38 @@ function applyFilters() {
     else if (b === 'above-25') list = list.filter(c => c.price > 2500000);
   }
 
-  // Multi-Attribute Omni-Search Engine
-  if (AppState.searchQuery.trim()) {
-    const rawTokens = AppState.searchQuery.toLowerCase().trim().split(/\s+/).filter(t => t.length > 0);
-    
+  // Omni Search Query
+  if (AppState.searchQuery.trim() !== '') {
+    const q = AppState.searchQuery.toLowerCase().trim();
     list = list.filter(c => {
-      const haystack = [
-        c.title || '',
-        c.brand || '',
-        c.model || '',
-        c.variant || '',
-        c.fuel_type || '',
-        c.transmission || '',
-        c.body_type || '',
-        c.owners || '',
-        c.color || '',
-        c.rto || '',
-        c.insurance || '',
-        c.description || '',
-        String(c.year || ''),
-        String(c.reg_year || ''),
-        String(c.kms || ''),
-        Array.isArray(c.features) ? c.features.join(' ') : ''
-      ].join(' ').toLowerCase();
-
-      return rawTokens.every(token => haystack.includes(token));
+      const matchText = `${c.brand || ''} ${c.model || ''} ${c.title || ''} ${c.year || ''} ${c.fuel_type || ''} ${c.transmission || ''} ${c.variant || ''} ${c.body_type || ''} ${c.owners || ''}`.toLowerCase();
+      return matchText.includes(q);
     });
   }
 
-  // Sort
-  if (AppState.sortBy === 'price-low') list.sort((a, b) => a.price - b.price);
-  else if (AppState.sortBy === 'price-high') list.sort((a, b) => b.price - a.price);
-  else if (AppState.sortBy === 'year-new') list.sort((a, b) => b.year - a.year);
-  else if (AppState.sortBy === 'kms-low') list.sort((a, b) => a.kms - b.kms);
-  else list.sort((a, b) => (b.is_featured ? 1 : 0) - (a.is_featured ? 1 : 0));
+  // Sorting
+  if (AppState.sortBy === 'price-low') {
+    list.sort((a, b) => a.price - b.price);
+  } else if (AppState.sortBy === 'price-high') {
+    list.sort((a, b) => b.price - a.price);
+  } else if (AppState.sortBy === 'year-new') {
+    list.sort((a, b) => b.year - a.year);
+  } else if (AppState.sortBy === 'kms-low') {
+    list.sort((a, b) => (a.kms || 0) - (b.kms || 0));
+  } else {
+    // Featured first
+    list.sort((a, b) => (b.is_featured ? 1 : 0) - (a.is_featured ? 1 : 0));
+  }
 
   AppState.filteredCars = list;
-  renderInventoryGrid();
-  
+
+  // Update Inventory Counter Badge
   const countBadge = document.getElementById('inventory-count-badge');
-  if (countBadge) countBadge.textContent = `${AppState.filteredCars.length} Cars Available`;
+  if (countBadge) {
+    countBadge.textContent = `${list.length} Cars Available`;
+  }
+
+  renderInventoryGrid();
 }
 
 // Omni-Search Modal Controllers
@@ -423,83 +443,46 @@ function renderInventoryGrid() {
   }
 
   grid.innerHTML = AppState.filteredCars.map(car => {
-    const isSold = car.status === 'Sold';
     const isFav = isFavorited(car.id);
     const mainImg = car.image_url || (car.gallery && car.gallery[0]) || 'https://images.unsplash.com/photo-1590362891991-f776e747a588?auto=format&fit=crop&w=800&q=80';
-    const origPriceHtml = car.original_price && car.original_price > car.price 
-      ? `<span class="price-val-orig">${formatCurrency(car.original_price)}</span>` 
-      : '';
+    const brandName = car.brand || 'Vehicle';
+    const carModelTitle = car.model || car.title || 'Luxury Car';
+    const carVariant = car.variant ? car.variant : '';
 
     return `
       <div class="car-item-card" onclick="viewCarDetails('${car.id}')">
         <!-- Thumbnail -->
         <div class="car-thumb-wrap">
-          <img src="${mainImg}" alt="${car.brand || ''} ${car.model || ''} ${car.year || ''} for sale at Shri Rani Cars Salem" title="${car.title || 'Pre-Owned Car'} - Shri Rani Cars Salem" width="380" height="240" loading="lazy" decoding="async" onerror="this.src='https://images.unsplash.com/photo-1590362891991-f776e747a588?auto=format&fit=crop&w=800&q=80'">
-          
-          <button type="button" class="btn-card-fav ${isFav ? 'active' : ''}" onclick="toggleFavorite('${car.id}', event)" title="Save to Favorites" aria-label="Save to Favorites">
-            <i class="${isFav ? 'fas' : 'far'} fa-heart"></i>
-          </button>
-          
-          ${car.is_featured ? '<div class="card-badge-feat"><i class="fas fa-star"></i> Featured</div>' : ''}
+          <img src="${mainImg}" alt="${brandName} ${carModelTitle} for sale at Shri Rani Cars Salem" title="${car.title || 'Pre-Owned Car'} - Shri Rani Cars" width="380" height="240" loading="lazy" decoding="async" onerror="this.src='https://images.unsplash.com/photo-1590362891991-f776e747a588?auto=format&fit=crop&w=800&q=80'">
           
           <div class="card-badge-status ${car.status === 'Sold' ? 'status-badge-sold' : (car.status === 'Reserved' ? 'status-badge-res' : 'status-badge-avail')}">
             ${car.status || 'Available'}
           </div>
+
+          <button type="button" class="btn-card-fav ${isFav ? 'active' : ''}" onclick="toggleFavorite('${car.id}', event)" title="Save to Favorites" aria-label="Save to Favorites">
+            <i class="${isFav ? 'fas' : 'far'} fa-heart"></i>
+          </button>
         </div>
 
-        <!-- Content -->
+        <!-- Content Area -->
         <div class="card-content-area">
-          <div class="card-make-line">${car.brand || 'Vehicle'} • ${car.body_type || 'Car'}</div>
-          <h3 class="card-car-title">${car.title}</h3>
-          <div class="card-variant-text">${car.variant || 'Standard'}</div>
+          <div class="card-brand-label">${brandName}</div>
+          <h3 class="card-car-title">${carModelTitle} ${carVariant ? `<span class="card-variant-inline">${carVariant}</span>` : ''}</h3>
 
-          <!-- Specs Matrix -->
-          <div class="card-specs-matrix">
-            <div class="matrix-col">
-              <i class="fas fa-calendar-alt"></i>
-              <span class="matrix-val">${car.year || '2022'}</span>
-              <span class="matrix-lbl">Year</span>
-            </div>
-            <div class="matrix-col">
-              <i class="fas fa-tachometer-alt"></i>
-              <span class="matrix-val">${(car.kms || 0).toLocaleString('en-IN')} km</span>
-              <span class="matrix-lbl">Driven</span>
-            </div>
-            <div class="matrix-col">
-              <i class="fas fa-gas-pump"></i>
-              <span class="matrix-val">${car.fuel_type || 'Petrol'}</span>
-              <span class="matrix-lbl">Fuel</span>
-            </div>
-            <div class="matrix-col">
-              <i class="fas fa-cogs"></i>
-              <span class="matrix-val">${car.transmission || 'Manual'}</span>
-              <span class="matrix-lbl">Gear</span>
-            </div>
+          <!-- Specs 2x2 Clean Matrix -->
+          <div class="card-specs-mini-grid">
+            <div class="spec-mini-item"><i class="far fa-calendar-alt"></i> <span>${car.year || '2021'}</span></div>
+            <div class="spec-mini-item"><i class="fas fa-gas-pump"></i> <span>${car.fuel_type || 'Petrol'}</span></div>
+            <div class="spec-mini-item"><i class="fas fa-cogs"></i> <span>${car.transmission || 'Manual'}</span></div>
+            <div class="spec-mini-item"><i class="fas fa-tachometer-alt"></i> <span>${(car.kms || 0).toLocaleString('en-IN')} km</span></div>
           </div>
 
-          <!-- Price Block -->
-          <div class="card-price-block">
-            <div class="price-row-wrap">
-              <span class="price-val-main">${formatCurrency(car.price)}</span>
-              ${origPriceHtml}
-            </div>
-            <div class="price-meta-subrow">
-              <span class="price-emi-text">${calculateMonthlyEmi(car.price)}</span>
-              <span class="owner-pill-badge"><i class="fas fa-user-check"></i> ${car.owners || '1st Owner'}</span>
-            </div>
-          </div>
-
-          <!-- Actions -->
-          <div class="card-actions-row" onclick="event.stopPropagation()">
-            <button type="button" class="btn-card-view" onclick="viewCarDetails('${car.id}')">
-              <i class="fas fa-eye"></i> <span>View Details</span>
+          <!-- Price & Arrow Action Row -->
+          <div class="card-price-arrow-row">
+            <div class="card-price-text">${formatCurrency(car.price)}</div>
+            <button type="button" class="btn-card-arrow-circle" onclick="viewCarDetails('${car.id}'); event.stopPropagation();" title="View details of ${car.title}" aria-label="View Details">
+              <i class="fas fa-arrow-right"></i>
             </button>
-            <a href="https://wa.me/917550172585?text=Hello%20Sri%20Rani%20Cars,%20I%20am%20interested%20in%20*${encodeURIComponent(car.title)}*%20(${car.year},%20${formatCurrency(car.price)}).%20Please%20share%20details." target="_blank" class="btn-card-wa" title="WhatsApp" aria-label="WhatsApp">
-              <i class="fab fa-whatsapp"></i>
-            </a>
-            <a href="tel:9750332585" class="btn-card-call" title="Call Showroom" aria-label="Call">
-              <i class="fas fa-phone-alt"></i>
-            </a>
           </div>
         </div>
       </div>
