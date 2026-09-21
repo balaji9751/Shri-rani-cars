@@ -56,6 +56,19 @@
   --transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
+/* Accessibility & SEO Heading Helper */
+.sr-only {
+  position: absolute !important;
+  width: 1px !important;
+  height: 1px !important;
+  padding: 0 !important;
+  margin: -1px !important;
+  overflow: hidden !important;
+  clip: rect(0, 0, 0, 0) !important;
+  white-space: nowrap !important;
+  border: 0 !important;
+}
+
 /* Reset & Base Setup */
 *, *::before, *::after {
   box-sizing: border-box;
@@ -3050,6 +3063,16 @@ input, select, textarea {
   object-fit: cover;
   object-position: center;
   display: block;
+  transform-origin: center center;
+}
+
+.hero-slide.pure-photo-slide {
+  background: #000000;
+}
+
+.hero-slide.pure-photo-slide img {
+  /* 100% original full brightness with zero overlay */
+  filter: none;
 }
 
 .hero-slide-caption {

@@ -927,30 +927,37 @@ function renderHeroBannersList() {
 
   container.innerHTML = banners.map((banner, index) => {
     const isActive = banner.active !== false;
+    const hasText = !!(banner.heading?.trim() || banner.tag?.trim() || banner.sub?.trim());
     return `
       <div class="banner-slide-admin-card" style="background: white; border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 1rem; display: flex; align-items: center; gap: 1.25rem; justify-content: space-between; flex-wrap: wrap;">
         <!-- Left info -->
         <div style="display: flex; align-items: center; gap: 1rem; min-width: 0; flex: 1;">
           <div style="width: 110px; height: 68px; border-radius: var(--radius-sm); overflow: hidden; background: #071426; flex-shrink: 0; border: 1px solid var(--border-color);">
-            <img src="${banner.image}" alt="${banner.heading}" style="width: 100%; height: 100%; object-fit: cover;">
+            <img src="${banner.image}" alt="${banner.heading || 'Banner'}" style="width: 100%; height: 100%; object-fit: cover; ${banner.pos ? `object-position: ${banner.pos};` : ''} ${banner.filter && banner.filter !== 'none' ? `filter: ${banner.filter};` : ''}">
           </div>
           <div style="min-width: 0;">
-            <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.25rem;">
+            <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.25rem; flex-wrap: wrap;">
               <span style="font-size: 0.7rem; font-weight: 800; background: rgba(7, 20, 38, 0.08); color: #071426; padding: 0.15rem 0.5rem; border-radius: var(--radius-full);">
                 Slide #${index + 1}
               </span>
               <span style="font-size: 0.75rem; font-weight: 700; color: ${isActive ? '#059669' : '#DC2626'}; background: ${isActive ? '#ECFDF5' : '#FEE2E2'}; padding: 0.15rem 0.5rem; border-radius: var(--radius-full);">
                 ${isActive ? '● Live on Showroom' : '○ Disabled'}
               </span>
-              <span style="font-size: 0.75rem; font-weight: 700; color: #4B5563;">
-                <i class="fas ${banner.tagIcon || 'fa-certificate'}"></i> ${banner.tag || 'Badge'}
-              </span>
+              ${hasText ? `
+                <span style="font-size: 0.72rem; font-weight: 700; color: #4B5563;">
+                  <i class="fas ${banner.tagIcon || 'fa-certificate'}"></i> ${banner.tag || 'Caption'}
+                </span>
+              ` : `
+                <span style="font-size: 0.72rem; font-weight: 700; color: #059669; background: #ECFDF5; padding: 0.15rem 0.45rem; border-radius: var(--radius-full);">
+                  ✨ 100% Brightness Photo
+                </span>
+              `}
             </div>
             <h4 style="font-size: 0.95rem; font-weight: 800; color: #071426; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-bottom: 0.15rem;">
-              ${banner.heading || 'Headline'}
+              ${banner.heading ? banner.heading : '<span style="color: #64748B; font-weight: 600; font-style: italic;">📸 Pure Photo Banner (No Text Overlay)</span>'}
             </h4>
             <p style="font-size: 0.8rem; color: var(--text-muted); margin: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
-              ${banner.sub || 'Subtitle description'}
+              ${banner.sub ? banner.sub : 'Displays in full original brightness and clarity on showroom.'}
             </p>
           </div>
         </div>
@@ -973,7 +980,7 @@ function renderHeroBannersList() {
 }
 
 // Image File Compressor for Fast Loading on Slow Internet
-function compressImageFile(file, maxWidth = 1200, maxHeight = 800, quality = 0.85) {
+function compressImageFile(file, maxWidth = 1400, maxHeight = 900, quality = 0.88) {
   return new Promise((resolve) => {
     const reader = new FileReader();
     reader.onload = function(e) {
@@ -1006,11 +1013,22 @@ function compressImageFile(file, maxWidth = 1200, maxHeight = 800, quality = 0.8
   });
 }
 
+// Transform State for Banner Framing
+let bannerTransformState = {
+  zoom: 100,
+  pos: 'center',
+  rotate: 0,
+  flipH: false,
+  flipV: false,
+  filter: 'none',
+  grid: true
+};
+
 // Modal Controllers for Banner Slides
 function openAddBannerModal() {
   document.getElementById('banner-modal-title').innerHTML = '<i class="fas fa-plus-circle text-primary"></i> Add Hero Banner Slide';
   document.getElementById('banner-edit-id').value = '';
-  document.getElementById('banner-tag-input').value = 'Certified Pre-Owned';
+  document.getElementById('banner-tag-input').value = '';
   document.getElementById('banner-icon-select').value = 'fa-certificate';
   document.getElementById('banner-heading-input').value = '';
   document.getElementById('banner-sub-input').value = '';
@@ -1018,10 +1036,22 @@ function openAddBannerModal() {
   document.getElementById('banner-preview-img').src = 'https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&w=1200&q=80';
   document.getElementById('banner-active-input').checked = true;
 
+  bannerTransformState = {
+    zoom: 100,
+    pos: 'center',
+    rotate: 0,
+    flipH: false,
+    flipV: false,
+    filter: 'none',
+    grid: true
+  };
+
   const zoomSlider = document.getElementById('banner-zoom-slider');
   const posSelect = document.getElementById('banner-pos-select');
   if (zoomSlider) zoomSlider.value = 100;
   if (posSelect) posSelect.value = 'center';
+
+  updateBannerFilterButtons('none');
   adjustBannerCrop();
   syncCropLivePreview();
 
@@ -1049,10 +1079,22 @@ function openEditBannerModal(id) {
   document.getElementById('banner-preview-img').src = banner.image || '';
   document.getElementById('banner-active-input').checked = banner.active !== false;
 
+  bannerTransformState = {
+    zoom: banner.zoom || 100,
+    pos: banner.pos || 'center',
+    rotate: banner.rotate || 0,
+    flipH: banner.flipH || false,
+    flipV: banner.flipV || false,
+    filter: banner.filter || 'none',
+    grid: true
+  };
+
   const zoomSlider = document.getElementById('banner-zoom-slider');
   const posSelect = document.getElementById('banner-pos-select');
-  if (zoomSlider) zoomSlider.value = 100;
-  if (posSelect) posSelect.value = 'center';
+  if (zoomSlider) zoomSlider.value = bannerTransformState.zoom;
+  if (posSelect) posSelect.value = bannerTransformState.pos;
+
+  updateBannerFilterButtons(bannerTransformState.filter);
   adjustBannerCrop();
   syncCropLivePreview();
 
@@ -1075,14 +1117,14 @@ async function handleBannerFileInput(event) {
   const file = event.target.files && event.target.files[0];
   if (!file) return;
 
-  showToast('Optimizing image from gallery...', 'info');
-  const compressed = await compressImageFile(file, 1400, 800, 0.88);
+  showToast('Optimizing mobile photo from gallery...', 'info');
+  const compressed = await compressImageFile(file, 1600, 900, 0.88);
   
   const input = document.getElementById('banner-image-input');
   if (input) input.value = compressed;
   
   updateBannerLivePreview(compressed);
-  showToast('Image loaded! Ready to save.', 'success');
+  showToast('Photo loaded ready for framing & save!', 'success');
 }
 
 function updateBannerLivePreview(url) {
@@ -1094,29 +1136,147 @@ function updateBannerLivePreview(url) {
 
 function adjustBannerCrop() {
   const zoomSlider = document.getElementById('banner-zoom-slider');
+  const zoomVal = document.getElementById('banner-zoom-val');
   const posSelect = document.getElementById('banner-pos-select');
   const prevImg = document.getElementById('banner-preview-img');
 
-  if (prevImg) {
-    const scale = (zoomSlider ? zoomSlider.value : 100) / 100;
-    const pos = posSelect ? posSelect.value : 'center';
-    
-    prevImg.style.transform = `scale(${scale})`;
-    prevImg.style.objectPosition = pos;
+  if (zoomSlider) {
+    bannerTransformState.zoom = parseInt(zoomSlider.value, 10) || 100;
   }
+  if (posSelect) {
+    bannerTransformState.pos = posSelect.value;
+  }
+  if (zoomVal) {
+    zoomVal.textContent = `${bannerTransformState.zoom}%`;
+  }
+
+  if (prevImg) {
+    const scale = bannerTransformState.zoom / 100;
+    const scaleX = bannerTransformState.flipH ? -scale : scale;
+    const scaleY = bannerTransformState.flipV ? -scale : scale;
+    prevImg.style.transform = `scale(${scaleX}, ${scaleY}) rotate(${bannerTransformState.rotate}deg)`;
+    prevImg.style.objectPosition = bannerTransformState.pos;
+    prevImg.style.filter = bannerTransformState.filter;
+  }
+}
+
+function stepBannerZoom(delta) {
+  const zoomSlider = document.getElementById('banner-zoom-slider');
+  if (zoomSlider) {
+    let current = parseInt(zoomSlider.value, 10) || 100;
+    current = Math.max(50, Math.min(250, current + delta));
+    zoomSlider.value = current;
+    adjustBannerCrop();
+  }
+}
+
+function rotateBannerPhoto(deg) {
+  bannerTransformState.rotate = (bannerTransformState.rotate + deg) % 360;
+  adjustBannerCrop();
+  showToast(`Rotated to ${bannerTransformState.rotate}°`, 'info');
+}
+
+function flipBannerPhoto(axis) {
+  if (axis === 'H') {
+    bannerTransformState.flipH = !bannerTransformState.flipH;
+  } else if (axis === 'V') {
+    bannerTransformState.flipV = !bannerTransformState.flipV;
+  }
+  adjustBannerCrop();
+}
+
+function toggleBannerGrid() {
+  const grid = document.getElementById('banner-grid-overlay');
+  if (grid) {
+    bannerTransformState.grid = !bannerTransformState.grid;
+    grid.style.display = bannerTransformState.grid ? 'block' : 'none';
+  }
+}
+
+function resetBannerCrop() {
+  bannerTransformState = {
+    zoom: 100,
+    pos: 'center',
+    rotate: 0,
+    flipH: false,
+    flipV: false,
+    filter: 'none',
+    grid: true
+  };
+  const zoomSlider = document.getElementById('banner-zoom-slider');
+  const posSelect = document.getElementById('banner-pos-select');
+  if (zoomSlider) zoomSlider.value = 100;
+  if (posSelect) posSelect.value = 'center';
+  const grid = document.getElementById('banner-grid-overlay');
+  if (grid) grid.style.display = 'block';
+
+  updateBannerFilterButtons('none');
+  adjustBannerCrop();
+  showToast('Framing & filters reset to 100% default', 'info');
+}
+
+function setBannerFilter(filterVal, btnEl) {
+  bannerTransformState.filter = filterVal;
+  updateBannerFilterButtons(filterVal);
+  adjustBannerCrop();
+}
+
+function updateBannerFilterButtons(activeFilter) {
+  const btns = document.querySelectorAll('.banner-filter-btn');
+  btns.forEach(btn => {
+    if (btn.getAttribute('data-filter') === activeFilter) {
+      btn.classList.add('active');
+      btn.style.background = '#071426';
+      btn.style.color = '#FFFFFF';
+      btn.style.borderColor = '#071426';
+    } else {
+      btn.classList.remove('active');
+      btn.style.background = '';
+      btn.style.color = '';
+      btn.style.borderColor = '';
+    }
+  });
 }
 
 function syncCropLivePreview() {
   const headInput = document.getElementById('banner-heading-input');
   const tagInput = document.getElementById('banner-tag-input');
+  const iconSelect = document.getElementById('banner-icon-select');
   const cropHead = document.getElementById('crop-head-preview');
   const cropTag = document.getElementById('crop-tag-badge');
+  const captionBox = document.getElementById('banner-caption-preview-box');
+  const indicator = document.getElementById('banner-brightness-indicator');
 
-  if (cropHead && headInput) {
-    cropHead.textContent = headInput.value.trim() || 'Headline Preview';
-  }
-  if (cropTag && tagInput) {
-    cropTag.textContent = tagInput.value.trim() || 'Certified Pre-Owned';
+  const headText = headInput ? headInput.value.trim() : '';
+  const tagText = tagInput ? tagInput.value.trim() : '';
+  const icon = iconSelect ? iconSelect.value : 'fa-certificate';
+
+  const hasAnyText = Boolean(headText || tagText);
+
+  if (captionBox) {
+    if (hasAnyText) {
+      captionBox.style.display = 'block';
+      if (cropHead) {
+        cropHead.textContent = headText || '';
+        cropHead.style.display = headText ? 'block' : 'none';
+      }
+      if (cropTag) {
+        cropTag.innerHTML = `<i class="fas ${icon}"></i> ${tagText}`;
+        cropTag.style.display = tagText ? 'inline-block' : 'none';
+      }
+      if (indicator) {
+        indicator.innerHTML = '📝 Caption Overlay Mode';
+        indicator.style.color = '#071426';
+        indicator.style.background = '#E2E8F0';
+      }
+    } else {
+      captionBox.style.display = 'none';
+      if (indicator) {
+        indicator.innerHTML = '✨ Full Brightness (Photo Only)';
+        indicator.style.color = '#059669';
+        indicator.style.background = '#ECFDF5';
+      }
+    }
   }
 }
 
@@ -1134,26 +1294,41 @@ async function handleBannerSubmit(e) {
     AdminDashboard.homepageConfig.heroBanners = [];
   }
 
+  const bannerData = {
+    tag,
+    tagIcon,
+    heading,
+    sub,
+    image,
+    active,
+    zoom: bannerTransformState.zoom || 100,
+    pos: bannerTransformState.pos || 'center',
+    rotate: bannerTransformState.rotate || 0,
+    flipH: bannerTransformState.flipH || false,
+    flipV: bannerTransformState.flipV || false,
+    filter: bannerTransformState.filter || 'none'
+  };
+
   if (editId) {
     // Update existing
     const idx = AdminDashboard.homepageConfig.heroBanners.findIndex(b => String(b.id) === String(editId));
     if (idx !== -1) {
       AdminDashboard.homepageConfig.heroBanners[idx] = {
         ...AdminDashboard.homepageConfig.heroBanners[idx],
-        tag, tagIcon, heading, sub, image, active
+        ...bannerData
       };
       showToast('Banner slide updated successfully!');
-      logActivity(`Updated banner slide: ${heading}`);
+      logActivity(`Updated hero banner slide: ${heading || 'Photo Slide'}`);
     }
   } else {
     // Add new
     const newBanner = {
       id: 'banner_' + Date.now(),
-      tag, tagIcon, heading, sub, image, active
+      ...bannerData
     };
     AdminDashboard.homepageConfig.heroBanners.push(newBanner);
     showToast('New banner slide added to showroom carousel!');
-    logActivity(`Added new banner slide: ${heading}`);
+    logActivity(`Added new hero banner slide: ${heading || 'Photo Slide'}`);
   }
 
   await window.CarService.saveHomepageConfig(AdminDashboard.homepageConfig);

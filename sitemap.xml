@@ -5,12 +5,12 @@
   
   <!-- Homepage & Main Showroom -->
   <url>
-    <loc>https://shriranicars.com/</loc>
-    <lastmod>2026-09-20</lastmod>
+    <loc>https://shriranicars.netlify.app/</loc>
+    <lastmod>2026-09-21</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
     <image:image>
-      <image:loc>https://shriranicars.com/icons/icon-512.png</image:loc>
+      <image:loc>https://shriranicars.netlify.app/icons/icon-512.png</image:loc>
       <image:title>Shri Rani Cars Showroom Logo</image:title>
       <image:caption>Multi-Brand Pre-Owned Luxury Cars Showroom in Vazhapadi, Salem</image:caption>
     </image:image>
@@ -18,32 +18,32 @@
 
   <!-- Inventory & Available Cars Section -->
   <url>
-    <loc>https://shriranicars.com/#inventory-section</loc>
-    <lastmod>2026-09-20</lastmod>
+    <loc>https://shriranicars.netlify.app/#inventory-section</loc>
+    <lastmod>2026-09-21</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.9</priority>
   </url>
 
   <!-- Sell Your Car / Valuation Section -->
   <url>
-    <loc>https://shriranicars.com/#sell-section</loc>
-    <lastmod>2026-09-20</lastmod>
+    <loc>https://shriranicars.netlify.app/#sell-section</loc>
+    <lastmod>2026-09-21</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
 
   <!-- EMI Loan Calculator -->
   <url>
-    <loc>https://shriranicars.com/#calculator-section</loc>
-    <lastmod>2026-09-20</lastmod>
+    <loc>https://shriranicars.netlify.app/#calculator-section</loc>
+    <lastmod>2026-09-21</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
 
   <!-- Showroom Location & Contact Details -->
   <url>
-    <loc>https://shriranicars.com/#location-section</loc>
-    <lastmod>2026-09-20</lastmod>
+    <loc>https://shriranicars.netlify.app/#location-section</loc>
+    <lastmod>2026-09-21</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.85</priority>
   </url>

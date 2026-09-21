@@ -49,16 +49,40 @@ async function syncHomepageFromConfig() {
       if (sliderWrap && Array.isArray(config.heroBanners) && config.heroBanners.length > 0) {
         const activeBanners = config.heroBanners.filter(b => b.active !== false);
         if (activeBanners.length > 0) {
-          const slidesHtml = activeBanners.map((banner, idx) => `
-            <div class="hero-slide ${idx === 0 ? 'active' : ''}">
-              <img src="${banner.image}" alt="${banner.heading || 'Shri Rani Cars'}" loading="lazy">
+          const slidesHtml = activeBanners.map((banner, idx) => {
+            const hasTag = Boolean(banner.tag && banner.tag.trim());
+            const hasHead = Boolean(banner.heading && banner.heading.trim());
+            const hasSub = Boolean(banner.sub && banner.sub.trim());
+            const hasText = hasTag || hasHead || hasSub;
+
+            const scale = (banner.zoom || 100) / 100;
+            const scaleX = banner.flipH ? -scale : scale;
+            const scaleY = banner.flipV ? -scale : scale;
+            const rotate = banner.rotate || 0;
+            const pos = banner.pos || 'center';
+            const filter = banner.filter && banner.filter !== 'none' ? banner.filter : '';
+
+            const imgStyles = [
+              `object-position: ${pos};`,
+              (scale !== 1 || banner.flipH || banner.flipV || rotate !== 0) ? `transform: scale(${scaleX}, ${scaleY}) rotate(${rotate}deg);` : '',
+              filter ? `filter: ${filter};` : ''
+            ].filter(Boolean).join(' ');
+
+            const captionHtml = hasText ? `
               <div class="hero-slide-caption">
-                <span class="hero-slide-tag"><i class="fas ${banner.tagIcon || 'fa-certificate'} text-primary"></i> ${banner.tag || 'Certified Pre-Owned'}</span>
-                <h2>${banner.heading || 'Tested, Certified & Road Ready'}</h2>
-                <p>${banner.sub || '140-Point Quality Inspection • Instant Financing'}</p>
+                ${hasTag ? `<span class="hero-slide-tag"><i class="fas ${banner.tagIcon || 'fa-certificate'} text-primary"></i> ${banner.tag.trim()}</span>` : ''}
+                ${hasHead ? `<h2>${banner.heading.trim()}</h2>` : ''}
+                ${hasSub ? `<p>${banner.sub.trim()}</p>` : ''}
               </div>
-            </div>
-          `).join('');
+            ` : '';
+
+            return `
+              <div class="hero-slide ${idx === 0 ? 'active' : ''} ${!hasText ? 'pure-photo-slide' : ''}">
+                <img src="${banner.image}" alt="${banner.heading || 'Shri Rani Cars'}" style="${imgStyles}" loading="lazy">
+                ${captionHtml}
+              </div>
+            `;
+          }).join('');
 
           const dotsHtml = `
             <div class="hero-carousel-dots" id="hero-carousel-dots">
@@ -362,7 +386,7 @@ function renderInventoryGrid() {
       <div class="car-item-card" onclick="viewCarDetails('${car.id}')">
         <!-- Thumbnail -->
         <div class="car-thumb-wrap">
-          <img src="${mainImg}" alt="${car.title}" loading="lazy" onerror="this.src='https://images.unsplash.com/photo-1590362891991-f776e747a588?auto=format&fit=crop&w=800&q=80'">
+          <img src="${mainImg}" alt="${car.brand || ''} ${car.model || ''} ${car.year || ''} for sale at Shri Rani Cars Salem" title="${car.title || 'Pre-Owned Car'} - Shri Rani Cars Salem" width="380" height="240" loading="lazy" decoding="async" onerror="this.src='https://images.unsplash.com/photo-1590362891991-f776e747a588?auto=format&fit=crop&w=800&q=80'">
           
           <button type="button" class="btn-card-fav ${isFav ? 'active' : ''}" onclick="toggleFavorite('${car.id}', event)" title="Save to Favorites" aria-label="Save to Favorites">
             <i class="${isFav ? 'fas' : 'far'} fa-heart"></i>
@@ -669,7 +693,7 @@ function renderProductGallery(gallery) {
     if (gallery.length > 1) {
       thumbsBox.style.display = 'flex';
       thumbsBox.innerHTML = gallery.map((img, idx) => `
-        <img src="${img}" class="product-thumb-item ${idx === AppState.currentGalleryIdx ? 'active' : ''}" onclick="setProductGalleryIdx(${idx})" alt="Thumbnail ${idx + 1}" onerror="this.onerror=null; this.src='icons/app-logo.png';">
+        <img src="${img}" class="product-thumb-item ${idx === AppState.currentGalleryIdx ? 'active' : ''}" onclick="setProductGalleryIdx(${idx})" alt="Shri Rani Cars gallery photo ${idx + 1}" title="Vehicle Photo ${idx + 1}" width="72" height="48" loading="lazy" decoding="async" onerror="this.onerror=null; this.src='icons/app-logo.png';">
       `).join('');
     } else {
       thumbsBox.style.display = 'none';
