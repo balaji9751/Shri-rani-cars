@@ -3459,5 +3459,265 @@ input, select, textarea {
   box-shadow: 0 4px 12px rgba(7, 20, 38, 0.35);
 }
 
+/* ==========================================================================
+   EXECUTIVE LUXURY HORIZON PRELOADER (CLEAN, MINIMALIST & PRESTIGIOUS)
+   ========================================================================== */
+.luxury-preloader {
+  position: fixed;
+  inset: 0;
+  z-index: 9999999;
+  background: radial-gradient(circle at 50% 45%, #0B1E36 0%, #050E1C 60%, #020710 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+  overflow: hidden;
+  opacity: 1;
+  visibility: visible;
+  transition: opacity 0.55s cubic-bezier(0.16, 1, 0.3, 1), transform 0.55s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.55s ease;
+}
+
+.luxury-preloader.fade-out {
+  opacity: 0;
+  transform: scale(1.05);
+  visibility: hidden;
+  pointer-events: none;
+}
+
+/* Ambient Subtle Radial Glow */
+.clean-preloader-glow {
+  position: absolute;
+  width: 380px;
+  height: 380px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(132, 212, 0, 0.15) 0%, rgba(2, 132, 199, 0.08) 50%, transparent 70%);
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  filter: blur(40px);
+  pointer-events: none;
+  animation: cleanAuraPulse 3s ease-in-out infinite alternate;
+}
+
+/* Minimalist Skip Button */
+.preloader-skip-btn {
+  position: absolute;
+  top: 1.25rem;
+  right: 1.25rem;
+  z-index: 20;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: #94A3B8;
+  font-size: 0.72rem;
+  font-weight: 700;
+  padding: 0.3rem 0.8rem;
+  border-radius: 999px;
+  cursor: pointer;
+  backdrop-filter: blur(8px);
+  transition: all 0.25s ease;
+}
+
+.preloader-skip-btn:hover {
+  background: rgba(132, 212, 0, 0.18);
+  color: #84D400;
+  border-color: #84D400;
+}
+
+/* Central Stage Container */
+.clean-preloader-stage {
+  position: relative;
+  z-index: 10;
+  width: 100%;
+  max-width: 380px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+/* Emblem Container with Precision Halo Ring */
+.clean-emblem-wrap {
+  position: relative;
+  width: 150px;
+  height: 150px;
+  margin: 0 auto 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Rotating Precision Ring */
+.clean-halo-ring {
+  position: absolute;
+  inset: -6px;
+  border-radius: 50%;
+  border: 1.5px dashed rgba(132, 212, 0, 0.45);
+  box-shadow: 0 0 25px rgba(132, 212, 0, 0.25);
+  animation: haloSpin 3s linear infinite;
+}
+
+.clean-halo-ring::before {
+  content: '';
+  position: absolute;
+  top: -3px;
+  left: 50%;
+  width: 9px;
+  height: 9px;
+  background: #84D400;
+  border-radius: 50%;
+  box-shadow: 0 0 12px #84D400, 0 0 24px #84D400;
+  transform: translateX(-50%);
+}
+
+/* Illuminated Luxury Contrast Disc */
+.clean-emblem-disc {
+  position: relative;
+  width: 126px;
+  height: 126px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 30%, #FFFFFF 0%, #F8FAFC 70%, #E2E8F0 100%);
+  border: 2px solid rgba(132, 212, 0, 0.8);
+  box-shadow: 0 0 30px rgba(132, 212, 0, 0.35), 0 12px 28px rgba(0, 0, 0, 0.5), inset 0 2px 4px rgba(255, 255, 255, 0.9), inset 0 -3px 8px rgba(0, 0, 0, 0.08);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 12px;
+  z-index: 2;
+  animation: cleanLogoFloat 2.5s ease-in-out infinite alternate;
+}
+
+/* Logo Image inside Disc */
+.clean-logo-img {
+  width: 100%;
+  height: 100%;
+  max-width: 102px;
+  max-height: 85px;
+  object-fit: contain;
+  filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.12));
+}
+
+/* Brand Text Block */
+.clean-brand-block {
+  margin-bottom: 1.5rem;
+}
+
+.clean-brand-name {
+  font-size: 1.25rem;
+  font-weight: 800;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: #FFFFFF;
+  margin: 0 0 0.35rem 0;
+  line-height: 1.1;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+}
+
+.clean-brand-name span {
+  color: var(--lime);
+}
+
+.clean-brand-sub {
+  font-size: 0.76rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #94A3B8;
+  margin: 0;
+}
+
+/* Sleek Razor Laser Progress Track */
+.clean-progress-wrap {
+  width: 100%;
+  max-width: 280px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.65rem;
+}
+
+.clean-progress-track {
+  position: relative;
+  width: 100%;
+  height: 3px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+.clean-progress-bar {
+  height: 100%;
+  width: 0%;
+  background: linear-gradient(90deg, #0284C7, #84D400, #FFFFFF);
+  border-radius: 999px;
+  box-shadow: 0 0 10px #84D400;
+  transition: width 0.12s linear;
+}
+
+.clean-progress-meta {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #CBD5E1;
+}
+
+.clean-status-msg {
+  color: var(--lime);
+  font-size: 0.75rem;
+  letter-spacing: 0.04em;
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.clean-pct-number {
+  font-family: monospace;
+  font-size: 0.85rem;
+  color: #FFFFFF;
+  font-weight: 800;
+}
+
+.text-lime {
+  color: var(--lime) !important;
+}
+
+/* Keyframes */
+@keyframes haloSpin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+@keyframes cleanAuraPulse {
+  0% { opacity: 0.2; transform: translate(-50%, -50%) scale(0.9); }
+  100% { opacity: 0.45; transform: translate(-50%, -50%) scale(1.15); }
+}
+
+@keyframes cleanLogoFloat {
+  0% { transform: translateY(0); }
+  100% { transform: translateY(-3px); }
+}
+
+@media (max-width: 480px) {
+  .clean-emblem-wrap {
+    width: 130px;
+    height: 130px;
+    margin-bottom: 1.25rem;
+  }
+  .clean-emblem-disc {
+    width: 110px;
+    height: 110px;
+    padding: 10px;
+  }
+  .clean-logo-img {
+    max-width: 88px;
+    max-height: 72px;
+  }
+  .clean-brand-name {
+    font-size: 1.1rem;
+  }
+}
+
 
 

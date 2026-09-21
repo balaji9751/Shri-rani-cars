@@ -1,10 +1,11 @@
 // Service Worker for Shri Rani Cars PWA
-const CACHE_NAME = 'shri-rani-cars-v8';
+const CACHE_NAME = 'shri-rani-cars-v9';
 const ASSETS_TO_CACHE = [
   './',
   './index.html',
   './css/style.css',
   './css/admin.css',
+  './icons/app-logo-clean.png',
   './icons/app-logo.png',
   './icons/icon-192.png',
   './icons/icon-512.png',

@@ -16,6 +16,7 @@ const AppState = {
 };
 
 document.addEventListener('DOMContentLoaded', async () => {
+  initLuxuryPreloader();
   initToastShelf();
   initHeroCarousel();
   await loadInventory();
@@ -40,6 +41,64 @@ document.addEventListener('DOMContentLoaded', async () => {
     await syncHomepageFromConfig();
   });
 });
+
+// Clean Executive Luxury Preloader Animation Engine
+function initLuxuryPreloader() {
+  const preloader = document.getElementById('app-preloader');
+  if (!preloader) return;
+
+  const progressBar = document.getElementById('clean-progress-bar');
+  const pctNumber = document.getElementById('clean-pct-number');
+  const statusMsg = document.getElementById('clean-status-msg');
+
+  const startTime = performance.now();
+  const duration = 1100; // 1.1s swift & crisp load
+
+  const updatePreloader = (now) => {
+    const elapsed = now - startTime;
+    const progress = Math.min(elapsed / duration, 1);
+    
+    // Smooth cubic ease-out
+    const eased = 1 - Math.pow(1 - progress, 3);
+    const pct = Math.floor(eased * 100);
+
+    if (progressBar) progressBar.style.width = `${pct}%`;
+    if (pctNumber) pctNumber.textContent = `${pct}%`;
+
+    if (statusMsg) {
+      if (pct < 35) {
+        statusMsg.innerHTML = '<i class="fas fa-shield-alt text-lime"></i> 140-Point Quality Inspection';
+      } else if (pct < 75) {
+        statusMsg.innerHTML = '<i class="fas fa-certificate text-lime"></i> Certified Luxury Fleet Ready';
+      } else {
+        statusMsg.innerHTML = '<i class="fas fa-check-circle text-lime"></i> Welcome to Shri Rani Cars';
+      }
+    }
+
+    if (progress < 1) {
+      requestAnimationFrame(updatePreloader);
+    } else {
+      setTimeout(() => {
+        dismissPreloader();
+      }, 150);
+    }
+  };
+
+  requestAnimationFrame(updatePreloader);
+
+  // Safety fallback (1.8s max)
+  setTimeout(() => dismissPreloader(), 1800);
+}
+
+function dismissPreloader() {
+  const preloader = document.getElementById('app-preloader');
+  if (preloader && !preloader.classList.contains('fade-out')) {
+    preloader.classList.add('fade-out');
+    setTimeout(() => {
+      if (preloader.parentNode) preloader.parentNode.removeChild(preloader);
+    }, 600);
+  }
+}
 
 async function syncHomepageFromConfig() {
   try {
