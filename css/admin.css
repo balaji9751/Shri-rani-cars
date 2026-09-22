@@ -1,24 +1,24 @@
 /* ==========================================================================
-   SRI RANI CARS — ADMIN DASHBOARD MASTER STYLESHEET
-   Navy & Electric Lime Luxury Automotive Admin Theme
+   SHRI RANI CARS — ADMIN DASHBOARD MASTER STYLESHEET
+   Dark Forest Emerald (#061A13) & Metallic Royal Gold (#D4AF37) Theme
    ========================================================================== */
 
 :root {
-  /* Brand Navy & Electric Lime Palette */
-  --admin-navy-dark: #071426;
-  --admin-navy-subtle: #0b1f3a;
-  --admin-navy-card: #11294d;
-  --admin-sidebar-bg: #071426;
+  /* Brand Forest Emerald & Royal Gold Palette */
+  --admin-navy-dark: #061A13;
+  --admin-navy-subtle: #0B251D;
+  --admin-navy-card: #0F3025;
+  --admin-sidebar-bg: #061A13;
   
-  --admin-lime: #84D400;
-  --admin-lime-hover: #72b800;
-  --admin-lime-bright: #A3E635;
-  --admin-lime-subtle: rgba(132, 212, 0, 0.12);
-  --admin-lime-border: rgba(132, 212, 0, 0.35);
+  --admin-lime: #D4AF37;
+  --admin-lime-hover: #C59E33;
+  --admin-lime-bright: #FDE047;
+  --admin-lime-subtle: rgba(212, 175, 55, 0.12);
+  --admin-lime-border: rgba(212, 175, 55, 0.35);
 
-  --bg-page: #F5F7FA;
+  --bg-page: #FAF8F2;
   --bg-surface: #FFFFFF;
-  --bg-surface-hover: #F8FAFC;
+  --bg-surface-hover: #F4F1E8;
   --bg-input: #FFFFFF;
 
   --text-main: #111827;
@@ -143,15 +143,15 @@ input, select, textarea {
 }
 
 .sidebar-logo-img {
-  width: 50px;
-  height: 42px;
-  border-radius: 8px;
-  object-fit: contain;
-  background: #FFFFFF;
-  padding: 2px 5px;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  object-fit: cover;
+  background: transparent;
+  padding: 0;
   flex-shrink: 0;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-  border: 1px solid rgba(132, 212, 0, 0.45);
+  box-shadow: 0 0 15px rgba(212, 175, 55, 0.35);
+  border: 1.5px solid #D4AF37;
 }
 
 .sidebar-logo-icon {

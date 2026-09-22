@@ -22,7 +22,6 @@ document.addEventListener('DOMContentLoaded', async () => {
   await loadInventory();
   await syncHomepageFromConfig();
   initListeners();
-  initStandaloneCalculator();
   updateWishlistCount();
 
   // Check URL hash & browser/phone back button navigation
@@ -42,17 +41,20 @@ document.addEventListener('DOMContentLoaded', async () => {
   });
 });
 
-// Clean Executive Luxury Preloader Animation Engine
+// Royal Gold & Onyx Luxury Preloader Animation (Matches Image 2)
 function initLuxuryPreloader() {
   const preloader = document.getElementById('app-preloader');
   if (!preloader) return;
 
-  const progressBar = document.getElementById('clean-progress-bar');
-  const pctNumber = document.getElementById('clean-pct-number');
-  const statusMsg = document.getElementById('clean-status-msg');
+  const svgProgress = document.getElementById('svg-ring-progress');
+  const circumference = 2 * Math.PI * 96; // ~603.18
+  if (svgProgress) {
+    svgProgress.style.strokeDasharray = `${circumference}`;
+    svgProgress.style.strokeDashoffset = `${circumference}`;
+  }
 
   const startTime = performance.now();
-  const duration = 1100; // 1.1s swift & crisp load
+  const duration = 1200; // 1.2s swift & ultra-smooth load
 
   const updatePreloader = (now) => {
     const elapsed = now - startTime;
@@ -60,19 +62,10 @@ function initLuxuryPreloader() {
     
     // Smooth cubic ease-out
     const eased = 1 - Math.pow(1 - progress, 3);
-    const pct = Math.floor(eased * 100);
 
-    if (progressBar) progressBar.style.width = `${pct}%`;
-    if (pctNumber) pctNumber.textContent = `${pct}%`;
-
-    if (statusMsg) {
-      if (pct < 35) {
-        statusMsg.innerHTML = '<i class="fas fa-shield-alt text-lime"></i> 140-Point Quality Inspection';
-      } else if (pct < 75) {
-        statusMsg.innerHTML = '<i class="fas fa-certificate text-lime"></i> Certified Luxury Fleet Ready';
-      } else {
-        statusMsg.innerHTML = '<i class="fas fa-check-circle text-lime"></i> Welcome to Shri Rani Cars';
-      }
+    if (svgProgress) {
+      const offset = circumference * (1 - eased);
+      svgProgress.style.strokeDashoffset = `${offset}`;
     }
 
     if (progress < 1) {
@@ -80,14 +73,14 @@ function initLuxuryPreloader() {
     } else {
       setTimeout(() => {
         dismissPreloader();
-      }, 150);
+      }, 250);
     }
   };
 
   requestAnimationFrame(updatePreloader);
 
-  // Safety fallback (1.8s max)
-  setTimeout(() => dismissPreloader(), 1800);
+  // Safety fallback (2s max)
+  setTimeout(() => dismissPreloader(), 2000);
 }
 
 function dismissPreloader() {
@@ -145,7 +138,7 @@ async function syncHomepageFromConfig() {
 
           const dotsHtml = `
             <div class="hero-carousel-dots" id="hero-carousel-dots">
-              ${activeBanners.map((_, idx) => `<span class="dot ${idx === 0 ? 'active' : ''}" onclick="goToHeroSlide(${idx})"></span>`).join('')}
+              ${activeBanners.map((_, idx) => `<span class="hero-dot ${idx === 0 ? 'active' : ''}" onclick="goToHeroSlide(${idx})"></span>`).join('')}
             </div>
           `;
 
@@ -281,7 +274,6 @@ function renderBrandScroller() {
       <button type="button" class="brand-pill ${isActive ? 'active' : ''}" onclick="filterByBrand('${brand}')">
         ${logoHtml}
         <span>${label}</span>
-        ${counts[brand] ? `<span class="pill-count">${counts[brand]}</span>` : ''}
       </button>
     `;
   }).join('');
@@ -423,7 +415,39 @@ function updateSearchFeedback() {
   }
 }
 
-// Render Main Showroom Grid
+// Hero Carousel Controllers (Matches Reference Image Slider)
+let heroSlideIndex = 0;
+let heroSlideInterval = null;
+
+function initHeroCarousel() {
+  if (heroSlideInterval) clearInterval(heroSlideInterval);
+  heroSlideInterval = setInterval(() => {
+    nextHeroSlide();
+  }, 5000);
+}
+
+function showHeroSlide(idx) {
+  const slides = document.querySelectorAll('.hero-slide');
+  if (!slides || slides.length === 0) return;
+  heroSlideIndex = (idx + slides.length) % slides.length;
+  slides.forEach((slide, i) => {
+    slide.classList.toggle('active', i === heroSlideIndex);
+  });
+}
+
+function nextHeroSlide() {
+  showHeroSlide(heroSlideIndex + 1);
+}
+
+function prevHeroSlide() {
+  showHeroSlide(heroSlideIndex - 1);
+}
+
+function goToHeroSlide(idx) {
+  showHeroSlide(idx);
+}
+
+// Render Main Showroom Grid (Matches Reference Image Cards)
 function renderInventoryGrid() {
   const grid = document.getElementById('inventory-grid');
   if (!grid) return;
@@ -467,23 +491,32 @@ function renderInventoryGrid() {
         <!-- Content Area -->
         <div class="card-content-area">
           <div class="card-brand-label">${brandName}</div>
-          <h3 class="card-car-title">${carModelTitle} ${carVariant ? `<span class="card-variant-inline">${carVariant}</span>` : ''}</h3>
+          <h3 class="card-car-title">${carModelTitle}</h3>
 
-          <!-- Specs 2x2 Clean Matrix -->
+          <!-- Specs 2-Line Row Matrix (Matches Reference Screenshot) -->
           <div class="card-specs-mini-grid">
-            <div class="spec-mini-item"><i class="far fa-calendar-alt"></i> <span>${car.year || '2021'}</span></div>
-            <div class="spec-mini-item"><i class="fas fa-gas-pump"></i> <span>${car.fuel_type || 'Petrol'}</span></div>
-            <div class="spec-mini-item"><i class="fas fa-cogs"></i> <span>${car.transmission || 'Manual'}</span></div>
-            <div class="spec-mini-item"><i class="fas fa-tachometer-alt"></i> <span>${(car.kms || 0).toLocaleString('en-IN')} km</span></div>
+            <div class="specs-sub-row">
+              <span class="spec-mini-item"><i class="far fa-calendar-alt"></i> ${car.year || '2021'}</span>
+              <span class="spec-pipe">|</span>
+              <span class="spec-mini-item"><i class="fas fa-gas-pump"></i> ${car.fuel_type || 'Petrol'}</span>
+            </div>
+            <div class="specs-sub-row">
+              <span class="spec-mini-item"><i class="fas fa-cogs"></i> ${car.transmission || 'Manual'}</span>
+              <span class="spec-pipe">|</span>
+              <span class="spec-mini-item"><i class="fas fa-tachometer-alt"></i> ${(car.kms || 0).toLocaleString('en-IN')} km</span>
+            </div>
           </div>
 
-          <!-- Price & Arrow Action Row -->
-          <div class="card-price-arrow-row">
+          <!-- Price & Action Buttons (Circle Arrow on Mobile, Wide Pill on Desktop) -->
+          <div class="card-price-row">
             <div class="card-price-text">${formatCurrency(car.price)}</div>
-            <button type="button" class="btn-card-arrow-circle" onclick="viewCarDetails('${car.id}'); event.stopPropagation();" title="View details of ${car.title}" aria-label="View Details">
+            <button type="button" class="btn-card-circle-arrow" onclick="viewCarDetails('${car.id}'); event.stopPropagation();" aria-label="View Details of ${car.title}">
               <i class="fas fa-arrow-right"></i>
             </button>
           </div>
+          <button type="button" class="btn-card-view-details" onclick="viewCarDetails('${car.id}'); event.stopPropagation();" title="View details of ${car.title}" aria-label="View Details">
+            <span>View Details</span> <i class="fas fa-arrow-right"></i>
+          </button>
         </div>
       </div>
     `;
@@ -901,39 +934,6 @@ function closeAllOpenModals() {
   document.body.style.overflow = '';
 }
 
-// Standalone EMI Calculator
-function initStandaloneCalculator() {
-  const amountSlider = document.getElementById('calc-amount-slider');
-  const rateSlider = document.getElementById('calc-rate-slider');
-  const tenureSlider = document.getElementById('calc-tenure-slider');
-
-  if (!amountSlider || !rateSlider || !tenureSlider) return;
-
-  const update = () => {
-    const principal = Number(amountSlider.value);
-    const rate = Number(rateSlider.value);
-    const months = Number(tenureSlider.value) * 12;
-
-    document.getElementById('calc-amount-val').textContent = formatCurrency(principal);
-    document.getElementById('calc-rate-val').textContent = `${rate}% p.a.`;
-    document.getElementById('calc-tenure-val').textContent = `${tenureSlider.value} Years (${months} Mos)`;
-
-    const r = rate / (12 * 100);
-    const emi = (principal * r * Math.pow(1 + r, months)) / (Math.pow(1 + r, months) - 1);
-    const totalPayable = emi * months;
-    const totalInterest = totalPayable - principal;
-
-    document.getElementById('calc-emi-result').textContent = `₹ ${Math.round(emi).toLocaleString('en-IN')}`;
-    document.getElementById('calc-total-interest').textContent = `₹ ${Math.round(totalInterest).toLocaleString('en-IN')}`;
-    document.getElementById('calc-total-payable').textContent = `₹ ${Math.round(totalPayable).toLocaleString('en-IN')}`;
-  };
-
-  amountSlider.addEventListener('input', update);
-  rateSlider.addEventListener('input', update);
-  tenureSlider.addEventListener('input', update);
-  update();
-}
-
 // Wishlist / Saved Cars Count
 function updateWishlistCount() {
   const countEls = document.querySelectorAll('.wishlist-counter');
@@ -1273,3 +1273,83 @@ function renderFavoritesList() {
   }).join('');
 }
 
+// Mobile Bottom Nav Interactive Tab Switcher
+function handleMobileNavClick(btn, targetId) {
+  document.querySelectorAll('.mob-nav-btn').forEach(b => b.classList.remove('active'));
+  if (btn) btn.classList.add('active');
+
+  if (targetId === 'filter') {
+    openFilterModal();
+    return;
+  }
+
+  backToShowroom();
+
+  if (targetId === 'home') {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  } else {
+    const el = document.getElementById(targetId);
+    if (el) {
+      el.scrollIntoView({ behavior: 'smooth' });
+    }
+  }
+}
+
+// Scroll Spy to keep bottom navigation in sync with scroll position
+function initMobileNavScrollSpy() {
+  const navBtns = document.querySelectorAll('.mob-nav-btn');
+  if (!navBtns || navBtns.length === 0) return;
+
+  window.addEventListener('scroll', () => {
+    // If product details view is open, don't update showroom scroll spy
+    const prodView = document.getElementById('product-page-view');
+    if (prodView && prodView.style.display === 'block') return;
+
+    const scrollPos = window.scrollY + 250;
+    const locationSec = document.getElementById('location-section');
+    const inventorySec = document.getElementById('inventory-section');
+
+    if (locationSec && scrollPos >= locationSec.offsetTop) {
+      navBtns.forEach(b => b.classList.remove('active'));
+      if (navBtns[3]) navBtns[3].classList.add('active'); // Contact
+    } else if (inventorySec && scrollPos >= inventorySec.offsetTop) {
+      navBtns.forEach(b => b.classList.remove('active'));
+      if (navBtns[1]) navBtns[1].classList.add('active'); // Cars
+    } else {
+      navBtns.forEach(b => b.classList.remove('active'));
+      if (navBtns[0]) navBtns[0].classList.add('active'); // Home
+    }
+  }, { passive: true });
+}
+
+// Smooth Continuous Auto-Marquee for Customer Reviews on Mobile
+function initReviewsAutoScroll() {
+  const track = document.querySelector('.reviews-marquee-track');
+  if (!track) return;
+
+  let touchTimeout = null;
+
+  track.addEventListener('touchstart', () => {
+    track.classList.add('is-paused');
+    if (touchTimeout) clearTimeout(touchTimeout);
+  }, { passive: true });
+
+  track.addEventListener('touchend', () => {
+    touchTimeout = setTimeout(() => {
+      track.classList.remove('is-paused');
+    }, 2000);
+  }, { passive: true });
+
+  track.addEventListener('mouseenter', () => {
+    track.classList.add('is-paused');
+  });
+
+  track.addEventListener('mouseleave', () => {
+    track.classList.remove('is-paused');
+  });
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  initMobileNavScrollSpy();
+  initReviewsAutoScroll();
+});

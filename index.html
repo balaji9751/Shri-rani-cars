@@ -44,7 +44,7 @@
   <link rel="icon" type="image/png" href="icons/favicon.png">
   <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
   <link rel="manifest" href="manifest.json">
-  <meta name="theme-color" content="#071426">
+  <meta name="theme-color" content="#061A13">
 
   <!-- Google Fonts: Plus Jakarta Sans with Preconnect & Asynchronous Non-Blocking Load -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -203,67 +203,90 @@
 <body>
 
   <!-- ========================================================================= -->
-  <!-- EXECUTIVE LUXURY PRELOADER (CLEAN, MINIMALIST & PRESTIGIOUS) -->
+  <!-- ROYAL GOLD & ONYX LUXURY PRELOADER (MATCHES IMAGE 2) -->
   <!-- ========================================================================= -->
   <div id="app-preloader" class="luxury-preloader">
-    <div class="clean-preloader-glow"></div>
-    <div class="clean-preloader-stage">
-      <div class="clean-emblem-wrap">
-        <div class="clean-halo-ring"></div>
-        <div class="clean-emblem-disc">
-          <img src="icons/app-logo-clean.png" alt="Shri Rani Cars" class="clean-logo-img">
+    <div class="preloader-floor-glow"></div>
+    <div class="preloader-stage-wrap">
+      <div class="preloader-emblem-container">
+        <!-- SVG Animated Glowing Circular Laser Arc -->
+        <svg class="preloader-svg-ring" viewBox="0 0 220 220">
+          <circle class="svg-ring-track" cx="110" cy="110" r="96" />
+          <circle id="svg-ring-progress" class="svg-ring-progress" cx="110" cy="110" r="96" />
+        </svg>
+        <div class="preloader-emblem-disc">
+          <img src="icons/preloader-emblem-clean.png" alt="Shri Rani Cars" class="preloader-logo-img">
         </div>
       </div>
-      <div class="clean-brand-block">
-        <h2 class="clean-brand-name">SHRI RANI <span>CARS</span></h2>
-        <p class="clean-brand-sub">Certified Pre-Owned Luxury Showroom</p>
-      </div>
-      <div class="clean-progress-wrap">
-        <div class="clean-progress-track">
-          <div id="clean-progress-bar" class="clean-progress-bar"></div>
-        </div>
-        <div class="clean-progress-meta">
-          <span id="clean-status-msg" class="clean-status-msg"><i class="fas fa-shield-alt"></i> Inspection Verified</span>
-          <span id="clean-pct-number" class="clean-pct-number">0%</span>
-        </div>
+      <div class="preloader-text-group">
+        <h2 class="preloader-loading-title">L O A D I N G . . .</h2>
+        <p class="preloader-trust-subtitle">— DRIVEN BY YOUR TRUST —</p>
       </div>
     </div>
   </div>
 
-  <!-- CLEAN MAIN HEADER -->
+  <!-- LUXURY MAIN HEADER (MATCHES REFERENCE: DARK FOREST EMERALD & METALLIC GOLD) -->
   <header class="site-header">
     <div class="container">
       <div class="header-container">
-        <!-- Logo -->
+        <!-- Brand Link: Circular Gold Emblem + Metallic Gold Typography -->
         <a href="#home" class="brand-link" onclick="backToShowroom()" title="Shri Rani Cars — Return to Home">
-          <img src="icons/app-logo-clean.png" alt="Shri Rani Cars Dealership Logo" title="Shri Rani Cars Dealership Logo" width="160" height="42" class="brand-logo-img" fetchpriority="high">
+          <img src="icons/app-logo-clean.png" alt="Shri Rani Cars Dealership Logo" title="Shri Rani Cars Dealership Logo" width="48" height="48" class="brand-logo-img" fetchpriority="high">
+          <div class="brand-titles">
+            <h1 class="brand-name-gold">SHRI RANI</h1>
+            <div class="brand-divider-cars"><span>—</span> CARS <span>—</span></div>
+            <span class="brand-tagline-gold">DRIVE YOUR DREAM</span>
+          </div>
         </a>
 
-        <!-- Desktop Navigation -->
+        <!-- Desktop Navigation Links -->
         <nav class="nav-links">
           <a href="#home" class="nav-link active" onclick="backToShowroom()">Home</a>
           <a href="#inventory-section" class="nav-link" onclick="backToShowroom()">Cars</a>
-          <button type="button" class="nav-link" style="display: inline-flex; align-items: center; gap: 0.4rem;" onclick="openFilterModal()">
-            <i class="fas fa-sliders text-primary"></i> Filter
-          </button>
+          <a href="#reviews-section" class="nav-link" onclick="backToShowroom()">Reviews</a>
           <a href="#location-section" class="nav-link" onclick="backToShowroom()">Contact</a>
         </nav>
 
-        <!-- Header Actions: Unified Round Action Cluster -->
+        <!-- Header Actions (Pills on Desktop, 4 Round Buttons on Mobile matching screenshot) -->
         <div class="header-right">
-          <a href="tel:9750332585" class="header-action-btn header-call-btn" title="Call Showroom: 97503 32585" aria-label="Call Showroom">
+          <!-- Desktop Call Now Pill -->
+          <a href="tel:9750332585" class="header-contact-pill header-pill-call" title="Call Showroom: 97503 32585">
+            <div class="pill-icon-circle pill-call-circle"><i class="fas fa-phone-alt"></i></div>
+            <div class="pill-text-block">
+              <span class="pill-lbl">Call Now</span>
+              <strong class="pill-val">97503 32585</strong>
+            </div>
+          </a>
+
+          <!-- Desktop WhatsApp Pill -->
+          <a href="https://wa.me/917550172585" target="_blank" class="header-contact-pill header-pill-wa" title="WhatsApp Inquiry: 75501 72585">
+            <div class="pill-icon-circle pill-wa-circle"><i class="fab fa-whatsapp"></i></div>
+            <div class="pill-text-block">
+              <span class="pill-lbl">WhatsApp</span>
+              <strong class="pill-val">75501 72585</strong>
+            </div>
+          </a>
+
+          <!-- Mobile Only Round Call Button -->
+          <a href="tel:9750332585" class="header-action-btn header-call-btn mobile-only-btn" title="Call Showroom" aria-label="Call Showroom">
             <i class="fas fa-phone-alt"></i>
           </a>
-          <a href="https://wa.me/917550172585" target="_blank" class="header-action-btn header-wa-btn" title="WhatsApp Inquiry: 75501 72585" aria-label="WhatsApp">
+
+          <!-- Mobile Only Round WhatsApp Button -->
+          <a href="https://wa.me/917550172585" target="_blank" class="header-action-btn header-wa-btn mobile-only-btn" title="WhatsApp Showroom" aria-label="WhatsApp Showroom">
             <i class="fab fa-whatsapp"></i>
           </a>
+
+          <!-- Search Button (Desktop) -->
+          <button type="button" class="header-action-btn header-search-btn desktop-only-btn" onclick="openSearchModal()" title="Search Inventory" aria-label="Search Cars">
+            <i class="fas fa-search"></i>
+          </button>
+
+          <!-- Favorites / Wishlist -->
           <button type="button" class="header-action-btn header-fav-btn" id="header-fav-btn" onclick="openFavoritesModal()" title="Saved / Favorite Cars" aria-label="Saved Cars">
-            <i class="fas fa-heart"></i>
+            <i class="fas fa-heart" style="color: #EF4444;"></i>
             <span class="fav-count-badge" id="header-fav-count" style="display: none;">0</span>
           </button>
-          <a href="admin.html" class="header-action-btn header-admin-btn" title="Admin Portal" aria-label="Admin Portal">
-            <i class="fas fa-lock"></i>
-          </a>
         </div>
       </div>
     </div>
@@ -272,7 +295,7 @@
   <!-- Semantic Primary Page Heading (H1 for Search Engine Optimization) -->
   <h1 class="sr-only">Shri Rani Cars — Certified Pre-Owned Luxury Cars Showroom in Vazhapadi, Salem</h1>
 
-  <!-- QUICK APP-STYLE OMNI SEARCH BAR (FLIPKART / AMAZON STYLE) -->
+  <!-- QUICK APP-STYLE OMNI SEARCH BAR -->
   <div class="quick-omni-search-container">
     <div class="container">
       <div class="quick-search-box" onclick="openSearchModal()">
@@ -290,43 +313,71 @@
   <!-- MAIN SHOWROOM LANDING VIEW -->
   <main id="main-showroom-view">
 
-    <!-- HERO SHOWCASE BANNER CAROUSEL -->
-    <section id="home" class="hero-carousel-section">
+    <!-- HERO SHOWCASE SECTION (ONLY CINEMATIC CAR SLIDER) -->
+    <section id="home" class="hero-showcase-section">
       <div class="container">
-        <div class="hero-slider-wrap" id="hero-slider-wrap">
-          <!-- Slide 1 -->
-          <div class="hero-slide active">
-            <img src="https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&w=900&q=75" alt="Certified Luxury Pre-Owned Cars" title="Certified Luxury Pre-Owned Cars at Shri Rani Cars Salem" width="900" height="506" id="hero-main-img" fetchpriority="high">
-            <div class="hero-slide-caption">
-              <span class="hero-slide-tag"><i class="fas fa-shield-alt"></i> 100% Non-Accidental</span>
-              <h2 id="hero-main-heading">Multi-Brand Pre-Owned Cars</h2>
-              <p class="hero-slide-sub" id="hero-main-sub">Quality • Trust • Great Value</p>
+        <!-- Showcase Car Slider (Pure Image Showcase) -->
+        <div class="hero-visual-content hero-full-showcase">
+          <div class="hero-slider-wrap" id="hero-slider-wrap">
+            <!-- Slide 1 -->
+            <div class="hero-slide active">
+              <img src="https://images.unsplash.com/photo-1555215695-3004980ad54e?auto=format&fit=crop&w=1400&q=85" alt="Certified Luxury Pre-Owned Cars" title="Certified Luxury Pre-Owned Cars at Shri Rani Cars Salem" width="1400" height="700" id="hero-main-img" fetchpriority="high">
+              <div class="hero-slide-badge">
+                <i class="fas fa-shield-alt"></i> <span>100% Non-Accidental</span>
+              </div>
+              <div class="hero-slide-overlay-text">
+                <h3>Multi-Brand Pre-Owned <br><span class="gold-gradient-text">Cars</span></h3>
+                <p>Quality • Trust • Great Value</p>
+              </div>
+              <div class="hero-car-badge-pill">
+                <span>SHRI RANI CARS</span>
+              </div>
             </div>
-          </div>
-          <!-- Slide 2 -->
-          <div class="hero-slide">
-            <img src="https://images.unsplash.com/photo-1580273916550-e323be2ae537?auto=format&fit=crop&w=900&q=75" alt="Premium SUV & Sedan Collection" title="Premium SUV and Sedan Collection" width="900" height="506" loading="lazy">
-            <div class="hero-slide-caption">
-              <span class="hero-slide-tag"><i class="fas fa-shield-alt text-primary"></i> 100% Non-Accidental</span>
-              <h2>Multi-Brand Pre-Owned Showroom</h2>
-              <p>Verified Kilometers • Single Owner Options • Fast RC Transfer</p>
+            <!-- Slide 2 -->
+            <div class="hero-slide">
+              <img src="https://images.unsplash.com/photo-1580273916550-e323be2ae537?auto=format&fit=crop&w=1400&q=85" alt="Premium SUV & Sedan Collection" title="Premium SUV and Sedan Collection" width="1400" height="700" loading="lazy">
+              <div class="hero-slide-badge">
+                <i class="fas fa-certificate"></i> <span>Certified Pre-Owned</span>
+              </div>
+              <div class="hero-slide-overlay-text">
+                <h3>Tested, Certified &amp; <br><span class="gold-gradient-text">Road Ready</span></h3>
+                <p>140-Point Inspection • Instant RC Transfer</p>
+              </div>
+              <div class="hero-car-badge-pill">
+                <span>SHRI RANI CARS</span>
+              </div>
             </div>
-          </div>
-          <!-- Slide 3 -->
-          <div class="hero-slide">
-            <img src="https://images.unsplash.com/photo-1533473359331-0135ef1b58bf?auto=format&fit=crop&w=900&q=75" alt="Easy EMI & Car Exchange" title="Easy EMI and Car Exchange" width="900" height="506" loading="lazy">
-            <div class="hero-slide-caption">
-              <span class="hero-slide-tag"><i class="fas fa-bolt text-primary"></i> Instant EMI Approval</span>
-              <h2>Lowest Interest Rates & Free Valuation</h2>
-              <p>Sell or Exchange Your Car for Best Showroom Price</p>
+            <!-- Slide 3 -->
+            <div class="hero-slide">
+              <img src="https://images.unsplash.com/photo-1533473359331-0135ef1b58bf?auto=format&fit=crop&w=1400&q=85" alt="Certified Luxury Cars" title="Certified Luxury Cars" width="1400" height="700" loading="lazy">
+              <div class="hero-slide-badge">
+                <i class="fas fa-bolt"></i> <span>Instant Delivery</span>
+              </div>
+              <div class="hero-slide-overlay-text">
+                <h3>Drive Home Your <br><span class="gold-gradient-text">Dream SUV</span></h3>
+                <p>Exchange Bonus • Best Showroom Value</p>
+              </div>
+              <div class="hero-car-badge-pill">
+                <span>SHRI RANI CARS</span>
+              </div>
             </div>
-          </div>
-          
-          <!-- Carousel Dots -->
-          <div class="hero-carousel-dots" id="hero-carousel-dots">
-            <span class="dot active" onclick="goToHeroSlide(0)"></span>
-            <span class="dot" onclick="goToHeroSlide(1)"></span>
-            <span class="dot" onclick="goToHeroSlide(2)"></span>
+
+            <!-- Carousel Slide Controls (< >) -->
+            <div class="hero-slider-nav-arrows">
+              <button type="button" class="slider-nav-arrow" onclick="prevHeroSlide()" aria-label="Previous Slide">
+                <i class="fas fa-chevron-left"></i>
+              </button>
+              <button type="button" class="slider-nav-arrow" onclick="nextHeroSlide()" aria-label="Next Slide">
+                <i class="fas fa-chevron-right"></i>
+              </button>
+            </div>
+
+            <!-- Carousel Dots Indicator -->
+            <div class="hero-carousel-dots" id="hero-carousel-dots">
+              <span class="hero-dot active" onclick="goToHeroSlide(0)"></span>
+              <span class="hero-dot" onclick="goToHeroSlide(1)"></span>
+              <span class="hero-dot" onclick="goToHeroSlide(2)"></span>
+            </div>
           </div>
         </div>
       </div>
@@ -337,7 +388,7 @@
       <div class="container">
         <div class="brand-bar-header">
           <div class="brand-bar-title">
-            <i class="fas fa-tag" style="color: var(--lime);"></i> Browse by Brand
+            <i class="fas fa-tag" style="color: var(--gold);"></i> Browse by Brand
           </div>
           <button type="button" class="brand-filters-link-btn" onclick="openFilterModal()">
             <i class="fas fa-sliders-h"></i> Filters <i class="fas fa-chevron-right" style="font-size: 0.65rem; margin-left: 2px;"></i>
@@ -349,30 +400,19 @@
       </div>
     </section>
 
-    <!-- INVENTORY SECTION (2-COLUMNS ON MOBILE!) -->
+    <!-- FEATURED CARS ("POPULAR PICKS") SECTION (4-COLUMNS ON DESKTOP, 2-COLUMNS ON MOBILE!) -->
     <section id="inventory-section" class="inventory-section">
       <div class="container">
         
-        <!-- Section Header -->
-        <div class="section-head-bar">
+        <!-- Section Header with "Available Showroom Cars" (Exact Match to Screenshot) -->
+        <div class="section-head-bar" style="margin-bottom: 1.25rem;">
           <div>
-            <h2 class="section-main-title">Available Showroom Cars</h2>
-            <p class="section-sub-title">Certified pre-owned vehicles with complete service records</p>
-          </div>
-          <div style="display: flex; align-items: center; gap: 0.6rem;">
-            <button type="button" class="btn btn-outline btn-sm" onclick="openSearchModal()">
-              <i class="fas fa-search text-primary"></i> Search
-            </button>
-            <button type="button" class="btn btn-outline btn-sm" onclick="openFilterModal()">
-              <i class="fas fa-sliders text-primary"></i> Filter
-            </button>
-            <div id="inventory-count-badge" style="font-weight: 700; color: var(--primary); background: var(--primary-light); padding: 0.35rem 0.8rem; border-radius: var(--radius-full); font-size: 0.82rem; border: 1px solid var(--primary-border);">
-              Loading...
-            </div>
+            <h2 class="section-main-title" style="font-size: 1.55rem; font-weight: 800; color: #061A13; margin: 0 0 0.25rem;">Available Showroom Cars</h2>
+            <p class="section-sub-title" style="margin: 0; color: #5A6B63; font-size: 0.88rem;">Certified pre-owned vehicles with complete service records</p>
           </div>
         </div>
 
-        <!-- Dynamic Car Grid (2-Columns on Mobile!) -->
+        <!-- Dynamic Car Grid (4-Columns on Desktop, 2-Columns on Mobile!) -->
         <div id="inventory-grid" class="car-grid-container">
           <!-- Rendered dynamically -->
         </div>
@@ -380,245 +420,260 @@
       </div>
     </section>
 
-    <!-- DEALERSHIP ADVANTAGES / PERKS -->
-    <section class="advantages-strip">
-      <div class="container">
-        <div class="section-head-bar" style="margin-bottom: 2rem;">
-          <div>
-            <h2 class="section-main-title">Why Choose Shri Rani Cars?</h2>
-            <p class="section-sub-title">Our customer commitment to certified quality and transparency</p>
-          </div>
-        </div>
-
-        <div class="perks-grid">
-          <div class="perk-box">
-            <div class="perk-icon-wrap">
-              <i class="fas fa-clipboard-check"></i>
-            </div>
-            <h3>140-Point Inspection</h3>
-            <p>Every engine, gearbox, suspension, braking system, and electricals undergo comprehensive testing.</p>
-          </div>
-
-          <div class="perk-box">
-            <div class="perk-icon-wrap">
-              <i class="fas fa-shield-alt"></i>
-            </div>
-            <h3>Non-Accidental Guarantee</h3>
-            <p>Verified physical structural integrity and 100% genuine odometer reading backed by documentation.</p>
-          </div>
-
-          <div class="perk-box">
-            <div class="perk-icon-wrap">
-              <i class="fas fa-id-card"></i>
-            </div>
-            <h3>Free RC Transfer</h3>
-            <p>End-to-end RTO name transfer handled directly by our experienced documentation executives.</p>
-          </div>
-
-          <div class="perk-box">
-            <div class="perk-icon-wrap">
-              <i class="fas fa-percentage"></i>
-            </div>
-            <h3>Instant Loan Approval</h3>
-            <p>Tie-ups with leading nationalized and private banks for flexible EMI and lowest interest rates.</p>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- INTERACTIVE EMI CALCULATOR -->
-    <section id="calculator-section" class="tools-block" style="padding: 3rem 0;">
-      <div class="container">
-        <div style="max-width: 800px; margin: 0 auto;">
-          
-          <div class="calculator-card">
-            <h3 style="font-size: 1.35rem; font-weight: 800; color: #0f172a; margin-bottom: 1.25rem;">
-              <i class="fas fa-calculator text-primary"></i> Car Loan EMI Calculator
-            </h3>
-
-            <div class="calc-slider-item">
-              <div class="calc-header-flex">
-                <span>Loan Amount</span>
-                <span id="calc-amount-val" class="calc-val-highlight">₹ 8,00,000</span>
-              </div>
-              <input type="range" id="calc-amount-slider" class="range-input" min="100000" max="4000000" step="50000" value="800000" aria-label="Vehicle Loan Amount">
-            </div>
-
-            <div class="calc-slider-item">
-              <div class="calc-header-flex">
-                <span>Interest Rate (% per annum)</span>
-                <span id="calc-rate-val" class="calc-val-highlight">9.5% p.a.</span>
-              </div>
-              <input type="range" id="calc-rate-slider" class="range-input" min="7" max="16" step="0.25" value="9.5" aria-label="Loan Interest Rate per annum">
-            </div>
-
-            <div class="calc-slider-item">
-              <div class="calc-header-flex">
-                <span>Loan Tenure (Years)</span>
-                <span id="calc-tenure-val" class="calc-val-highlight">5 Years (60 Mos)</span>
-              </div>
-              <input type="range" id="calc-tenure-slider" class="range-input" min="1" max="7" step="1" value="5" aria-label="Loan Tenure in Years">
-            </div>
-
-            <div class="calc-summary-banner">
-              <div>
-                <div style="font-size: 0.78rem; text-transform: uppercase; color: #94a3b8; font-weight: 700;">Estimated Monthly EMI</div>
-                <div id="calc-emi-result" class="calc-emi-big">₹ 16,802</div>
-              </div>
-              <div style="text-align: right; font-size: 0.8rem; color: #cbd5e1;">
-                <div>Total Interest: <strong id="calc-total-interest">₹ 2,08,120</strong></div>
-                <div>Total Payable: <strong id="calc-total-payable">₹ 10,08,120</strong></div>
-              </div>
-            </div>
-          </div>
-
-        </div>
-      </div>
-    </section>
-
-    <!-- ABOUT SHRI RANI CARS -->
-    <section id="about-section" class="about-section">
-      <div class="container">
-        <div class="about-grid">
-          <div class="about-text-col">
-            <span class="section-badge"><i class="fas fa-award text-primary"></i> About Shri Rani Cars</span>
-            <h2 class="about-title">Salem &amp; Vazhapadi's Most Trusted Pre-Owned Dealership</h2>
-            <p class="about-lead">
-              Shri Rani Cars has earned the trust of over 500+ car buyers across Salem, Vazhapadi, Attur, and Namakkal. We believe that buying a pre-owned car should feel as exciting, transparent, and secure as buying brand new.
-            </p>
-            <div class="about-points-grid">
-              <div class="about-point-card">
-                <div class="about-point-icon"><i class="fas fa-clipboard-check"></i></div>
-                <div>
-                  <h3>140-Point Inspection</h3>
-                  <p>Engine, transmission, suspension, brakes, electricals and chassis thoroughly tested by technicians.</p>
-                </div>
-              </div>
-              <div class="about-point-card">
-                <div class="about-point-icon"><i class="fas fa-shield-alt"></i></div>
-                <div>
-                  <h3>Non-Accidental Guarantee</h3>
-                  <p>Strict policy against flood-damaged or accidental vehicles with 100% genuine odometer guarantee.</p>
-                </div>
-              </div>
-              <div class="about-point-card">
-                <div class="about-point-icon"><i class="fas fa-file-signature"></i></div>
-                <div>
-                  <h3>Hassle-Free RC Transfer</h3>
-                  <p>Complete transparent paperwork, clear title documentation, and fast RTO passing support.</p>
-                </div>
-              </div>
-              <div class="about-point-card">
-                <div class="about-point-icon"><i class="fas fa-hand-holding-usd"></i></div>
-                <div>
-                  <h3>Instant Financing &amp; EMI</h3>
-                  <p>Tie-ups with leading nationalized and private banks for lowest interest rates and quick loan approval.</p>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="about-visual-col">
-            <div class="about-visual-card">
-              <img src="icons/app-logo.png" alt="Shri Rani Cars Dealership Logo" title="Shri Rani Cars" width="140" height="93" style="max-width: 140px; height: auto; object-fit: contain; margin-bottom: 0.5rem;" class="about-brand-logo" loading="lazy">
-              <h3>SHRI RANI CARS</h3>
-              <p class="text-lime" style="font-weight: 800; font-size: 0.85rem; letter-spacing: 0.05em; text-transform: uppercase;">Certified Pre-Owned Showroom</p>
-              <div class="about-stats-row">
-                <div>
-                  <strong>10+</strong>
-                  <span>Years Trust</span>
-                </div>
-                <div>
-                  <strong>500+</strong>
-                  <span>Happy Buyers</span>
-                </div>
-                <div>
-                  <strong>100%</strong>
-                  <span>Verified Cars</span>
-                </div>
-              </div>
-              <div class="about-location-tag">
-                <i class="fas fa-map-marker-alt text-lime"></i> Mangamma Salai, Vazhapadi, Salem
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- CUSTOMER REVIEWS & TESTIMONIALS -->
+    <!-- CUSTOMER REVIEWS & TESTIMONIALS SECTION -->
     <section id="reviews-section" class="reviews-section">
       <div class="container">
-        <div class="section-head-bar text-center-wrap">
-          <div>
-            <span class="section-badge"><i class="fas fa-star text-gold" style="color: #F59E0B;"></i> Customer Experiences</span>
-            <h2 class="section-main-title">What Our Buyers Say</h2>
-            <p class="section-sub-title">Rated <strong>4.9 / 5.0</strong> by 500+ satisfied car owners across Tamil Nadu</p>
+        <div class="reviews-header">
+          <span class="section-eyebrow-gold">⭐ CUSTOMER TESTIMONIALS</span>
+          <div class="section-title-divider-row" style="justify-content: center;">
+            <h2 class="section-main-title" style="text-align: center;">Trusted by 1,000+ Happy Car Buyers</h2>
+            <div class="title-gold-line"></div>
+          </div>
+          <p class="section-sub-title" style="text-align: center; margin-top: 0.35rem; color: #5A6B63;">
+            Real experiences from our valued customers across Salem, Namakkal, Erode, and Tamil Nadu
+          </p>
+
+          <!-- Google Rating Trust Badge -->
+          <div class="google-rating-pill">
+            <div class="google-badge-stars">
+              <i class="fas fa-star"></i>
+              <i class="fas fa-star"></i>
+              <i class="fas fa-star"></i>
+              <i class="fas fa-star"></i>
+              <i class="fas fa-star"></i>
+            </div>
+            <span class="google-badge-score">4.9 / 5.0</span>
+            <span class="google-badge-divider">•</span>
+            <span class="google-badge-count">250+ Verified Google Reviews</span>
           </div>
         </div>
 
-        <div class="reviews-grid">
-          <!-- Review 1 -->
-          <div class="review-card">
-            <div class="review-stars">
-              <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
-            </div>
-            <p class="review-text">
-              "Bought my Hyundai Creta from Shri Rani Cars. The vehicle condition was showroom fresh with 100% genuine kms. Transparent pricing and got RC transfer completed within days."
-            </p>
-            <div class="review-author-wrap">
-              <div class="review-avatar">KR</div>
-              <div>
-                <strong>Karthikeyan R.</strong>
-                <div class="review-meta"><i class="fas fa-check-circle" style="color: #16a34a;"></i> Verified Buyer • Salem</div>
+        <!-- Reviews Infinite Marquee Track (Seamless auto loop on Mobile, 2x2 Grid on Desktop) -->
+        <div class="reviews-marquee-wrapper">
+          <div class="reviews-marquee-track">
+            
+            <!-- Review Card 1 -->
+            <div class="review-card">
+              <div class="review-top-row">
+                <div class="reviewer-meta">
+                  <div class="reviewer-avatar">SK</div>
+                  <div>
+                    <h4 class="reviewer-name">Dr. S. Karthikeyan</h4>
+                    <span class="reviewer-city">Salem • Verified Buyer</span>
+                  </div>
+                </div>
+                <div class="review-stars">
+                  <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+                </div>
+              </div>
+              <div class="review-car-tag">
+                <i class="fas fa-car-side"></i> Bought: <strong>Toyota Fortuner 4x4</strong>
+              </div>
+              <p class="review-text">
+                "Bought my Fortuner from Shri Rani Cars. The vehicle condition was immaculate, 100% genuine odometer, and full service history. RC transfer was completed in just 3 days without any hassle. Highly recommended for luxury pre-owned cars in Salem!"
+              </p>
+              <div class="review-footer">
+                <span class="review-date"><i class="far fa-clock"></i> 2 weeks ago</span>
+                <span class="verified-badge"><i class="fas fa-check-circle"></i> Verified Purchase</span>
               </div>
             </div>
-          </div>
 
-          <!-- Review 2 -->
-          <div class="review-card">
-            <div class="review-stars">
-              <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
-            </div>
-            <p class="review-text">
-              "Best pre-owned car showroom in Vazhapadi. The team helped me secure a low-interest bank loan for my Innova Crysta within a single day. Highly recommend Shri Rani Cars!"
-            </p>
-            <div class="review-author-wrap">
-              <div class="review-avatar">SK</div>
-              <div>
-                <strong>Senthil Kumar</strong>
-                <div class="review-meta"><i class="fas fa-check-circle" style="color: #16a34a;"></i> Verified Buyer • Vazhapadi</div>
+            <!-- Review Card 2 -->
+            <div class="review-card">
+              <div class="review-top-row">
+                <div class="reviewer-meta">
+                  <div class="reviewer-avatar">RK</div>
+                  <div>
+                    <h4 class="reviewer-name">M. Ramesh Kumar</h4>
+                    <span class="reviewer-city">Attur • Business Owner</span>
+                  </div>
+                </div>
+                <div class="review-stars">
+                  <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+                </div>
+              </div>
+              <div class="review-car-tag">
+                <i class="fas fa-car-side"></i> Bought: <strong>Hyundai Creta SX (O)</strong>
+              </div>
+              <p class="review-text">
+                "Best pre-owned car buying experience! Completely transparent pricing with zero hidden charges. The test drive and documentation process was smooth. Mr. Balaji guided us very patiently and gave the best value."
+              </p>
+              <div class="review-footer">
+                <span class="review-date"><i class="far fa-clock"></i> 1 month ago</span>
+                <span class="verified-badge"><i class="fas fa-check-circle"></i> Verified Purchase</span>
               </div>
             </div>
-          </div>
 
-          <!-- Review 3 -->
-          <div class="review-card">
-            <div class="review-stars">
-              <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
-            </div>
-            <p class="review-text">
-              "Very honest dealership with zero hidden charges. They showed all service records and let us test drive extensively. Loving our Maruti Swift Dzire!"
-            </p>
-            <div class="review-author-wrap">
-              <div class="review-avatar">PV</div>
-              <div>
-                <strong>Priya &amp; Vignesh</strong>
-                <div class="review-meta"><i class="fas fa-check-circle" style="color: #16a34a;"></i> Verified Buyer • Namakkal</div>
+            <!-- Review Card 3 -->
+            <div class="review-card">
+              <div class="review-top-row">
+                <div class="reviewer-meta">
+                  <div class="reviewer-avatar">MS</div>
+                  <div>
+                    <h4 class="reviewer-name">A. Meena &amp; Soundararajan</h4>
+                    <span class="reviewer-city">Namakkal • Verified Family</span>
+                  </div>
+                </div>
+                <div class="review-stars">
+                  <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+                </div>
+              </div>
+              <div class="review-car-tag">
+                <i class="fas fa-car-side"></i> Bought: <strong>Maruti Suzuki Swift ZXi</strong>
+              </div>
+              <p class="review-text">
+                "Very trustworthy showroom. The 140-point inspection gave us complete peace of mind. Car looks and drives just like brand new. Prompt support even after the purchase. Thank you Shri Rani Cars team!"
+              </p>
+              <div class="review-footer">
+                <span class="review-date"><i class="far fa-clock"></i> 1 month ago</span>
+                <span class="verified-badge"><i class="fas fa-check-circle"></i> Verified Purchase</span>
               </div>
             </div>
+
+            <!-- Review Card 4 -->
+            <div class="review-card">
+              <div class="review-top-row">
+                <div class="reviewer-meta">
+                  <div class="reviewer-avatar">PV</div>
+                  <div>
+                    <h4 class="reviewer-name">P. Vignesh</h4>
+                    <span class="reviewer-city">Salem • IT Professional</span>
+                  </div>
+                </div>
+                <div class="review-stars">
+                  <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+                </div>
+              </div>
+              <div class="review-car-tag">
+                <i class="fas fa-car-side"></i> Bought: <strong>Honda City ZX CVT</strong>
+              </div>
+              <p class="review-text">
+                "100% verified non-accidental car with pristine interior. Their after-sales support and friendly customer approach is commendable. Truly the most reliable multi-brand showroom in Salem region."
+              </p>
+              <div class="review-footer">
+                <span class="review-date"><i class="far fa-clock"></i> 2 months ago</span>
+                <span class="verified-badge"><i class="fas fa-check-circle"></i> Verified Purchase</span>
+              </div>
+            </div>
+
+            <!-- DUPLICATED CLONE CARDS FOR SEAMLESS 100% INFINITE LOOP (MOBILE ONLY) -->
+            <!-- Review Card 1 Clone -->
+            <div class="review-card clone" aria-hidden="true">
+              <div class="review-top-row">
+                <div class="reviewer-meta">
+                  <div class="reviewer-avatar">SK</div>
+                  <div>
+                    <h4 class="reviewer-name">Dr. S. Karthikeyan</h4>
+                    <span class="reviewer-city">Salem • Verified Buyer</span>
+                  </div>
+                </div>
+                <div class="review-stars">
+                  <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+                </div>
+              </div>
+              <div class="review-car-tag">
+                <i class="fas fa-car-side"></i> Bought: <strong>Toyota Fortuner 4x4</strong>
+              </div>
+              <p class="review-text">
+                "Bought my Fortuner from Shri Rani Cars. The vehicle condition was immaculate, 100% genuine odometer, and full service history. RC transfer was completed in just 3 days without any hassle. Highly recommended for luxury pre-owned cars in Salem!"
+              </p>
+              <div class="review-footer">
+                <span class="review-date"><i class="far fa-clock"></i> 2 weeks ago</span>
+                <span class="verified-badge"><i class="fas fa-check-circle"></i> Verified Purchase</span>
+              </div>
+            </div>
+
+            <!-- Review Card 2 Clone -->
+            <div class="review-card clone" aria-hidden="true">
+              <div class="review-top-row">
+                <div class="reviewer-meta">
+                  <div class="reviewer-avatar">RK</div>
+                  <div>
+                    <h4 class="reviewer-name">M. Ramesh Kumar</h4>
+                    <span class="reviewer-city">Attur • Business Owner</span>
+                  </div>
+                </div>
+                <div class="review-stars">
+                  <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+                </div>
+              </div>
+              <div class="review-car-tag">
+                <i class="fas fa-car-side"></i> Bought: <strong>Hyundai Creta SX (O)</strong>
+              </div>
+              <p class="review-text">
+                "Best pre-owned car buying experience! Completely transparent pricing with zero hidden charges. The test drive and documentation process was smooth. Mr. Balaji guided us very patiently and gave the best value."
+              </p>
+              <div class="review-footer">
+                <span class="review-date"><i class="far fa-clock"></i> 1 month ago</span>
+                <span class="verified-badge"><i class="fas fa-check-circle"></i> Verified Purchase</span>
+              </div>
+            </div>
+
+            <!-- Review Card 3 Clone -->
+            <div class="review-card clone" aria-hidden="true">
+              <div class="review-top-row">
+                <div class="reviewer-meta">
+                  <div class="reviewer-avatar">MS</div>
+                  <div>
+                    <h4 class="reviewer-name">A. Meena &amp; Soundararajan</h4>
+                    <span class="reviewer-city">Namakkal • Verified Family</span>
+                  </div>
+                </div>
+                <div class="review-stars">
+                  <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+                </div>
+              </div>
+              <div class="review-car-tag">
+                <i class="fas fa-car-side"></i> Bought: <strong>Maruti Suzuki Swift ZXi</strong>
+              </div>
+              <p class="review-text">
+                "Very trustworthy showroom. The 140-point inspection gave us complete peace of mind. Car looks and drives just like brand new. Prompt support even after the purchase. Thank you Shri Rani Cars team!"
+              </p>
+              <div class="review-footer">
+                <span class="review-date"><i class="far fa-clock"></i> 1 month ago</span>
+                <span class="verified-badge"><i class="fas fa-check-circle"></i> Verified Purchase</span>
+              </div>
+            </div>
+
+            <!-- Review Card 4 Clone -->
+            <div class="review-card clone" aria-hidden="true">
+              <div class="review-top-row">
+                <div class="reviewer-meta">
+                  <div class="reviewer-avatar">PV</div>
+                  <div>
+                    <h4 class="reviewer-name">P. Vignesh</h4>
+                    <span class="reviewer-city">Salem • IT Professional</span>
+                  </div>
+                </div>
+                <div class="review-stars">
+                  <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+                </div>
+              </div>
+              <div class="review-car-tag">
+                <i class="fas fa-car-side"></i> Bought: <strong>Honda City ZX CVT</strong>
+              </div>
+              <p class="review-text">
+                "100% verified non-accidental car with pristine interior. Their after-sales support and friendly customer approach is commendable. Truly the most reliable multi-brand showroom in Salem region."
+              </p>
+              <div class="review-footer">
+                <span class="review-date"><i class="far fa-clock"></i> 2 months ago</span>
+                <span class="verified-badge"><i class="fas fa-check-circle"></i> Verified Purchase</span>
+              </div>
+            </div>
+
           </div>
         </div>
       </div>
     </section>
 
     <!-- SHOWROOM LOCATION & CONTACT -->
-    <section id="location-section" class="contact-block" style="padding: 3rem 0; background: #ffffff; border-top: 1px solid var(--border-light);">
+    <section id="location-section" class="contact-block">
       <div class="container">
         <div class="contact-layout">
           <!-- Contact Details -->
           <div class="showroom-details-box">
-            <h3 style="font-size: 1.35rem; font-weight: 800; color: #0f172a; margin-bottom: 1.25rem;">
-              <i class="fas fa-map-marked-alt text-primary"></i> Showroom Location & Contact
+            <h3 style="font-size: 1.35rem; font-weight: 800; color: #061A13; margin-bottom: 1.25rem;">
+              <i class="fas fa-map-marked-alt text-gold"></i> Showroom Location &amp; Contact
             </h3>
 
             <div class="contact-row-item">
@@ -626,10 +681,10 @@
                 <i class="fas fa-building"></i>
               </div>
               <div>
-                <strong style="color: #0f172a; font-size: 0.95rem;">Showroom Address:</strong>
+                <strong style="color: #061A13; font-size: 0.95rem;">Showroom Address:</strong>
                 <p style="color: var(--text-muted); font-size: 0.88rem; margin-top: 0.2rem; line-height: 1.5;">
-                  Shri Rani Cars, Mangamma Salai, Near RTO Office, <br>
-                  Puthupalayam, Vazhapadi, Salem - 636115.
+                  Shri Rani Cars, Mangammal Salai, RTO Office Road, <br>
+                  Puduppalayam, Vazhapadi, Salem - 636115, Tamil Nadu, India.
                 </p>
               </div>
             </div>
@@ -639,9 +694,9 @@
                 <i class="fas fa-phone-alt"></i>
               </div>
               <div>
-                <strong style="color: #0f172a; font-size: 0.95rem;">Call Showroom:</strong>
+                <strong style="color: #061A13; font-size: 0.95rem;">Call Showroom:</strong>
                 <div style="margin-top: 0.2rem;">
-                  <a href="tel:9750332585" style="color: var(--primary); font-weight: 700; font-size: 1.05rem;">
+                  <a href="tel:9750332585" style="color: var(--gold-dark); font-weight: 700; font-size: 1.05rem;">
                     97503 32585
                   </a>
                 </div>
@@ -649,11 +704,11 @@
             </div>
 
             <div class="contact-row-item">
-              <div class="contact-icon-box" style="background: #dcfce7; color: #16a34a;">
+              <div class="contact-icon-box" style="background: #dcfce7; color: #16a34a; border-color: #86efac;">
                 <i class="fab fa-whatsapp"></i>
               </div>
               <div>
-                <strong style="color: #0f172a; font-size: 0.95rem;">WhatsApp Inquiries:</strong>
+                <strong style="color: #061A13; font-size: 0.95rem;">WhatsApp Inquiries:</strong>
                 <div style="margin-top: 0.2rem;">
                   <a href="https://wa.me/917550172585" target="_blank" style="color: #15803d; font-weight: 700; font-size: 1.05rem;" aria-label="WhatsApp 75501 72585">
                     75501 72585
@@ -663,7 +718,7 @@
             </div>
 
             <div style="display: flex; gap: 0.75rem; margin-top: 1.5rem; flex-wrap: wrap;">
-              <a href="https://www.google.com/maps/place/Shri+Rani+Cars/@11.6453125,78.4139375,17z/data=!3m1!4b1!4m6!3m5!1s0x3bab91002bea7ad3:0xb03837d336cd1d53!8m2!3d11.6453125!4d78.4139375!16s%2Fg%2F11yql0bvn8" target="_blank" class="btn btn-primary btn-sm">
+              <a href="https://www.google.com/maps/place/Shri+Rani+Cars/@11.6453125,78.4139375,17z/data=!3m1!4b1!4m6!3m5!1s0x3bab91002bea7ad3:0xb03837d336cd1d53!8m2!3d11.6453125!4d78.4139375!16s%2Fg%2F11yql0bvn8" target="_blank" class="btn btn-gold btn-sm" style="background: linear-gradient(135deg, #ECC46A 0%, #D4AF37 100%); color: #04140E; font-weight: 800; border: 1px solid #D4AF37; box-shadow: 0 4px 14px rgba(212, 175, 55, 0.35);">
                 <i class="fas fa-directions"></i> Get Directions
               </a>
               <button type="button" class="btn btn-outline btn-sm" onclick="openTestDriveModal()">
@@ -755,15 +810,15 @@
               </div>
             </div>
 
-            <!-- Instant EMI Estimation Row -->
+            <!-- Certified Quality Assurance Row -->
             <div style="margin-top: 0.85rem; padding-top: 0.85rem; border-top: 1px dashed var(--border-light); display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 0.5rem;">
               <div style="font-size: 0.85rem; font-weight: 700; color: #0f172a; display: flex; align-items: center; gap: 0.4rem;">
-                <i class="fas fa-percentage text-primary"></i>
-                <span id="product-emi-val">EMI starts at ₹ 14,800/month</span>
+                <i class="fas fa-shield-alt text-primary"></i>
+                <span id="product-emi-val">100% Non-Accidental Guarantee</span>
               </div>
-              <a href="#calculator-section" style="font-size: 0.8rem; font-weight: 700; color: var(--primary); text-decoration: underline;">
-                Customize Loan EMI
-              </a>
+              <div style="font-size: 0.8rem; font-weight: 700; color: #16a34a; display: flex; align-items: center; gap: 0.35rem;">
+                <i class="fas fa-check-circle"></i> 140-Point Inspection Verified
+              </div>
             </div>
           </div>
 
@@ -855,104 +910,125 @@
     </div>
   </div>
 
-  <!-- FOOTER -->
+  <!-- FOOTER (MATCHES REFERENCE IMAGE: DARK FOREST EMERALD & ROYAL GOLD) -->
   <footer class="site-footer">
     <div class="container">
       <div class="footer-columns">
-        <!-- Col 1: Brand Info -->
-        <div>
-          <div style="display: flex; align-items: center; gap: 0.65rem; margin-bottom: 0.75rem;">
-            <img src="icons/app-logo.png" alt="Shri Rani Cars Dealership Logo" title="Shri Rani Cars" width="48" height="32" style="width: 48px; height: auto; object-fit: contain; border-radius: 6px; border: 1px solid rgba(132, 212, 0, 0.35);" loading="lazy">
-            <h3 style="color: white; font-size: 1.25rem; font-weight: 800; margin-bottom: 0;">SHRI RANI CARS</h3>
+        <!-- Col 1: Brand Info & Socials -->
+        <div class="footer-brand-col">
+          <div class="footer-brand-header">
+            <img src="icons/icon-192.png" alt="Shri Rani Cars Dealership Logo" title="Shri Rani Cars" width="56" height="56" class="footer-logo-img" loading="lazy">
+            <div class="footer-brand-titles">
+              <h3 class="footer-brand-title">SHRI RANI CARS</h3>
+              <span class="footer-brand-tagline">DRIVE YOUR DREAM</span>
+            </div>
           </div>
-          <p style="font-size: 0.85rem; color: #cbd5e1; line-height: 1.6; margin-bottom: 1.25rem;">
-            Salem and Vazhapadi's premier pre-owned multi-brand dealership. Certified quality cars with complete background checks and easy financing.
+          <p class="footer-about-text">
+            Salem &amp; Vazhapadi's premier pre-owned luxury car showroom. Quality certified vehicles, guaranteed peace of mind.
           </p>
           <div class="footer-social-row">
-            <a href="https://www.youtube.com/@ShriRanicars" target="_blank" class="footer-social-icon icon-youtube" title="YouTube Channel" aria-label="YouTube Channel">
-              <i class="fab fa-youtube"></i>
-            </a>
-            <a href="https://www.instagram.com/shri_rani_cars" target="_blank" class="footer-social-icon icon-instagram" title="Instagram Profile" aria-label="Instagram Profile">
-              <i class="fab fa-instagram"></i>
-            </a>
-            <a href="https://www.facebook.com/mkarthi.keyan.9212" target="_blank" class="footer-social-icon icon-facebook" title="Facebook Page" aria-label="Facebook Page">
+            <a href="https://www.facebook.com/mkarthi.keyan.9212" target="_blank" class="footer-social-circle icon-facebook" title="Facebook Page" aria-label="Facebook Page">
               <i class="fab fa-facebook-f"></i>
             </a>
-            <a href="https://maps.app.goo.gl/2sRQouxHpMTtnd2m6" target="_blank" class="footer-social-icon icon-maps" title="Showroom Location on Google Maps" aria-label="Google Maps Location">
-              <i class="fas fa-map-marker-alt"></i>
+            <a href="https://www.instagram.com/shri_rani_cars" target="_blank" class="footer-social-circle icon-instagram" title="Instagram Profile" aria-label="Instagram Profile">
+              <i class="fab fa-instagram"></i>
             </a>
-            <a href="https://wa.me/917550172585" target="_blank" class="footer-social-icon icon-whatsapp" title="WhatsApp Contact" aria-label="Contact on WhatsApp">
+            <a href="https://www.youtube.com/@ShriRanicars" target="_blank" class="footer-social-circle icon-youtube" title="YouTube Channel" aria-label="YouTube Channel">
+              <i class="fab fa-youtube"></i>
+            </a>
+            <a href="https://wa.me/917550172585" target="_blank" class="footer-social-circle icon-whatsapp" title="WhatsApp Contact" aria-label="Contact on WhatsApp">
               <i class="fab fa-whatsapp"></i>
             </a>
-            <a href="tel:9750332585" class="footer-social-icon icon-phone" title="Phone Call" aria-label="Call Showroom Phone">
-              <i class="fas fa-phone-alt"></i>
+            <a href="https://maps.app.goo.gl/2sRQouxHpMTtnd2m6" target="_blank" class="footer-social-circle icon-maps" title="Showroom Location on Google Maps" aria-label="Google Maps Location">
+              <i class="fas fa-map-marker-alt"></i>
             </a>
           </div>
         </div>
 
-        <!-- Col 2: Inventory Links -->
-        <div>
-          <h4 class="footer-col-title">Showroom Inventory</h4>
+        <!-- Col 2: Quick Links -->
+        <div class="footer-links-col">
+          <h4 class="footer-col-title">Quick Links</h4>
           <ul class="footer-nav-list">
-            <li><a href="#inventory-section" onclick="backToShowroom(); filterByBrand('all');">All Available Cars</a></li>
-            <li><a href="#inventory-section" onclick="backToShowroom(); AppState.activeFuel='Diesel'; applyFilters();">Diesel Cars</a></li>
-            <li><a href="#inventory-section" onclick="backToShowroom(); AppState.activeFuel='Petrol'; applyFilters();">Petrol Cars</a></li>
-            <li><a href="#inventory-section" onclick="backToShowroom(); AppState.activeFuel='Electric'; applyFilters();">Electric Cars (EV)</a></li>
-            <li><a href="#inventory-section" onclick="backToShowroom(); AppState.activeBodyType='SUV'; applyFilters();">SUV & 7-Seaters</a></li>
+            <li><a href="#home" onclick="backToShowroom()">Home</a></li>
+            <li><a href="#inventory-section" onclick="backToShowroom()">Cars</a></li>
+            <li><a href="#reviews-section" onclick="backToShowroom()">Reviews</a></li>
+            <li><a href="#location-section" onclick="backToShowroom()">Contact</a></li>
           </ul>
         </div>
 
-        <!-- Col 3: Customer Services -->
-        <div>
-          <h4 class="footer-col-title">Customer Services</h4>
-          <ul class="footer-nav-list">
-            <li><a href="#calculator-section" onclick="backToShowroom()">Loan EMI Calculator</a></li>
-            <li><a href="#sell-section" onclick="openSellCarModal(); return false;">Sell Your Car Online</a></li>
-            <li><a href="#location-section" onclick="openTestDriveModal(); return false;">Book Test Drive</a></li>
-            <li><a href="#location-section" onclick="backToShowroom()">Showroom Location</a></li>
-            <li><a href="admin.html">Admin Portal</a></li>
+        <!-- Col 3: Contact Us -->
+        <div class="footer-contact-col">
+          <h4 class="footer-col-title">Contact Us</h4>
+          <ul class="footer-contact-list">
+            <li>
+              <i class="fas fa-phone-alt footer-icon-gold"></i>
+              <a href="tel:9750332585">97503 32585</a>
+            </li>
+            <li>
+              <i class="fab fa-whatsapp footer-icon-gold"></i>
+              <a href="https://wa.me/917550172585" target="_blank">75501 72585</a>
+            </li>
+            <li>
+              <i class="fas fa-envelope footer-icon-gold"></i>
+              <a href="mailto:shriranicars@gmail.com">shriranicars@gmail.com</a>
+            </li>
+            <li class="footer-address-item">
+              <i class="fas fa-map-marker-alt footer-icon-gold"></i>
+              <span>Mangammal Salai, RTO Office Road, Puduppalayam, Vazhapadi, Salem - 636115, Tamil Nadu, India</span>
+            </li>
           </ul>
         </div>
 
-        <!-- Col 4: Contact Info -->
-        <div>
-          <h4 class="footer-col-title">Showroom Contact</h4>
-          <p style="font-size: 0.85rem; color: #cbd5e1; margin-bottom: 0.5rem; line-height: 1.5;">
-            Mangamma Salai, Near RTO Office, Puthupalayam, Vazhapadi, Salem - 636115.
-          </p>
-          <div style="font-size: 0.85rem; color: #e2e8f0; display: flex; flex-direction: column; gap: 0.35rem; margin-top: 0.75rem;">
-            <div><i class="fas fa-phone-alt text-primary"></i> 97503 32585</div>
-            <div><i class="fab fa-whatsapp" style="color: var(--whatsapp);"></i> 75501 72585</div>
-            <div><i class="fas fa-clock text-gold"></i> Mon - Sun: 9:00 AM - 8:30 PM</div>
+        <!-- Col 4: Business Hours -->
+        <div class="footer-hours-col">
+          <h4 class="footer-col-title">Business Hours</h4>
+          <div class="footer-hours-block">
+            <div class="hours-row">
+              <i class="far fa-clock footer-icon-gold"></i>
+              <span>Mon - Sat : 9:00 AM - 8:00 PM</span>
+            </div>
+            <div class="hours-row">
+              <i class="far fa-clock footer-icon-gold"></i>
+              <span>Sunday : 9:00 AM - 5:00 PM</span>
+            </div>
+          </div>
+          <div style="margin-top: 1rem;">
+            <a href="https://maps.app.goo.gl/2sRQouxHpMTtnd2m6" target="_blank" class="btn btn-outline-pill btn-sm" style="font-size: 0.8rem; padding: 0.5rem 1rem; border-color: rgba(212, 175, 55, 0.4);">
+              <i class="fas fa-directions"></i> <span>Get Directions</span>
+            </a>
           </div>
         </div>
       </div>
 
       <div class="footer-bottom-bar">
-        <div style="color: #cbd5e1;">© 2026 Shri Rani Cars. All rights reserved.</div>
-        <div style="color: #cbd5e1;">Vazhapadi & Salem Pre-Owned Car Dealership</div>
+        <div class="footer-copy-text">© 2025 Shri Rani Cars. All rights reserved.</div>
+        <div class="footer-legal-links">
+          <a href="#home">Privacy Policy</a>
+          <span>|</span>
+          <a href="#home">Terms &amp; Conditions</a>
+        </div>
       </div>
     </div>
   </footer>
 
   <!-- MOBILE BOTTOM NAVIGATION BAR -->
   <nav class="mobile-bottom-bar" aria-label="Mobile Bottom Navigation">
-    <a href="#home" class="mob-nav-btn active" onclick="backToShowroom()" aria-label="Home">
+    <button type="button" class="mob-nav-btn active" onclick="handleMobileNavClick(this, 'home')" aria-label="Home">
       <i class="fas fa-home"></i>
       <span>Home</span>
-    </a>
-    <a href="#inventory-section" class="mob-nav-btn" onclick="backToShowroom()" aria-label="Showroom Cars">
+    </button>
+    <button type="button" class="mob-nav-btn" onclick="handleMobileNavClick(this, 'inventory-section')" aria-label="Showroom Cars">
       <i class="fas fa-car"></i>
       <span>Cars</span>
-    </a>
-    <button type="button" class="mob-nav-btn" onclick="openFilterModal()" aria-label="Filter Cars">
-      <i class="fas fa-sliders"></i>
+    </button>
+    <button type="button" class="mob-nav-btn" onclick="handleMobileNavClick(this, 'filter')" aria-label="Filter Cars">
+      <i class="fas fa-sliders-h"></i>
       <span>Filter</span>
     </button>
-    <a href="#location-section" class="mob-nav-btn" onclick="backToShowroom()" aria-label="Showroom Contact">
+    <button type="button" class="mob-nav-btn" onclick="handleMobileNavClick(this, 'location-section')" aria-label="Showroom Contact">
       <i class="fas fa-phone-alt"></i>
       <span>Contact</span>
-    </a>
+    </button>
   </nav>
 
   <!-- FLOATING WHATSAPP & CALL DIAL -->
@@ -971,11 +1047,11 @@
 
   <!-- 0. PWA CENTER INSTALL POPUP MODAL -->
   <div id="pwaInstallModal" class="modal-layer" role="dialog" aria-modal="true" style="display: none;">
-    <div class="modal-window" style="max-width: 440px; text-align: center; padding: 2.2rem 1.75rem; border-radius: 20px; border: 1.5px solid rgba(132, 212, 0, 0.4); box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);">
-      <div style="width: 80px; height: 80px; margin: 0 auto 1.25rem; border-radius: 20px; background: #071426; border: 2px solid #84D400; box-shadow: 0 8px 25px rgba(132, 212, 0, 0.35); display: flex; align-items: center; justify-content: center; padding: 8px;">
+    <div class="modal-window" style="max-width: 440px; text-align: center; padding: 2.2rem 1.75rem; border-radius: 20px; border: 1.5px solid rgba(212, 175, 55, 0.4); box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);">
+      <div style="width: 80px; height: 80px; margin: 0 auto 1.25rem; border-radius: 20px; background: #061A13; border: 2px solid #D4AF37; box-shadow: 0 8px 25px rgba(212, 175, 55, 0.35); display: flex; align-items: center; justify-content: center; padding: 8px;">
         <img src="icons/icon-192.png" alt="Shri Rani Cars App" style="width: 100%; height: 100%; object-fit: contain;">
       </div>
-      <h3 style="font-size: 1.35rem; font-weight: 800; color: var(--primary-navy); margin-bottom: 0.5rem; letter-spacing: -0.01em;">Install Shri Rani Cars App</h3>
+      <h3 style="font-size: 1.35rem; font-weight: 800; color: #061A13; margin-bottom: 0.5rem; letter-spacing: -0.01em;">Install Shri Rani Cars App</h3>
       <p style="font-size: 0.88rem; color: var(--text-muted); line-height: 1.5; margin-bottom: 1.5rem;">
         Enjoy instant vehicle alerts, one-tap booking, and 10x faster showroom browsing directly from your home screen.
       </p>
@@ -1017,7 +1093,7 @@
           <span class="search-chip" onclick="quickOmniSearch('Electric')">Electric EV</span>
         </div>
 
-        <div id="search-modal-feedback" style="font-size: 0.88rem; font-weight: 700; color: #071426; margin-top: 0.75rem; padding: 0.6rem 0.85rem; background: #F8FAFC; border-radius: var(--radius-md); border: 1px solid var(--border-light);">
+        <div id="search-modal-feedback" style="font-size: 0.88rem; font-weight: 700; color: #061A13; margin-top: 0.75rem; padding: 0.6rem 0.85rem; background: #F8FAFC; border-radius: var(--radius-md); border: 1px solid var(--border-light);">
           Type any keyword above to find matching cars.
         </div>
       </div>

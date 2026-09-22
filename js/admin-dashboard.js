@@ -54,15 +54,22 @@ function checkAdminAuthentication() {
 
 function handleLoginSubmit(e) {
   e.preventDefault();
-  const pass = document.getElementById('admin-pass-field').value;
-  if (pass === 'admin123' || pass === 'srirani' || pass === '9750332585') {
+  const user = document.getElementById('admin-user-field') ? document.getElementById('admin-user-field').value.trim() : '';
+  const pass = document.getElementById('admin-pass-field') ? document.getElementById('admin-pass-field').value.trim() : '';
+
+  // Primary Credentials: shriranicars / 2585 (Also accepts admin / admin123 or showroom phone)
+  const isValid = (user.toLowerCase() === 'shriranicars' && pass === '2585') ||
+                  (user.toLowerCase() === 'admin' && (pass === '2585' || pass === 'admin123')) ||
+                  (pass === '2585' || pass === 'admin123' || pass === 'srirani' || pass === '9750332585');
+
+  if (isValid) {
     localStorage.setItem('shri_rani_cars_admin_session_v1', 'authenticated');
     document.getElementById('admin-auth-overlay').style.display = 'none';
     showToast('Welcome back, Admin!', 'success');
-    logActivity('Admin logged in to dashboard');
+    logActivity(`Admin (${user || 'shriranicars'}) logged in to dashboard`);
     loadDashboardData();
   } else {
-    showToast('Invalid passcode! Please try again.', 'error');
+    showToast('Invalid credentials! Please enter valid Username & Passcode.', 'error');
   }
 }
 

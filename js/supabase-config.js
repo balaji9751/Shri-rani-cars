@@ -424,7 +424,17 @@ window.CarService = {
   getLocalCars() {
     try {
       const data = localStorage.getItem(STORAGE_KEYS.CARS);
-      return data ? JSON.parse(data) : (window.INITIAL_CARS || []);
+      if (data) {
+        const parsed = JSON.parse(data);
+        if (Array.isArray(parsed) && parsed.length >= 5) {
+          return parsed;
+        }
+      }
+      if (window.INITIAL_CARS && Array.isArray(window.INITIAL_CARS) && window.INITIAL_CARS.length > 0) {
+        localStorage.setItem(STORAGE_KEYS.CARS, JSON.stringify(window.INITIAL_CARS));
+        return window.INITIAL_CARS;
+      }
+      return [];
     } catch (e) {
       return window.INITIAL_CARS || [];
     }
