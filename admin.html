@@ -453,21 +453,62 @@
               <div class="form-columns-2" style="margin-bottom: 1.5rem;">
                 <div class="form-field-group">
                   <label class="form-field-lbl">Brand / Manufacturer *</label>
-                  <select id="form-car-brand" class="form-input-ctrl" required>
-                    <option value="Maruti Suzuki">Maruti Suzuki</option>
-                    <option value="Hyundai">Hyundai</option>
-                    <option value="Mahindra">Mahindra</option>
-                    <option value="Toyota">Toyota</option>
-                    <option value="Tata">Tata</option>
-                    <option value="Honda">Honda</option>
-                    <option value="Kia">Kia</option>
-                    <option value="BMW">BMW</option>
-                    <option value="MG">MG</option>
-                    <option value="Volkswagen">Volkswagen</option>
-                    <option value="Skoda">Skoda</option>
-                    <option value="Renault">Renault</option>
-                    <option value="Nissan">Nissan</option>
+                  <select id="form-car-brand" class="form-input-ctrl" onchange="handleBrandSelectChange(this)" required>
+                    <option value="" disabled selected>-- Select Car Brand --</option>
+                    <optgroup label="👑 Luxury & Premium German">
+                      <option value="Audi">Audi</option>
+                      <option value="BMW">BMW</option>
+                      <option value="Mercedes-Benz">Mercedes-Benz</option>
+                      <option value="Porsche">Porsche</option>
+                      <option value="Volkswagen">Volkswagen</option>
+                      <option value="Skoda">Skoda</option>
+                      <option value="Volvo">Volvo</option>
+                    </optgroup>
+                    <optgroup label="🇬🇧 British Luxury & Performance">
+                      <option value="Jaguar">Jaguar</option>
+                      <option value="Land Rover">Land Rover</option>
+                      <option value="Range Rover">Range Rover</option>
+                      <option value="Mini">Mini Cooper</option>
+                      <option value="Bentley">Bentley</option>
+                      <option value="Rolls-Royce">Rolls-Royce</option>
+                      <option value="Aston Martin">Aston Martin</option>
+                    </optgroup>
+                    <optgroup label="🇮🇹 Italian & Supercars">
+                      <option value="Ferrari">Ferrari</option>
+                      <option value="Lamborghini">Lamborghini</option>
+                      <option value="Maserati">Maserati</option>
+                    </optgroup>
+                    <optgroup label="🇯🇵 🇰🇷 Japanese & Korean Leaders">
+                      <option value="Toyota">Toyota</option>
+                      <option value="Lexus">Lexus</option>
+                      <option value="Hyundai">Hyundai</option>
+                      <option value="Kia">Kia</option>
+                      <option value="Honda">Honda</option>
+                      <option value="Nissan">Nissan</option>
+                      <option value="Mitsubishi">Mitsubishi</option>
+                      <option value="Isuzu">Isuzu</option>
+                    </optgroup>
+                    <optgroup label="🇮🇳 Indian Top Automakers">
+                      <option value="Maruti Suzuki">Maruti Suzuki</option>
+                      <option value="Mahindra">Mahindra</option>
+                      <option value="Tata">Tata Motors</option>
+                      <option value="Force Motors">Force Motors</option>
+                    </optgroup>
+                    <optgroup label="🇺🇸 American & Global Brands">
+                      <option value="Jeep">Jeep</option>
+                      <option value="Ford">Ford</option>
+                      <option value="MG">MG (Morris Garages)</option>
+                      <option value="Renault">Renault</option>
+                      <option value="Chevrolet">Chevrolet</option>
+                      <option value="Fiat">Fiat</option>
+                      <option value="Tesla">Tesla</option>
+                      <option value="BYD">BYD</option>
+                    </optgroup>
+                    <optgroup label="✨ Custom / Other">
+                      <option value="Other">Other (Enter Custom Brand)</option>
+                    </optgroup>
                   </select>
+                  <input type="text" id="form-car-brand-custom" class="form-input-ctrl" placeholder="Type custom car brand..." style="display: none; margin-top: 0.5rem;">
                 </div>
 
                 <div class="form-field-group">

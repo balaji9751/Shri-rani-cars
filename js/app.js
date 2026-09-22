@@ -229,9 +229,23 @@ function calculateMonthlyEmi(price) {
 // Brand Logo Assets Mapping for Visual Filter Pills
 const BRAND_LOGOS = {
   'bmw': 'https://www.carlogos.org/car-logos/bmw-logo-2020-grey.png',
-  'hyundai': 'https://www.carlogos.org/car-logos/hyundai-logo.png',
+  'audi': 'https://www.carlogos.org/car-logos/audi-logo.png',
   'mercedes': 'https://www.carlogos.org/car-logos/mercedes-benz-logo.png',
   'mercedes-benz': 'https://www.carlogos.org/car-logos/mercedes-benz-logo.png',
+  'jaguar': 'https://www.carlogos.org/car-logos/jaguar-logo.png',
+  'land rover': 'https://www.carlogos.org/car-logos/land-rover-logo.png',
+  'range rover': 'https://www.carlogos.org/car-logos/land-rover-logo.png',
+  'porsche': 'https://www.carlogos.org/car-logos/porsche-logo.png',
+  'volvo': 'https://www.carlogos.org/car-logos/volvo-logo.png',
+  'lexus': 'https://www.carlogos.org/car-logos/lexus-logo.png',
+  'mini': 'https://www.carlogos.org/car-logos/mini-logo.png',
+  'rolls-royce': 'https://www.carlogos.org/car-logos/rolls-royce-logo.png',
+  'bentley': 'https://www.carlogos.org/car-logos/bentley-logo.png',
+  'ferrari': 'https://www.carlogos.org/car-logos/ferrari-logo.png',
+  'lamborghini': 'https://www.carlogos.org/car-logos/lamborghini-logo.png',
+  'maserati': 'https://www.carlogos.org/car-logos/maserati-logo.png',
+  'aston martin': 'https://www.carlogos.org/car-logos/aston-martin-logo.png',
+  'hyundai': 'https://www.carlogos.org/car-logos/hyundai-logo.png',
   'mahindra': 'https://www.carlogos.org/car-logos/mahindra-logo.png',
   'toyota': 'https://www.carlogos.org/car-logos/toyota-logo.png',
   'tata': 'https://www.carlogos.org/car-logos/tata-logo.png',
@@ -240,14 +254,18 @@ const BRAND_LOGOS = {
   'suzuki': 'https://www.carlogos.org/car-logos/suzuki-logo.png',
   'kia': 'https://www.carlogos.org/car-logos/kia-logo.png',
   'honda': 'https://www.carlogos.org/car-logos/honda-logo.png',
-  'audi': 'https://www.carlogos.org/car-logos/audi-logo.png',
   'volkswagen': 'https://www.carlogos.org/car-logos/volkswagen-logo.png',
   'skoda': 'https://www.carlogos.org/car-logos/skoda-logo.png',
   'jeep': 'https://www.carlogos.org/car-logos/jeep-logo.png',
   'mg': 'https://www.carlogos.org/car-logos/mg-logo.png',
   'ford': 'https://www.carlogos.org/car-logos/ford-logo.png',
   'renault': 'https://www.carlogos.org/car-logos/renault-logo.png',
-  'nissan': 'https://www.carlogos.org/car-logos/nissan-logo.png'
+  'nissan': 'https://www.carlogos.org/car-logos/nissan-logo.png',
+  'isuzu': 'https://www.carlogos.org/car-logos/isuzu-logo.png',
+  'force': 'https://www.carlogos.org/car-logos/force-motors-logo.png',
+  'force motors': 'https://www.carlogos.org/car-logos/force-motors-logo.png',
+  'byd': 'https://www.carlogos.org/car-logos/byd-logo.png',
+  'tesla': 'https://www.carlogos.org/car-logos/tesla-logo.png'
 };
 
 // Brand Filter Scroller

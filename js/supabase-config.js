@@ -63,7 +63,7 @@ window.CarService = {
         new Promise((_, reject) => setTimeout(() => reject(new Error('Timeout')), 4000))
       ]);
 
-      if (!error && data && data.length > 0) {
+      if (!error && Array.isArray(data)) {
         const currentLocal = localStorage.getItem(STORAGE_KEYS.CARS);
         const newStr = JSON.stringify(data);
         if (currentLocal !== newStr) {
@@ -424,19 +424,15 @@ window.CarService = {
   getLocalCars() {
     try {
       const data = localStorage.getItem(STORAGE_KEYS.CARS);
-      if (data) {
+      if (data !== null) {
         const parsed = JSON.parse(data);
-        if (Array.isArray(parsed) && parsed.length >= 5) {
+        if (Array.isArray(parsed)) {
           return parsed;
         }
       }
-      if (window.INITIAL_CARS && Array.isArray(window.INITIAL_CARS) && window.INITIAL_CARS.length > 0) {
-        localStorage.setItem(STORAGE_KEYS.CARS, JSON.stringify(window.INITIAL_CARS));
-        return window.INITIAL_CARS;
-      }
       return [];
     } catch (e) {
-      return window.INITIAL_CARS || [];
+      return [];
     }
   },
 

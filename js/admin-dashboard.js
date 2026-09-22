@@ -513,9 +513,25 @@ function editCarFromDashboard(id) {
   navigateTo('add-car');
 }
 
+function handleBrandSelectChange(selectEl) {
+  const customInput = document.getElementById('form-car-brand-custom');
+  if (!customInput) return;
+  if (selectEl.value === 'Other') {
+    customInput.style.display = 'block';
+    customInput.required = true;
+    customInput.focus();
+  } else {
+    customInput.style.display = 'none';
+    customInput.required = false;
+    customInput.value = '';
+  }
+}
+
 function renderCarForm() {
   const formTitle = document.getElementById('car-form-page-heading');
   const submitBtn = document.getElementById('car-form-submit-btn');
+  const brandSelect = document.getElementById('form-car-brand');
+  const customBrandInput = document.getElementById('form-car-brand-custom');
 
   if (AdminDashboard.editingCarId) {
     const car = AdminDashboard.cars.find(c => String(c.id) === String(AdminDashboard.editingCarId));
@@ -532,7 +548,31 @@ function renderCarForm() {
         if (el) el.checked = !!checked;
       };
 
-      setVal('form-car-brand', car.brand || 'Maruti Suzuki');
+      // Set Brand
+      if (brandSelect) {
+        const brandVal = car.brand || '';
+        let found = false;
+        for (let opt of brandSelect.options) {
+          if (opt.value && opt.value.toLowerCase() === brandVal.toLowerCase()) {
+            brandSelect.value = opt.value;
+            found = true;
+            break;
+          }
+        }
+        if (!found && brandVal) {
+          brandSelect.value = 'Other';
+          if (customBrandInput) {
+            customBrandInput.style.display = 'block';
+            customBrandInput.value = brandVal;
+          }
+        } else {
+          if (customBrandInput) {
+            customBrandInput.style.display = 'none';
+            customBrandInput.value = '';
+          }
+        }
+      }
+
       setVal('form-car-model', car.model || '');
       setVal('form-car-variant', car.variant || '');
       setVal('form-car-year', car.year || 2022);
@@ -569,6 +609,12 @@ function renderCarForm() {
 
   const form = document.getElementById('master-car-form');
   if (form) form.reset();
+
+  if (brandSelect) brandSelect.value = '';
+  if (customBrandInput) {
+    customBrandInput.style.display = 'none';
+    customBrandInput.value = '';
+  }
 
   AdminDashboard.carFormImages = [];
   AdminDashboard.carFormFeatures = [];
@@ -709,7 +755,10 @@ async function handleMasterCarFormSubmit(e) {
       return el ? el.checked : false;
     };
 
-    const brand = getVal('form-car-brand', 'Maruti Suzuki');
+    let brand = getVal('form-car-brand', '');
+    if (brand === 'Other' || !brand) {
+      brand = getVal('form-car-brand-custom', 'Custom Brand');
+    }
     const model = getVal('form-car-model', '');
     const variant = getVal('form-car-variant', '');
     const year = getNum('form-car-year', 2022);
