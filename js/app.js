@@ -857,7 +857,7 @@ function updateCarStructuredData(car) {
     "vehicleTransmission": car.transmission || "Manual",
     "color": car.color || "Standard",
     "bodyType": car.body_type || "Car",
-    "image": car.image_url || "https://shriranicars.com/icons/icon-512.png",
+    "image": car.image_url || "https://www.shriranicars.com/icons/icon-512.png",
     "offers": {
       "@type": "Offer",
       "price": car.price || 0,
@@ -867,7 +867,7 @@ function updateCarStructuredData(car) {
         "@type": "AutoDealer",
         "name": "Shri Rani Cars",
         "telephone": "+919750332585",
-        "url": "https://shriranicars.com/"
+        "url": "https://www.shriranicars.com/"
       }
     }
   };

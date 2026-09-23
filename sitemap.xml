@@ -5,40 +5,47 @@
   
   <!-- Homepage & Main Showroom -->
   <url>
-    <loc>https://shriranicars.netlify.app/</loc>
-    <lastmod>2026-09-21</lastmod>
+    <loc>https://www.shriranicars.com/</loc>
+    <lastmod>2026-09-23</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
     <image:image>
-      <image:loc>https://shriranicars.netlify.app/icons/icon-512.png</image:loc>
+      <image:loc>https://www.shriranicars.com/icons/icon-512.png</image:loc>
       <image:title>Shri Rani Cars Showroom Logo</image:title>
-      <image:caption>Multi-Brand Pre-Owned Luxury Cars Showroom in Vazhapadi, Salem</image:caption>
+      <image:caption>Multi-Brand Pre-Owned Luxury Cars Showroom in Vazhapadi, Salem, Tamil Nadu</image:caption>
     </image:image>
   </url>
 
   <!-- Inventory & Available Cars Section -->
   <url>
-    <loc>https://shriranicars.netlify.app/#inventory-section</loc>
-    <lastmod>2026-09-21</lastmod>
+    <loc>https://www.shriranicars.com/#inventory-section</loc>
+    <lastmod>2026-09-23</lastmod>
     <changefreq>daily</changefreq>
-    <priority>0.9</priority>
+    <priority>0.95</priority>
   </url>
 
   <!-- Sell Your Car / Valuation Section -->
   <url>
-    <loc>https://shriranicars.netlify.app/#sell-section</loc>
-    <lastmod>2026-09-21</lastmod>
+    <loc>https://www.shriranicars.com/#sell-section</loc>
+    <lastmod>2026-09-23</lastmod>
     <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
+    <priority>0.85</priority>
   </url>
 
+  <!-- Customer Testimonials & Reviews -->
+  <url>
+    <loc>https://www.shriranicars.com/#reviews-section</loc>
+    <lastmod>2026-09-23</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.80</priority>
+  </url>
 
   <!-- Showroom Location & Contact Details -->
   <url>
-    <loc>https://shriranicars.netlify.app/#location-section</loc>
-    <lastmod>2026-09-21</lastmod>
+    <loc>https://www.shriranicars.com/#location-section</loc>
+    <lastmod>2026-09-23</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.85</priority>
+    <priority>0.90</priority>
   </url>
 
 </urlset>
