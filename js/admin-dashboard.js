@@ -91,7 +91,7 @@ async function loadDashboardData() {
       id: 'br_1',
       name: 'Main Showroom (Vazhapadi)',
       address: 'Mangamma Salai, Near RTO Office, Puthupalayam, Vazhapadi, Salem - 636115',
-      phone: '97503 32585',
+      phone: '87785 93328 / 97503 32585',
       whatsapp: '75501 72585',
       hours: '9:00 AM - 8:30 PM (All Days)',
       isPrimary: true

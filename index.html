@@ -77,7 +77,7 @@
         "logo": "https://www.shriranicars.com/icons/icon-512.png",
         "image": "https://www.shriranicars.com/icons/icon-512.png",
         "description": "Certified multi-brand pre-owned luxury cars showroom in Vazhapadi, Salem. 100% non-accidental guarantee, customized loan EMI & best market valuation.",
-        "telephone": "+919750332585",
+        "telephone": ["+918778593328", "+919750332585"],
         "priceRange": "₹₹ - ₹₹₹₹",
         "address": {
           "@type": "PostalAddress",
@@ -247,13 +247,22 @@
           <a href="#location-section" class="nav-link" onclick="backToShowroom()">Contact</a>
         </nav>
 
-        <!-- Header Actions (Pills on Desktop, 4 Round Buttons on Mobile matching screenshot) -->
+        <!-- Header Actions (Pills on Desktop, Round Buttons on Mobile) -->
         <div class="header-right">
-          <!-- Desktop Call Now Pill -->
+          <!-- Desktop Call Now Pill 1 (Primary) -->
+          <a href="tel:8778593328" class="header-contact-pill header-pill-call" title="Call Showroom: 87785 93328">
+            <div class="pill-icon-circle pill-call-circle"><i class="fas fa-phone-alt"></i></div>
+            <div class="pill-text-block">
+              <span class="pill-lbl">Call (Primary)</span>
+              <strong class="pill-val">87785 93328</strong>
+            </div>
+          </a>
+
+          <!-- Desktop Call Pill 2 (Secondary) -->
           <a href="tel:9750332585" class="header-contact-pill header-pill-call" title="Call Showroom: 97503 32585">
             <div class="pill-icon-circle pill-call-circle"><i class="fas fa-phone-alt"></i></div>
             <div class="pill-text-block">
-              <span class="pill-lbl">Call Now</span>
+              <span class="pill-lbl">Call (Secondary)</span>
               <strong class="pill-val">97503 32585</strong>
             </div>
           </a>
@@ -268,7 +277,7 @@
           </a>
 
           <!-- Mobile Only Round Call Button -->
-          <a href="tel:9750332585" class="header-action-btn header-call-btn mobile-only-btn" title="Call Showroom" aria-label="Call Showroom">
+          <a href="tel:8778593328" class="header-action-btn header-call-btn mobile-only-btn" title="Call Showroom: 87785 93328" aria-label="Call Showroom">
             <i class="fas fa-phone-alt"></i>
           </a>
 
@@ -695,9 +704,14 @@
               </div>
               <div>
                 <strong style="color: #061A13; font-size: 0.95rem;">Call Showroom:</strong>
-                <div style="margin-top: 0.2rem;">
-                  <a href="tel:9750332585" style="color: var(--gold-dark); font-weight: 700; font-size: 1.05rem;">
-                    97503 32585
+                <div style="margin-top: 0.35rem; display: flex; flex-direction: column; gap: 0.3rem;">
+                  <a href="tel:8778593328" style="color: var(--gold-dark); font-weight: 700; font-size: 1.05rem; display: flex; align-items: center; gap: 0.4rem;">
+                    <span>87785 93328</span>
+                    <span style="font-size: 0.75rem; font-weight: 600; color: #061A13; background: #e2e8f0; padding: 2px 6px; border-radius: 4px;">Primary</span>
+                  </a>
+                  <a href="tel:9750332585" style="color: var(--gold-dark); font-weight: 700; font-size: 1.05rem; display: flex; align-items: center; gap: 0.4rem;">
+                    <span>97503 32585</span>
+                    <span style="font-size: 0.75rem; font-weight: 600; color: #061A13; background: #e2e8f0; padding: 2px 6px; border-radius: 4px;">Secondary</span>
                   </a>
                 </div>
               </div>
@@ -962,6 +976,10 @@
           <ul class="footer-contact-list">
             <li>
               <i class="fas fa-phone-alt footer-icon-gold"></i>
+              <a href="tel:8778593328">87785 93328</a>
+            </li>
+            <li>
+              <i class="fas fa-phone-alt footer-icon-gold"></i>
               <a href="tel:9750332585">97503 32585</a>
             </li>
             <li>
@@ -1036,7 +1054,7 @@
     <a href="https://wa.me/917550172585" target="_blank" class="fab-circle fab-whatsapp-btn" title="WhatsApp" aria-label="WhatsApp">
       <i class="fab fa-whatsapp"></i>
     </a>
-    <a href="tel:9750332585" class="fab-circle fab-call-btn" title="Call" aria-label="Call">
+    <a href="tel:8778593328" class="fab-circle fab-call-btn" title="Call Showroom (87785 93328)" aria-label="Call Showroom">
       <i class="fas fa-phone-alt"></i>
     </a>
   </div>
@@ -1144,10 +1162,14 @@
             <label class="form-field-lbl">Fuel Type</label>
             <select id="modal-fuel-select" class="form-input-ctrl">
               <option value="all">All Fuel Types</option>
-              <option value="Diesel">Diesel</option>
               <option value="Petrol">Petrol</option>
-              <option value="Electric">Electric (EV)</option>
+              <option value="Diesel">Diesel</option>
+              <option value="Petrol / CNG">Petrol / CNG</option>
+              <option value="Petrol / LPG">Petrol / LPG</option>
               <option value="CNG">CNG</option>
+              <option value="LPG">LPG</option>
+              <option value="Electric">Electric (EV)</option>
+              <option value="Hybrid">Hybrid</option>
             </select>
           </div>
 

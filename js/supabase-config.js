@@ -232,10 +232,10 @@ window.CarService = {
   async getSettings() {
     let currentSettings = {
       businessName: 'Shri Rani Cars',
-      phone1: '9750332585',
-      phone2: '7550172585',
+      phone1: '8778593328',
+      phone2: '9750332585',
       whatsapp: '7550172585',
-      email: 'contact@shriranicars.com',
+      email: 'shriranicars@gmail.com',
       address: 'Mangamma Salai, Near RTO Office, Puthupalayam, Vazhapadi, Salem - 636115',
       hours: 'Mon - Sun: 9:00 AM - 8:30 PM'
     };
